@@ -1,0 +1,27 @@
+{
+	"folders": [
+		{
+			"name": "Source",
+			"path": "code"
+		},
+		{
+			"name": "Documentation",
+			"path": "docs"
+		},
+		{
+			"name": "Root",
+			"path": "."
+		}
+	],
+	"settings": {
+		"java.configuration.updateBuildConfiguration": "automatic",
+		"editor.formatOnSave": true,
+		"cSpell.words": [
+			"Guice",
+			"Xbox",
+			"tankdrive",
+			"teleop",
+			"waypoint"
+		]
+	}
+}

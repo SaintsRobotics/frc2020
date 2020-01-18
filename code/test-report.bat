@@ -1,0 +1,1 @@
+start "" %~d0%~p0"/build/reports/tests/test/index.html"
