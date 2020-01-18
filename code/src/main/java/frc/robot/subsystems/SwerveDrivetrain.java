@@ -7,9 +7,18 @@
 
 package frc.robot.subsystems;
 
+import com.ctre.phoenix.motorcontrol.can.VictorSPX;
+import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
 import com.google.inject.Inject;
+import com.revrobotics.CANSparkMax;
+import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
+import edu.wpi.first.wpilibj.SpeedController;
+import edu.wpi.first.wpilibj.VictorSP;
+import edu.wpi.first.wpilibj.kinematics.ChassisSpeeds;
+import edu.wpi.first.wpilibj.kinematics.SwerveDriveKinematics;
 import frc.robot.RobotConfig;
+import frc.robot.common.AbsoluteEncoder;
 import frc.robot.common.IDrivetrainSubsystem;
 import frc.robot.common.ILogger;
 import frc.robot.common.Position;
@@ -21,11 +30,42 @@ import frc.robot.common.TraceableSubsystem;
 public class SwerveDrivetrain extends TraceableSubsystem implements IDrivetrainSubsystem {
 
     private RobotConfig _config;
+    private SwerveWheel m_frontLeft;
+    private SwerveWheel m_backRight;
+    private SwerveWheel m_backLeft;
+    private SwerveWheel m_frontRight;
+    private CANSparkMax m_frontLeftDrive;
+    private CANSparkMax m_backRightDrive;
+    private CANSparkMax m_backLeftDrive;
+    private CANSparkMax m_frontRightDrive;
+    private SpeedController m_frontLeftTurn;
+    private SpeedController m_backRightTurn;
+    private SpeedController m_backLeftTurn;
+    private SpeedController m_frontRightTurn;
+    private AbsoluteEncoder m_frontLeftEncoder;
+    private AbsoluteEncoder m_frontRightEncoder;
+    private AbsoluteEncoder m_backRightEncoder;
+    private AbsoluteEncoder m_backLeftEncoder;
+    private SwerveDriveKinematics m_kinematics;
 
     @Inject
     public SwerveDrivetrain(final ILogger logger, final RobotConfig config) {
         super(logger);
         _config = config;
+         
+        m_frontLeftDrive = new CANSparkMax(config.Drivetrain.frontLeftDriveMotorPort, MotorType.kBrushless);
+        m_frontRightDrive = new CANSparkMax(config.Drivetrain.frontRightDriveMotorPort, MotorType.kBrushless);
+        
+        m_frontLeftDrive = new CANSparkMax(config.Drivetrain.rearLeftDriveMotorPort, MotorType.kBrushless);
+        m_frontLeftTurn = new WPI_VictorSPX(config.Drivetrain.frontLeftTurnMotorPort);
+        m_frontRightTurn = new WPI_VictorSPX(config.Drivetrain.frontRightTurnMotorPort);
+        m_backLeftTurn = new WPI_VictorSPX(config.Drivetrain.rearLeftTurnMotorPort);
+
+        m_backRightDrive = new CANSparkMax(config.Drivetrain.rearRightDriveMotorPort, MotorType.kBrushless);
+        m_backRightTurn = new WPI_VictorSPX(config.Drivetrain.rearRightturnMotorPort);
+        m_backRightEncoder = new AbsoluteEncoder(config.Drivetrain.rearRightAbsoluteEncoder, true);
+        
+
     }
 
     @Override
@@ -67,7 +107,14 @@ public class SwerveDrivetrain extends TraceableSubsystem implements IDrivetrainS
     @Override
     public void move(final double x, final double y, final double theta) {
         // TODO Auto-generated method stub
+
         this.getLogger().debug("x: " + x + ", y: " + y + ", theta: " + theta);
+        var swerveModuleStates = m_kinematics.toSwerveModuleStates(new ChassisSpeeds(x, y, theta));
+        SwerveDriveKinematics.normalizeWheelSpeeds(swerveModuleStates, this.getMaxSpeed());
+        m_frontLeft.setDesiredState(swerveModuleStates[0]);
+        m_frontRight.setDesiredState(swerveModuleStates[1]);
+        m_backLeft.setDesiredState(swerveModuleStates[2]);
+        m_backRight.setDesiredState(swerveModuleStates[3]);
 
     }
 
