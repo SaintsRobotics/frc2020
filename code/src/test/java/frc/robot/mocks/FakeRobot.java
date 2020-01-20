@@ -151,6 +151,8 @@ public class FakeRobot {
     /**
      * This autonomous runs the autonomous command selected by your
      * {@link RobotContainer} class.
+     * This autonomous runs the autonomous command selected by your {@link RobotContainer}
+     * class.
      */
     public void autonomousInit() {
         m_autonomousCommand = _robot.getAutonomousCommand();

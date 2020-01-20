@@ -14,7 +14,7 @@ package frc.robot;
  */
 public final class RobotConfig {
     public final RobotConfig.Controller Controller = new RobotConfig.Controller();
-    public final RobotConfig.Drivetrain Drivetrain = new RobotConfig.Drivetrain();
+    public final RobotConfig.SwerveDrivetrain Drivetrain = new RobotConfig.SwerveDrivetrain();
     public final RobotConfig.Physical Physical = new RobotConfig.Physical();
 
     public final class Controller {
@@ -22,9 +22,9 @@ public final class RobotConfig {
 
     }
 
-    public final class Drivetrain {
+    public final class SwerveDrivetrain {
         // examples to be filled out in detail during drivetrain development
-        public final int frontLeftDriveMotorPort = 12;
+        public final int frontLeftDriveMotorPort = 8;
         public final int frontLeftTurnMotorPort = 1;
         public final int rearLeftDriveMotorPort = 2;
         public final int rearLeftTurnMotorPort = 3;
@@ -36,8 +36,8 @@ public final class RobotConfig {
         public final int frontRightAbsoluteEncoder = 1;
         public final int rearLeftAbsoluteEncoder = 2;
         public final int rearRightAbsoluteEncoder = 3;
-        private final double x = 0.32385;
-        private final double y = 0.2794;
+        public final double swerveX = 0.32385;
+        public final double swerveY = 0.2794;
     }
 
     public final class Physical {
