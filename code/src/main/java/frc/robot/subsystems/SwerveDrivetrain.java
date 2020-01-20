@@ -13,10 +13,12 @@ import com.google.inject.Inject;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.SpeedController;
 import edu.wpi.first.wpilibj.VictorSP;
 import edu.wpi.first.wpilibj.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.kinematics.SwerveDriveKinematics;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.RobotConfig;
 import frc.robot.common.AbsoluteEncoder;
 import frc.robot.common.IDrivetrainSubsystem;
@@ -50,22 +52,33 @@ public class SwerveDrivetrain extends TraceableSubsystem implements IDrivetrainS
 
     @Inject
     public SwerveDrivetrain(final ILogger logger, final RobotConfig config) {
+        
         super(logger);
         _config = config;
-         
         m_frontLeftDrive = new CANSparkMax(config.Drivetrain.frontLeftDriveMotorPort, MotorType.kBrushless);
-        m_frontRightDrive = new CANSparkMax(config.Drivetrain.frontRightDriveMotorPort, MotorType.kBrushless);
-        
-        m_frontLeftDrive = new CANSparkMax(config.Drivetrain.rearLeftDriveMotorPort, MotorType.kBrushless);
         m_frontLeftTurn = new WPI_VictorSPX(config.Drivetrain.frontLeftTurnMotorPort);
+        m_frontLeftEncoder = new AbsoluteEncoder(config.Drivetrain.frontLeftAbsoluteEncoder, false);
+        m_frontLeft = new SwerveWheel(m_frontLeftDrive, m_frontLeftTurn, config.Drivetrain.swerveX, config.Drivetrain.swerveY, m_frontLeftEncoder);
+
+
+        m_frontRightDrive = new CANSparkMax(config.Drivetrain.frontRightDriveMotorPort, MotorType.kBrushless);        
         m_frontRightTurn = new WPI_VictorSPX(config.Drivetrain.frontRightTurnMotorPort);
+        m_frontRightEncoder = new AbsoluteEncoder(config.Drivetrain.frontRightAbsoluteEncoder, false);
+        m_frontRight = new SwerveWheel(m_frontRightDrive, m_frontRightTurn, config.Drivetrain.swerveX, -config.Drivetrain.swerveY, m_frontRightEncoder);
+
+        
+
+        m_backLeftDrive = new CANSparkMax(config.Drivetrain.rearLeftDriveMotorPort, MotorType.kBrushless);
         m_backLeftTurn = new WPI_VictorSPX(config.Drivetrain.rearLeftTurnMotorPort);
+        m_backLeftEncoder = new AbsoluteEncoder(config.Drivetrain.rearLeftAbsoluteEncoder, false);
+        m_backLeft = new SwerveWheel(m_backLeftDrive, m_backLeftTurn, -config.Drivetrain.swerveX, config.Drivetrain.swerveY, m_backLeftEncoder);
+
 
         m_backRightDrive = new CANSparkMax(config.Drivetrain.rearRightDriveMotorPort, MotorType.kBrushless);
         m_backRightTurn = new WPI_VictorSPX(config.Drivetrain.rearRightturnMotorPort);
-        m_backRightEncoder = new AbsoluteEncoder(config.Drivetrain.rearRightAbsoluteEncoder, true);
-        
-
+        m_backRightEncoder = new AbsoluteEncoder(config.Drivetrain.rearRightAbsoluteEncoder, false);
+        m_backRight = new SwerveWheel(m_backRightDrive, m_backRightTurn, -config.Drivetrain.swerveX, -config.Drivetrain.swerveY, m_backRightEncoder);
+        m_kinematics = new SwerveDriveKinematics(m_frontLeft.getlocation(), m_frontRight.getlocation(), m_backLeft.getlocation(), m_backRight.getlocation());
     }
 
     @Override
@@ -77,7 +90,7 @@ public class SwerveDrivetrain extends TraceableSubsystem implements IDrivetrainS
     @Override
     public double getMaxSpeed() {
         // TODO Auto-generated method stub
-        return 0;
+        return 4.68490122217;
     }
 
     @Override
@@ -111,11 +124,13 @@ public class SwerveDrivetrain extends TraceableSubsystem implements IDrivetrainS
         this.getLogger().verbose("x: " + x + ", y: " + y + ", theta: " + theta);
         var swerveModuleStates = m_kinematics.toSwerveModuleStates(new ChassisSpeeds(x, y, theta));
         SwerveDriveKinematics.normalizeWheelSpeeds(swerveModuleStates, this.getMaxSpeed());
+       //order of wheels in swerve module states is the same order as the wheels being inputed to Swerve kinematics
         m_frontLeft.setDesiredState(swerveModuleStates[0]);
         m_frontRight.setDesiredState(swerveModuleStates[1]);
         m_backLeft.setDesiredState(swerveModuleStates[2]);
         m_backRight.setDesiredState(swerveModuleStates[3]);
-
+        // this.getLogger("frontLeft: ", m)
+        SmartDashboard.putNumber("frontleft encoder ", m_frontLeftEncoder.getRadians());
     }
 
     @Override

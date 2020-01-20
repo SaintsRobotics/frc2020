@@ -33,7 +33,7 @@ public class CompetitionRobot {
     }
 
     /**
-     * Use this to pass the autonomous command to the main {@link RobotHost} class.
+     * Use this to pass the autonomous command to the main {@link Robot} class.
      *
      * @return the command to run in autonomous
      */
@@ -109,7 +109,7 @@ public class CompetitionRobot {
 
     /**
      * This autonomous runs the autonomous command selected by your
-     * {@link RobotHost} class.
+     * {@link Robot} class.
      */
     public void autonomousInit() {
         // TODO Auto-generated method stub

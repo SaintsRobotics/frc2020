@@ -36,7 +36,7 @@ public class AbsoluteEncoder {
 	 * 
 	 * @return the position of encoder in degrees
 	 */
-	public double get() {
+	public double getDegrees() {
 		if (isInverted) {
 			return ((5 - analogIn.getVoltage()) * this.voltageToDegrees) - this.offset;
 		}
@@ -44,6 +44,9 @@ public class AbsoluteEncoder {
 		else {
 			return (analogIn.getVoltage() * this.voltageToDegrees) - this.offset;
 		}
+	}
+	public double getRadians(){
+		return Math.toRadians(getDegrees());
 	}
 
 	public void reset() {

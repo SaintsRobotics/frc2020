@@ -7,6 +7,10 @@
 
 package frc.robot.subsystems;
 
+import com.revrobotics.CANEncoder;
+import com.revrobotics.CANSparkMax;
+
+import edu.wpi.first.wpilibj.AnalogEncoder;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.PWMVictorSPX;
 import edu.wpi.first.wpilibj.SpeedController;
@@ -15,7 +19,9 @@ import edu.wpi.first.wpilibj.controller.ProfiledPIDController;
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.geometry.Translation2d;
 import edu.wpi.first.wpilibj.kinematics.SwerveModuleState;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.trajectory.TrapezoidProfile;
+import frc.robot.common.AbsoluteEncoder;
 
 public class SwerveWheel {
   private static final double kWheelRadius = 0.0508;
@@ -24,15 +30,15 @@ public class SwerveWheel {
   private static final double kModuleMaxAngularVelocity = Math.PI;
   private static final double kModuleMaxAngularAcceleration = 2 * Math.PI; // radians per second squared
 
-  private final SpeedController m_driveMotor;
+  private CANSparkMax m_driveMotor;
   private final SpeedController m_turningMotor;
   private final Translation2d m_location;
-  private final Encoder m_driveEncoder = new Encoder(0, 1);
-  private final Encoder m_turningEncoder = new Encoder(2, 3);
+  private final CANEncoder m_driveEncoder;
+  private final AbsoluteEncoder m_turningEncoder;
 
   private final PIDController m_drivePIDController = new PIDController(1, 0, 0);
 
-  private final ProfiledPIDController m_turningPIDController = new ProfiledPIDController(1, 0, 0,
+  private final ProfiledPIDController m_turningPIDController = new ProfiledPIDController(.02*180/Math.PI, 0, 0,
       new TrapezoidProfile.Constraints(kModuleMaxAngularVelocity, kModuleMaxAngularAcceleration));
 
   /**
@@ -45,25 +51,26 @@ public class SwerveWheel {
    * @param Y            Y displacement in meters from the pivot point of the
    *                     robot
    */
-  public SwerveWheel(SpeedController driveMotor, SpeedController turningMotor, double X, double Y) {
+  public SwerveWheel(CANSparkMax driveMotor, SpeedController turningMotor, double X, double Y, AbsoluteEncoder turnEncoder) {
     m_driveMotor = driveMotor;
     m_turningMotor = turningMotor;
-
+    m_driveEncoder = m_driveMotor.getEncoder();
+    m_turningEncoder = turnEncoder;
     m_location = new Translation2d(X, Y);
-
     // Set the distance per pulse for the drive encoder. We can simply use the
     // distance traveled for one rotation of the wheel divided by the encoder
     // resolution.
-    m_driveEncoder.setDistancePerPulse(2 * Math.PI * kWheelRadius / kEncoderResolution);
+    
 
     // Set the distance (in this case, angle) per pulse for the turning encoder.
     // This is the the angle through an entire rotation (2 * wpi::math::pi)
     // divided by the encoder resolution.
-    m_turningEncoder.setDistancePerPulse(2 * Math.PI / kEncoderResolution);
+    //m_turningEncoder.setDistancePerPulse(2 * Math.PI / kEncoderResolution);
 
     // Limit the PID Controller's input range between -pi and pi and set the input
     // to be continuous.
-    m_turningPIDController.enableContinuousInput(-Math.PI, Math.PI);
+    m_turningPIDController.enableContinuousInput(0, 2*Math.PI);
+    
   }
 
   /**
@@ -79,7 +86,7 @@ public class SwerveWheel {
    * @return The current state of the module.
    */
   public SwerveModuleState getState() {
-    return new SwerveModuleState(m_driveEncoder.getRate(), new Rotation2d(m_turningEncoder.get()));
+    return new SwerveModuleState(m_driveEncoder.getVelocity(), new Rotation2d(m_turningEncoder.getRadians()));
   }
 
   /**
@@ -89,10 +96,14 @@ public class SwerveWheel {
    */
   public void setDesiredState(SwerveModuleState state) {
     // Calculate the drive output from the drive PID controller.
-    final var driveOutput = m_drivePIDController.calculate(m_driveEncoder.getRate(), state.speedMetersPerSecond);
-
+    // TODO ds
+    final var driveOutput = state.speedMetersPerSecond / 4.6849;// m_drivePIDController.calculate(m_driveEncoder.getVelocity()*0.0355, state.speedMetersPerSecond);
+    SmartDashboard.putNumber("target m/s", state.speedMetersPerSecond);
+    SmartDashboard.putNumber("Velocity PidOutput", driveOutput);
+    SmartDashboard.putNumber("Wheel m/s", m_driveEncoder.getVelocity() * 0.0355);
+    
     // Calculate the turning motor output from the turning PID controller.
-    final var turnOutput = m_turningPIDController.calculate(m_turningEncoder.get(), state.angle.getRadians());
+    final var turnOutput = m_turningPIDController.calculate(m_turningEncoder.getRadians(), state.angle.getRadians());
 
     // Calculate the turning motor output from the turning PID controller.
     m_driveMotor.set(driveOutput);

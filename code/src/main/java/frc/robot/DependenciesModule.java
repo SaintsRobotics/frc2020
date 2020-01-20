@@ -21,6 +21,6 @@ public class DependenciesModule extends AbstractModule {
         ILogger logger = new LoggerGroup(new ConsoleLogger());
 
         this.bind(ILogger.class).toInstance(logger);
-        this.bind(IDrivetrainSubsystem.class).to(SwerveDrivetrain.class);
+        this.bind(IDrivetrainSubsystem.class).to(SwerveDrivetrain.class).asEagerSingleton();;
     }
 }
