@@ -53,6 +53,7 @@ dependencies {
     nativeDesktopZip wpi.deps.vendor.jni(wpi.platforms.desktop)
 
     testImplementation 'junit:junit:4.13'
+    testCompile group: 'com.tngtech.java', name: 'junit-dataprovider', version: '1.10.0'
 
 
     // testCompile "junit:junit:4.11"

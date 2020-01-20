@@ -5,13 +5,12 @@
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
 
-package frc.robot.unit.mocks;
+package frc.robot;
 
 import com.google.inject.AbstractModule;
 
-import edu.wpi.first.wpilibj.XboxController;
 import frc.robot.common.*;
-import frc.robot.unit.mocks.subsystems.MockDrivetrain;
+import frc.robot.mocks.subsystems.MockDrivetrain;
 
 /**
  * Add your docs here.

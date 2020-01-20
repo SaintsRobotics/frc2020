@@ -17,6 +17,10 @@ public class TraceableMockSubsystem implements Subsystem {
         logger.setComponentName(this.getName());
     }
 
+    public ILogger getLogger() {
+        return _logger;
+    }
+
     @Override
     public void periodic() {
         // This method will be called once per scheduler run
