@@ -15,6 +15,7 @@ import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.commands.DrivetrainControllerCommand;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -28,24 +29,11 @@ public class Robot extends TimedRobot {
   private RobotContainer _robot;
   private RobotConfig _config;
 
-  private final Injector _container;
+  private final Injector _container = Guice.createInjector(new DependenciesModule());
   // The driver's controller
   XboxController m_driverController;
 
-  /**
-   * Top level robot that controls the competition, this is NOT where you put your
-   * competition robot code. That goes into the RobotContainer.java file
-   */
   public Robot() {
-    this(new DependenciesModule());
-  }
-
-  /**
-   * @param dependencies allows the overriding of the default dependencies for the
-   *                     competition this is most useful during testing
-   */
-  public Robot(AbstractModule dependencies) {
-    _container = Guice.createInjector(dependencies);
     _config = _container.getInstance(RobotConfig.class);
     m_driverController = new XboxController(_config.Controller.controllerPort);
   }
@@ -124,8 +112,8 @@ public class Robot extends TimedRobot {
   }
 
   /**
-   * This autonomous runs the autonomous command selected by your
-   * {@link RobotContainer} class.
+   * This autonomous runs the autonomous command selected by your {@link RobotContainer}
+   * class.
    */
   @Override
   public void autonomousInit() {
