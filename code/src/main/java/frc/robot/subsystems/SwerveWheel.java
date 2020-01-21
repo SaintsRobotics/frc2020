@@ -38,8 +38,7 @@ public class SwerveWheel {
 
   private final PIDController m_drivePIDController = new PIDController(1, 0, 0);
 
-  private final ProfiledPIDController m_turningPIDController = new ProfiledPIDController(.02*180/Math.PI, 0, 0,
-      new TrapezoidProfile.Constraints(kModuleMaxAngularVelocity, kModuleMaxAngularAcceleration));
+  private final PIDController m_turningPIDController = new PIDController(1, 0, 0);
 
   /**
    * Constructs a SwerveModule.
@@ -69,8 +68,8 @@ public class SwerveWheel {
 
     // Limit the PID Controller's input range between -pi and pi and set the input
     // to be continuous.
-    m_turningPIDController.enableContinuousInput(0, 2*Math.PI);
-    
+    m_turningPIDController.enableContinuousInput(0, 6);
+
   }
 
   /**
@@ -97,14 +96,15 @@ public class SwerveWheel {
   public void setDesiredState(SwerveModuleState state) {
     // Calculate the drive output from the drive PID controller.
     // TODO ds
-    final var driveOutput = state.speedMetersPerSecond / 4.6849;// m_drivePIDController.calculate(m_driveEncoder.getVelocity()*0.0355, state.speedMetersPerSecond);
+    final var driveOutput = state.speedMetersPerSecond / 4.685;// m_drivePIDController.calculate(m_driveEncoder.getVelocity()*0.0355, state.speedMetersPerSecond);
     SmartDashboard.putNumber("target m/s", state.speedMetersPerSecond);
     SmartDashboard.putNumber("Velocity PidOutput", driveOutput);
     SmartDashboard.putNumber("Wheel m/s", m_driveEncoder.getVelocity() * 0.0355);
-    
+   
     // Calculate the turning motor output from the turning PID controller.
-    final var turnOutput = m_turningPIDController.calculate(m_turningEncoder.getRadians(), state.angle.getRadians());
-
+    final var turnOutput = m_turningPIDController.calculate(m_turningEncoder.getRadians(), (state.angle.getRadians()%(2*Math.PI) + (2*Math.PI)) % (2*Math.PI));
+    
+    SmartDashboard.putNumber("Angle", (state.angle.getRadians()%(2*Math.PI) + (2*Math.PI)) % (2*Math.PI));
     // Calculate the turning motor output from the turning PID controller.
     m_driveMotor.set(driveOutput);
     m_turningMotor.set(turnOutput);
