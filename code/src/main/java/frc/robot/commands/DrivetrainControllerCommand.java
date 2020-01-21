@@ -40,7 +40,7 @@ public class DrivetrainControllerCommand extends TraceableCommand {
         //_drivetrain.move(_controller.getX(Hand.kRight), _controller.getY(Hand.kRight),
         //        _controller.getTriggerAxis(Hand.kRight)); // theta == axis??
         //TODO uncomment above
-        _drivetrain.move(_controller.getY(Hand.kLeft), _controller.getX(Hand.kLeft), _controller.getX(Hand.kRight));
+        _drivetrain.move(4*_controller.getY(Hand.kLeft), 4* _controller.getX(Hand.kLeft), 4*_controller.getX(Hand.kRight));
     }
 
     /**

@@ -14,7 +14,7 @@ public class AbsoluteEncoder {
 	 */
 
 	private AnalogInput analogIn;
-	private double offset = 0; // the offset from zero for each motor
+	private double m_offset = 0; // the offset from zero for each motor
 	private boolean isInverted;
 	private double voltageToDegrees = 72;
 	private AnalogEncoder x;
@@ -25,10 +25,11 @@ public class AbsoluteEncoder {
 	 * @param channel    Analog port for the Encoder
 	 * @param isInverted Changes which direction increases/decreases the encoder
 	 */
-	public AbsoluteEncoder(int channel, boolean isInverted) {
+	public AbsoluteEncoder(int channel, double offset, boolean isInverted) {
 		analogIn = new AnalogInput(channel);
 		this.x = new AnalogEncoder(analogIn);
 		this.isInverted = isInverted;
+		this.m_offset = offset;
 	}
 
 	/**
@@ -38,19 +39,19 @@ public class AbsoluteEncoder {
 	 */
 	public double getDegrees() {
 		if (isInverted) {
-			return ((5 - analogIn.getVoltage()) * this.voltageToDegrees) - this.offset;
+			return ((5 - analogIn.getVoltage()) * this.voltageToDegrees) ;
 		}
 
 		else {
-			return (analogIn.getVoltage() * this.voltageToDegrees) - this.offset;
+			return (analogIn.getVoltage() * this.voltageToDegrees);
 		}
 	}
 	public double getRadians(){
-		return Math.toRadians(getDegrees());
+		return Math.toRadians(getDegrees()) - this.m_offset;
 	}
 
 	public void reset() {
-		this.offset = analogIn.getVoltage() * this.voltageToDegrees;
+		this.m_offset = analogIn.getVoltage() * this.voltageToDegrees;
 	}
 
 }
