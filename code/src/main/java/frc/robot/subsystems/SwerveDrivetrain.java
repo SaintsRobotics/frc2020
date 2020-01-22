@@ -56,13 +56,16 @@ public class SwerveDrivetrain extends TraceableSubsystem implements IDrivetrainS
         super(logger);
         _config = config;
         m_frontLeftDrive = new CANSparkMax(config.Drivetrain.frontLeftDriveMotorPort, MotorType.kBrushless);
+    
         m_frontLeftTurn = new WPI_VictorSPX(config.Drivetrain.frontLeftTurnMotorPort);
         m_frontLeftEncoder = new AbsoluteEncoder(config.Drivetrain.frontLeftAbsoluteEncoder, 1.9,  false);
+        ((CANSparkMax) m_frontLeftDrive).setSmartCurrentLimit(35, 60, 150);
         m_frontLeft = new SwerveWheel(m_frontLeftDrive, m_frontLeftTurn, config.Drivetrain.swerveX, config.Drivetrain.swerveY, m_frontLeftEncoder);
 
 
         m_frontRightDrive = new CANSparkMax(config.Drivetrain.frontRightDriveMotorPort, MotorType.kBrushless);        
         m_frontRightDrive.setInverted(true);
+		((CANSparkMax) m_frontRightDrive).setSmartCurrentLimit(35, 60, 150);
         m_frontRightTurn = new WPI_VictorSPX(config.Drivetrain.frontRightTurnMotorPort);
         m_frontRightEncoder = new AbsoluteEncoder(config.Drivetrain.frontRightAbsoluteEncoder, 2.09+.1,false);
         m_frontRight = new SwerveWheel(m_frontRightDrive, m_frontRightTurn, config.Drivetrain.swerveX, -config.Drivetrain.swerveY, m_frontRightEncoder);
@@ -72,13 +75,15 @@ public class SwerveDrivetrain extends TraceableSubsystem implements IDrivetrainS
         m_backLeftDrive = new CANSparkMax(config.Drivetrain.rearLeftDriveMotorPort, MotorType.kBrushless);
         m_backLeftTurn = new WPI_VictorSPX(config.Drivetrain.rearLeftTurnMotorPort);
         m_backLeftEncoder = new AbsoluteEncoder(config.Drivetrain.rearLeftAbsoluteEncoder, 2.12, false);
+        ((CANSparkMax) m_backLeftDrive).setSmartCurrentLimit(35,60,150);
         m_backLeft = new SwerveWheel(m_backLeftDrive, m_backLeftTurn, -config.Drivetrain.swerveX, config.Drivetrain.swerveY, m_backLeftEncoder);
         
 
         m_backRightDrive = new CANSparkMax(config.Drivetrain.rearRightDriveMotorPort, MotorType.kBrushless);
         m_backRightDrive.setInverted(true);
         m_backRightTurn = new WPI_VictorSPX(config.Drivetrain.rearRightturnMotorPort);
-        m_backRightEncoder = new AbsoluteEncoder(config.Drivetrain.rearRightAbsoluteEncoder, 3.54, false);
+        m_backRightEncoder = new AbsoluteEncoder(config.Drivetrain.rearRightAbsoluteEncoder, 3.6, false);
+        m_backRightDrive.setSmartCurrentLimit(35,60,150);
         m_backRight = new SwerveWheel(m_backRightDrive, m_backRightTurn, -config.Drivetrain.swerveX, -config.Drivetrain.swerveY, m_backRightEncoder);
         m_kinematics = new SwerveDriveKinematics(m_frontLeft.getlocation(), m_frontRight.getlocation(), m_backLeft.getlocation(), m_backRight.getlocation());
         
