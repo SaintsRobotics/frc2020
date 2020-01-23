@@ -38,4 +38,9 @@ public class Location {
     public void updateHeading(double heading) {
         _heading = heading;
     }
+
+    @Override
+    public String toString() {
+        return "x: " + _position.getX() + ", y: " + _position.getY() + ", heading: " + _heading;
+    }
 }

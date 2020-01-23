@@ -63,12 +63,13 @@ public class MockDrivetrain extends TraceableMockSubsystem implements IDrivetrai
     public void moveBackward(double distance) {
         // check for invalid values
         if (this.isPositiveNumber(distance))
-            this.updateRelativeLocation(0, -distance);
+            this.updateRelativeLocation2(-distance);
+
     }
 
     @Override
     public void moveBackward(double maxSpeed, double distance) {
-        this.moveBackward(distance);
+        this.moveBackward(-distance);
     }
 
     @Override
@@ -78,7 +79,7 @@ public class MockDrivetrain extends TraceableMockSubsystem implements IDrivetrai
     }
 
     @Override
-    public void moveLeft(double distance) {
+    public void moveLeft(double distance) {//do
         this.turnLeft();
         // TODO: Calculate the correct path
         this.moveForward(distance);
@@ -90,7 +91,7 @@ public class MockDrivetrain extends TraceableMockSubsystem implements IDrivetrai
     }
 
     @Override
-    public void moveRight(double distance) {
+    public void moveRight(double distance) {//do
         this.turnRight();
         // TODO: Calculate the correct path
         this.moveForward(distance);
@@ -102,7 +103,7 @@ public class MockDrivetrain extends TraceableMockSubsystem implements IDrivetrai
     }
 
     @Override
-    public void moveNorth(double distance) {
+    public void moveNorth(double distance) {//do
         this.faceNorth();
         this.moveForward(distance);
     }
@@ -113,7 +114,7 @@ public class MockDrivetrain extends TraceableMockSubsystem implements IDrivetrai
     }
 
     @Override
-    public void moveSouth(double distance) {
+    public void moveSouth(double distance) {//do
         this.faceSouth();
         this.moveForward(distance);
 
@@ -125,7 +126,7 @@ public class MockDrivetrain extends TraceableMockSubsystem implements IDrivetrai
     }
 
     @Override
-    public void moveEast(double distance) {
+    public void moveEast(double distance) {//do
         this.faceEast();
         this.moveForward(distance);
     }
@@ -136,7 +137,7 @@ public class MockDrivetrain extends TraceableMockSubsystem implements IDrivetrai
     }
 
     @Override
-    public void moveWest(double distance) {
+    public void moveWest(double distance) {//do
         this.faceWest();
         this.moveForward(distance);
     }
@@ -156,12 +157,12 @@ public class MockDrivetrain extends TraceableMockSubsystem implements IDrivetrai
     }
 
     @Override
-    public void turnLeft() {
+    public void turnLeft() {//do
         this.rotate(-90);
     }
 
     @Override
-    public void turnRight() {
+    public void turnRight() {//do
         this.rotate(90);
     }
 
@@ -181,7 +182,7 @@ public class MockDrivetrain extends TraceableMockSubsystem implements IDrivetrai
     }
 
     @Override
-    public void faceWest() {
+    public void faceWest() {//do all
         _location.updateHeading(270);
     }
 
@@ -210,22 +211,6 @@ public class MockDrivetrain extends TraceableMockSubsystem implements IDrivetrai
             y = Math.cos(radianHeading) * distance;
         }
 
-        double newXPos = pos.getX() + x;
-        double newYPos = pos.getY() + y;
-
-        // constrain the movement
-        if (newXPos < 0) {
-            newXPos = 0;
-        }
-        if (newYPos < 0) {
-            newYPos = 0;
-        }
-        _location.updatePosition(new Position(newXPos, newYPos));
-    }
-
-    private void updateRelativeLocation(double x, double y) {
-        double heading = _location.getHeading();
-        Position pos = _location.getPosition();
         double newXPos = pos.getX() + x;
         double newYPos = pos.getY() + y;
 
