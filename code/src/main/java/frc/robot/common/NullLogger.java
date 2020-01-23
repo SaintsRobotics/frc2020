@@ -39,4 +39,9 @@ public class NullLogger implements ILogger {
     public void verbose(String message) {
         // No-Op
     }
+
+    @Override
+    public void error(String message) {
+        // No-Op
+    }
 }

@@ -15,4 +15,9 @@ public class ConsoleLogger extends NullLogger {
     public void verbose(String message) {
         System.out.println("(" + this.getComponentType() + ":" + this.getComponentName() + ") " + message);
     }
+
+    @Override
+    public void error(String message) {
+        System.err.println("(" + this.getComponentType() + ":" + this.getComponentName() + ") " + message);
+    }
 }

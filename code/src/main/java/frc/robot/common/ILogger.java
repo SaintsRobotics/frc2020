@@ -20,4 +20,6 @@ public interface ILogger {
     void setComponentName(String name);
 
     void verbose(String message);
+
+    void error(String message);
 }

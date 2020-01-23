@@ -55,4 +55,11 @@ public class LoggerGroup implements ILogger {
             _loggers.get(i).verbose(message);
         }
     }
+
+    @Override
+    public void error(String message) {
+        for (int i = 0; i < _loggers.size(); i++) {
+            _loggers.get(i).error(message);
+        }
+    }
 }

@@ -5,14 +5,15 @@
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
 
-package frc.robot.unit.mocks;
+package frc.robot.mocks;
 
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import frc.robot.Robot;
+import frc.robot.RobotContainer;
+import frc.robot.TestDependenciesModule;
 import frc.robot.RobotConfig;
 
 /**
@@ -21,7 +22,7 @@ import frc.robot.RobotConfig;
  */
 public class FakeRobot {
     private Command m_autonomousCommand;
-    private Robot _robot;
+    private RobotContainer _robot;
     private RobotConfig _config;
 
     private final Injector _container = Guice.createInjector(new TestDependenciesModule());
@@ -32,14 +33,14 @@ public class FakeRobot {
 
     public FakeRobot() {
         _config = this.createInstance(RobotConfig.class);
-        _robot = this.createInstance(Robot.class);
+        _robot = this.createInstance(RobotContainer.class);
     }
 
     public <T> T createInstance(Class<T> type) {
         return _container.getInstance(type);
     }
 
-    public Robot getRobot() {
+    public RobotContainer getRobot() {
         return _robot;
     }
 
@@ -94,7 +95,7 @@ public class FakeRobot {
         // Instantiate our RobotContainer. This will perform all our button bindings,
         // and put our
         // autonomous chooser on the dashboard.
-        _robot = _container.getInstance(Robot.class);
+        _robot = _container.getInstance(RobotContainer.class);
 
         // Configure the button bindings
         // these have to be done here as they are not unit testable
@@ -148,8 +149,8 @@ public class FakeRobot {
     }
 
     /**
-     * This autonomous runs the autonomous command selected by your {@link Robot}
-     * class.
+     * This autonomous runs the autonomous command selected by your
+     * {@link RobotContainer} class.
      */
     public void autonomousInit() {
         m_autonomousCommand = _robot.getAutonomousCommand();

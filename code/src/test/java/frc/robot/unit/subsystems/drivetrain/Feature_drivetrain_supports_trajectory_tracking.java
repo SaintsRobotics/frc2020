@@ -9,18 +9,25 @@ package frc.robot.unit.subsystems.drivetrain;
 
 import org.junit.*;
 
-import frc.robot.Robot;
-import frc.robot.unit.mocks.FakeRobot;
+import frc.robot.RobotContainer;
+import frc.robot.mocks.MockRobot;
 
 /**
  * Add your docs here.
  */
 public class Feature_drivetrain_supports_trajectory_tracking {
-    private Robot _robot;
+    private RobotContainer _robot;
+    private MockRobot _mockRobot;
 
     @Before
     public void beforeEachTest() {
-        _robot = new FakeRobot().getRobot();
+        _mockRobot = new MockRobot();
+        _robot = _mockRobot.getRobot();
+    }
+
+    @After
+    public void afterEachTeast() {
+        _mockRobot.close();
     }
 
     @Test

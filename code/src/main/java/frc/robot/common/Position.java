@@ -28,4 +28,9 @@ public class Position {
         return _y;
     }
 
+    @Override
+    public String toString(){
+        return "x: " + _x + ", y: " + _y;
+    }
+
 }
