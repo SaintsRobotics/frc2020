@@ -161,7 +161,7 @@ public class SwerveWheel {
 
   
   
-  public double convertToSingleRad (double rad){
+  public double rangeFix (double rad){
 
      
     double convertedRad  = (((rad % (2*Math.PI))+ (2*Math.PI)))%(2*Math.PI);
