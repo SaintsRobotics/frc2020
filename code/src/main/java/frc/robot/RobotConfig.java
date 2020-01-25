@@ -36,8 +36,8 @@ public final class RobotConfig {
         public final int frontRightAbsoluteEncoder = 1;
         public final int rearLeftAbsoluteEncoder = 2;
         public final int rearRightAbsoluteEncoder = 3;
-        public final double swerveX = 0.32385;
-        public final double swerveY = 0.2794;
+        public final double swerveX = .67/2;
+        public final double swerveY = .25;
     }
 
     public final class Physical {
