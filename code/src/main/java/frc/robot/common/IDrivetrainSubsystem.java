@@ -39,7 +39,7 @@ public interface IDrivetrainSubsystem extends Subsystem {
     void moveBackward(double maxSpeed, double distance);
 
     // used for teleop
-    void move(double x, double y, double rotation);
+    void move(double x, double y, double rotation, boolean fieldRelative);
 
     void moveLeft(double distance);
 
