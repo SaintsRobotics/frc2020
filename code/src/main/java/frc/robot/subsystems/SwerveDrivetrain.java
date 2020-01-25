@@ -135,10 +135,10 @@ public class SwerveDrivetrain extends TraceableSubsystem implements IDrivetrainS
         this.getLogger().verbose("x: " + x + ", y: " + y + ", theta: " + theta);
         if (fieldRelative){
             var swerveModuleStates = m_kinematics.toSwerveModuleStates(ChassisSpeeds.fromFieldRelativeSpeeds(
-                xSpeed, ySpeed, rot, getAngle());
+                x, y,theta, gyro.getAngle());
         }
         else {
-            var swerveModuleStates = m_kinematics.toSwerveModuleStates(new ChassisSpeeds(xSpeed, ySpeed, rot));
+            var swerveModuleStates = m_kinematics.toSwerveModuleStates(new ChassisSpeeds(x, y, theta));
         }
         SwerveDriveKinematics.normalizeWheelSpeeds(swerveModuleStates, this.getMaxSpeed());
        //order of wheels in swerve module states is the same order as the wheels being inputed to Swerve kinematics
