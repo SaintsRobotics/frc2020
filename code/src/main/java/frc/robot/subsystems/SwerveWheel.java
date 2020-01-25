@@ -96,7 +96,7 @@ public class SwerveWheel {
   public void setDesiredState(SwerveModuleState state) {
     // Calculate the drive output from the drive PID controller.
     // TODO ds
-    final var driveOutput = state.speedMetersPerSecond / 4.685;// m_drivePIDController.calculate(m_driveEncoder.getVelocity()*0.0355, state.speedMetersPerSecond);
+    final var driveOutput = state.speedMetersPerSecond / 3.63;// m_drivePIDController.calculate(m_driveEncoder.getVelocity()*0.0355, state.speedMetersPerSecond);
     SmartDashboard.putNumber("target m/s", state.speedMetersPerSecond);
     SmartDashboard.putNumber("Velocity PidOutput", driveOutput);
     SmartDashboard.putNumber("Wheel m/s", m_driveEncoder.getVelocity() * 0.0355);
