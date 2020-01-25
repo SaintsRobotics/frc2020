@@ -154,7 +154,7 @@ public class SwerveWheel {
   /**
    *
    *
-   * @param WheelMPs given speed of the wheel in M/S
+   * @param WheelMPs given speed of the wheel in MPS
    * @return scaled voltage needed to attain specified speed
    */
   
@@ -171,8 +171,7 @@ public class SwerveWheel {
   }
   
 /**
-   *
-   *
+    *
    * @param rad given angle
    * @return removes unnecessary rotations when given an angle by consolidating the angle to be between 0 and 2*Pi
    */
