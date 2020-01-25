@@ -10,7 +10,7 @@ package frc.robot.commands;
 import com.google.inject.Inject;
 
 import edu.wpi.first.wpilibj.XboxController;
-import edu.wpi.first.wpilibj.GenericHID.Hand;
+import edu.wpi.first.wpilibj.GenericHID.*;
 import frc.robot.common.*;
 
 /**
@@ -37,10 +37,10 @@ public class DrivetrainControllerCommand extends TraceableCommand {
     @Override
     public void execute() {
         super.execute();
-        //_drivetrain.move(_controller.getX(Hand.kRight), _controller.getY(Hand.kRight),
-        //        _controller.getTriggerAxis(Hand.kRight)); // theta == axis??
-        //TODO uncomment above
-        _drivetrain.move(_controller.getY(Hand.kLeft),  _controller.getX(Hand.kLeft), 1.2* _controller.getX(Hand.kRight));
+        _drivetrain.move(_controller.getY(Hand.kLeft), _controller.getX(Hand.kLeft), _controller.getX(Hand.kRight), _controller.getBumper(Hand.kRight)); // theta
+                                                                                                                     // ==
+                                                                                                                     // axis??
+
     }
 
     /**

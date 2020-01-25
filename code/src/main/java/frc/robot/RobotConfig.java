@@ -35,8 +35,8 @@ public final class RobotConfig {
         public final int rearRightturnMotorPort = 7;
         public final int frontLeftAbsoluteEncoder = 0;
         public final int frontRightAbsoluteEncoder = 1;
-        public final int rearLeftAbsoluteEncoder = 2;
-        public final int rearRightAbsoluteEncoder = 3;
+        public final int rearLeftAbsoluteEncoder = 3;
+        public final int rearRightAbsoluteEncoder = 2;
         public final double swerveX = .67/2;
         public final double swerveY = .25;
         
