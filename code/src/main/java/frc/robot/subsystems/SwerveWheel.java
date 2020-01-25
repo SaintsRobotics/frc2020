@@ -7,6 +7,7 @@
 
 package frc.robot.subsystems;
 
+import com.fasterxml.jackson.core.sym.Name;
 import com.revrobotics.CANEncoder;
 import com.revrobotics.CANSparkMax;
 
@@ -40,6 +41,8 @@ public class SwerveWheel {
 
   private final PIDController m_turningPIDController = new PIDController(1, 0, 0);
 
+  private String m_name;
+
   /**
    * Constructs a SwerveModule.
    *
@@ -50,7 +53,8 @@ public class SwerveWheel {
    * @param Y            Y displacement in meters from the pivot point of the
    *                     robot
    */
-  public SwerveWheel(CANSparkMax driveMotor, SpeedController turningMotor, double X, double Y, AbsoluteEncoder turnEncoder) {
+  public SwerveWheel(CANSparkMax driveMotor, SpeedController turningMotor, double X, double Y, AbsoluteEncoder turnEncoder, String name) {
+    m_name = name;
     m_driveMotor = driveMotor;
     m_turningMotor = turningMotor;
     m_driveEncoder = m_driveMotor.getEncoder();
@@ -97,14 +101,15 @@ public class SwerveWheel {
     // Calculate the drive output from the drive PID controller.
     // TODO ds
     final var driveOutput = state.speedMetersPerSecond / 3.63;// m_drivePIDController.calculate(m_driveEncoder.getVelocity()*0.0355, state.speedMetersPerSecond);
-    SmartDashboard.putNumber("target m/s", state.speedMetersPerSecond);
-    SmartDashboard.putNumber("Velocity PidOutput", driveOutput);
-    SmartDashboard.putNumber("Wheel m/s", m_driveEncoder.getVelocity() * 0.0355);
+    SmartDashboard.putNumber(m_name + " target m/s", state.speedMetersPerSecond);
+    
+    
    
     // Calculate the turning motor output from the turning PID controller.
     final var turnOutput = m_turningPIDController.calculate(m_turningEncoder.getRadians(), (state.angle.getRadians()%(2*Math.PI) + (2*Math.PI)) % (2*Math.PI));
     
-    SmartDashboard.putNumber("Angle", (state.angle.getRadians()%(2*Math.PI) + (2*Math.PI)) % (2*Math.PI));
+    SmartDashboard.putNumber(m_name + " Angle", (state.angle.getRadians()%(2*Math.PI) + (2*Math.PI)) % (2*Math.PI));
+    SmartDashboard.putNumber(m_name + " Turning PID output", m_turningPIDController.calculate(m_turningEncoder.getRadians(), (state.angle.getRadians()%(2*Math.PI) + (2*Math.PI)) % (2*Math.PI)));
     // Calculate the turning motor output from the turning PID controller.
     m_driveMotor.set(driveOutput);
     m_turningMotor.set(turnOutput);
