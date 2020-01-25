@@ -40,58 +40,52 @@ public class SwerveDrivetrain extends TraceableSubsystem implements IDrivetrainS
     private CANSparkMax m_backRightDrive;
     private CANSparkMax m_backLeftDrive;
     private CANSparkMax m_frontRightDrive;
-    private SpeedController m_frontLeftTurn;
-    private SpeedController m_backRightTurn;
-    private SpeedController m_backLeftTurn;
-    private SpeedController m_frontRightTurn;
-    private AbsoluteEncoder m_frontLeftEncoder;
-    private AbsoluteEncoder m_frontRightEncoder;
-    private AbsoluteEncoder m_backRightEncoder;
-    private AbsoluteEncoder m_backLeftEncoder;
+    private CANSparkMax m_frontLeftTurn;
+    private CANSparkMax m_backRightTurn;
+    private CANSparkMax m_backLeftTurn;
+    private CANSparkMax m_frontRightTurn;
+    public AbsoluteEncoder m_frontLeftEncoder;
+    public AbsoluteEncoder m_frontRightEncoder;
+    public AbsoluteEncoder m_backRightEncoder;
+    public AbsoluteEncoder m_backLeftEncoder;
     private SwerveDriveKinematics m_kinematics;
 
     @Inject
     public SwerveDrivetrain(final ILogger logger, final RobotConfig config) {
-        
+
         super(logger);
         _config = config;
         m_frontLeftDrive = new CANSparkMax(config.Drivetrain.frontLeftDriveMotorPort, MotorType.kBrushless);
-        ((CANSparkMax) m_frontLeftDrive).setSmartCurrentLimit(35, 60, 150);
-
+        m_frontLeftDrive.setInverted(true);
         m_frontLeftTurn = new CANSparkMax(config.Drivetrain.frontLeftTurnMotorPort, MotorType.kBrushless);
-        m_frontLeftEncoder = new AbsoluteEncoder(config.Drivetrain.frontLeftAbsoluteEncoder, 0,  false);
-        ((CANSparkMax) m_frontLeftTurn).setSmartCurrentLimit(35, 60, 75);
-        m_frontLeft = new SwerveWheel(m_frontLeftDrive, m_frontLeftTurn, config.Drivetrain.swerveX, config.Drivetrain.swerveY, m_frontLeftEncoder, "Left front");
+        m_frontLeftEncoder = new AbsoluteEncoder(config.Drivetrain.frontLeftAbsoluteEncoder, 6.25, true);
 
+        m_frontLeft = new SwerveWheel(m_frontLeftDrive, m_frontLeftTurn, config.Drivetrain.swerveX,
+                config.Drivetrain.swerveY, m_frontLeftEncoder, "Left front");
 
-        m_frontRightDrive = new CANSparkMax(config.Drivetrain.frontRightDriveMotorPort, MotorType.kBrushless);        
-        m_frontRightDrive.setInverted(true);
-        ((CANSparkMax) m_frontRightDrive).setSmartCurrentLimit(35, 60, 150);
-        
+        m_frontRightDrive = new CANSparkMax(config.Drivetrain.frontRightDriveMotorPort, MotorType.kBrushless);
+        m_frontRightDrive.setInverted(false);
         m_frontRightTurn = new CANSparkMax(config.Drivetrain.frontRightTurnMotorPort, MotorType.kBrushless);
-        ((CANSparkMax) m_frontRightTurn).setSmartCurrentLimit(35, 60, 75);
-        m_frontRightEncoder = new AbsoluteEncoder(config.Drivetrain.frontRightAbsoluteEncoder, 0,false);
-        m_frontRight = new SwerveWheel(m_frontRightDrive, m_frontRightTurn, config.Drivetrain.swerveX, -config.Drivetrain.swerveY, m_frontRightEncoder, "Right front");
-
-
+        m_frontRightEncoder = new AbsoluteEncoder(config.Drivetrain.frontRightAbsoluteEncoder, 0.322, true);
+        m_frontRight = new SwerveWheel(m_frontRightDrive, m_frontRightTurn, config.Drivetrain.swerveX,
+                -config.Drivetrain.swerveY, m_frontRightEncoder, "Right front");
 
         m_backLeftDrive = new CANSparkMax(config.Drivetrain.rearLeftDriveMotorPort, MotorType.kBrushless);
+        m_backLeftDrive.setInverted(true);
         m_backLeftTurn = new CANSparkMax(config.Drivetrain.rearLeftTurnMotorPort, MotorType.kBrushless);
-        m_backLeftEncoder = new AbsoluteEncoder(config.Drivetrain.rearLeftAbsoluteEncoder, 0, false);
-        ((CANSparkMax) m_backLeftDrive).setSmartCurrentLimit(35,60,150);
-        ((CANSparkMax) m_backLeftTurn).setSmartCurrentLimit(35, 60, 75);
-        m_backLeft = new SwerveWheel(m_backLeftDrive, m_backLeftTurn, -config.Drivetrain.swerveX, config.Drivetrain.swerveY, m_backLeftEncoder, "Left back");
-        
+        m_backLeftEncoder = new AbsoluteEncoder(config.Drivetrain.rearLeftAbsoluteEncoder, 3.377, true);
+        m_backLeft = new SwerveWheel(m_backLeftDrive, m_backLeftTurn, -config.Drivetrain.swerveX,
+                config.Drivetrain.swerveY, m_backLeftEncoder, "Left back");
 
         m_backRightDrive = new CANSparkMax(config.Drivetrain.rearRightDriveMotorPort, MotorType.kBrushless);
-        m_backRightDrive.setInverted(true);
+        m_backRightDrive.setInverted(false);
         m_backRightTurn = new CANSparkMax(config.Drivetrain.rearRightturnMotorPort, MotorType.kBrushless);
-        m_backRightEncoder = new AbsoluteEncoder(config.Drivetrain.rearRightAbsoluteEncoder, 0, false);
-        m_backRightDrive.setSmartCurrentLimit(35,60,150);
-        ((CANSparkMax) m_backRightTurn).setSmartCurrentLimit(35, 60, 75);
-        m_backRight = new SwerveWheel(m_backRightDrive, m_backRightTurn, -config.Drivetrain.swerveX, -config.Drivetrain.swerveY, m_backRightEncoder, "Right back");
-        m_kinematics = new SwerveDriveKinematics(m_frontLeft.getlocation(), m_frontRight.getlocation(), m_backLeft.getlocation(), m_backRight.getlocation());
-        
+        m_backRightEncoder = new AbsoluteEncoder(config.Drivetrain.rearRightAbsoluteEncoder, 5.55, true);
+        m_backRight = new SwerveWheel(m_backRightDrive, m_backRightTurn, -config.Drivetrain.swerveX,
+                -config.Drivetrain.swerveY, m_backRightEncoder, "Right back");
+        m_kinematics = new SwerveDriveKinematics(m_frontLeft.getlocation(), m_frontRight.getlocation(),
+                m_backLeft.getlocation(), m_backRight.getlocation());
+
     }
 
     @Override
@@ -137,7 +131,8 @@ public class SwerveDrivetrain extends TraceableSubsystem implements IDrivetrainS
         this.getLogger().verbose("x: " + x + ", y: " + y + ", theta: " + theta);
         var swerveModuleStates = m_kinematics.toSwerveModuleStates(new ChassisSpeeds(x, y, theta));
         SwerveDriveKinematics.normalizeWheelSpeeds(swerveModuleStates, this.getMaxSpeed());
-       //order of wheels in swerve module states is the same order as the wheels being inputed to Swerve kinematics
+        // order of wheels in swerve module states is the same order as the wheels being
+        // inputed to Swerve kinematics
         m_frontLeft.setDesiredState(swerveModuleStates[0]);
         m_frontRight.setDesiredState(swerveModuleStates[1]);
         m_backLeft.setDesiredState(swerveModuleStates[2]);
@@ -147,7 +142,7 @@ public class SwerveDrivetrain extends TraceableSubsystem implements IDrivetrainS
         SmartDashboard.putNumber("frontright encoder ", m_frontRightEncoder.getRadians());
         SmartDashboard.putNumber("backleft encoder ", m_backLeftEncoder.getRadians());
         SmartDashboard.putNumber("backright encoder ", m_backRightEncoder.getRadians());
-       
+
     }
 
     @Override
