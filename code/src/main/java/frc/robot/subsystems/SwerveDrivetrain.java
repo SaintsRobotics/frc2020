@@ -125,7 +125,7 @@ public class SwerveDrivetrain extends TraceableSubsystem implements IDrivetrainS
     }
 
     @Override
-    public void move(final double x, final double y, final double theta, final boolean fieldRelative) {
+    public void move(double x, double y, double theta, final boolean fieldRelative) {
         // TODO Auto-generated method stub
 
         this.getLogger().verbose("x: " + x + ", y: " + y + ", theta: " + theta);
