@@ -16,6 +16,7 @@ public final class RobotConfig {
     public final RobotConfig.Controller Controller = new RobotConfig.Controller();
     public final RobotConfig.SwerveDrivetrain Drivetrain = new RobotConfig.SwerveDrivetrain();
     public final RobotConfig.Physical Physical = new RobotConfig.Physical();
+    public final RobotConfig.SwerveWheel SwerveWheel = new RobotConfig.SwerveWheel();
 
     public final class Controller {
         public final int controllerPort = 0;
@@ -38,6 +39,7 @@ public final class RobotConfig {
         public final int rearRightAbsoluteEncoder = 3;
         public final double swerveX = .67/2;
         public final double swerveY = .25;
+        
     }
 
     public final class Physical {
@@ -45,4 +47,11 @@ public final class RobotConfig {
         public final double lengthInCms = 0;
         public final double weightInKgs = 0;
     }
+
+    public final class SwerveWheel {
+
+        public final double WheelDiameter = 0.31918;
+        public final double DriveGearRatio = 8.33/1;
+        public final double maxDriveRPM = 5874;
+          }
 }

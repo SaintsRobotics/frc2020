@@ -7,6 +7,8 @@
 
 package frc.robot.subsystems;
 
+import java.io.ObjectInputFilter.Config;
+
 import com.revrobotics.CANEncoder;
 import com.revrobotics.CANSparkMax;
 
@@ -21,6 +23,7 @@ import edu.wpi.first.wpilibj.geometry.Translation2d;
 import edu.wpi.first.wpilibj.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.trajectory.TrapezoidProfile;
+import frc.robot.RobotConfig;
 import frc.robot.common.AbsoluteEncoder;
 
 public class SwerveWheel {
@@ -40,6 +43,8 @@ public class SwerveWheel {
 
   private final PIDController m_turningPIDController = new PIDController(1, 0, 0);
 
+  private final RobotConfig _config;
+
   /**
    * Constructs a SwerveModule.
    *
@@ -50,12 +55,14 @@ public class SwerveWheel {
    * @param Y            Y displacement in meters from the pivot point of the
    *                     robot
    */
-  public SwerveWheel(CANSparkMax driveMotor, SpeedController turningMotor, double X, double Y, AbsoluteEncoder turnEncoder) {
+  public SwerveWheel(CANSparkMax driveMotor, SpeedController turningMotor, double X, double Y, AbsoluteEncoder turnEncoder, final RobotConfig config) {
     m_driveMotor = driveMotor;
     m_turningMotor = turningMotor;
     m_driveEncoder = m_driveMotor.getEncoder();
     m_turningEncoder = turnEncoder;
     m_location = new Translation2d(X, Y);
+    _config = config;
+
     // Set the distance per pulse for the drive encoder. We can simply use the
     // distance traveled for one rotation of the wheel divided by the encoder
     // resolution.
@@ -109,4 +116,67 @@ public class SwerveWheel {
     m_driveMotor.set(driveOutput);
     m_turningMotor.set(turnOutput);
   }
+
+  /**
+   *
+   *
+   * @param state Desired state with speed and angle
+   * @return returns Velocity Output from pid
+   */
+ 
+
+  public double mpsToVoltOutput (double WheelMps){
+
+    double secToMin = 60.0;
+    double WheelMpm = WheelMps*secToMin;
+
+    double WheelDiameter = _config.SwerveWheel.WheelDiameter;
+    double WheelCircum = WheelDiameter*Math.PI;
+
+    double WheelRPM = WheelMpm/WheelDiameter;
+    
+    double DriveGearRatio = _config.SwerveWheel.DriveGearRatio;
+
+    double MotorRPM = WheelRPM/DriveGearRatio;
+
+    double maxDriveRPM = _config.SwerveWheel.maxDriveRPM;
+    
+    double outputScaledVoltage = (MotorRPM/maxDriveRPM);
+
+    if (outputScaledVoltage > 1){
+      System.out.println("MaxDriveRPM Exceeded");
+      return maxDriveRPM;
+    }
+
+    return outputScaledVoltage;
+
+  }
+  /**
+   *
+   *
+   * @param WheelMPs given speed of the wheel in M/S
+   * @return scaled voltage needed to attain specified speed
+   */
+  
+
+  
+  
+  public double convertToSingleRad (double rad){
+
+     
+    double convertedRad  = (((rad % (2*Math.PI))+ (2*Math.PI)))%(2*Math.PI);
+
+    return convertedRad;
+
+  }
+  
+/**
+   *
+   *
+   * @param rad given angle
+   * @return removes unnecessary rotations when given an angle by consolidating the angle to be between 0 and 2*Pi
+   */
+
+
 }
+ 
