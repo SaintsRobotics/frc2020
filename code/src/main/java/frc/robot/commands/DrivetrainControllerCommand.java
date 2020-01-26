@@ -42,8 +42,15 @@ public class DrivetrainControllerCommand extends TraceableCommand {
                                                                                                                      // axis??
 
     }
+
+    /**
+     * 
+     * @param input     value to be modified (deadzoned)
+     * @param deadZone  the maximum value to be considered zero
+     * @return          the modified version of input
+     */
     public double deadZones (double input, double deadZone) {
-        if (input < deadZone){
+        if (Math.abs(input) < deadZone){
             return 0;
         }
         return input;
