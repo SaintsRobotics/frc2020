@@ -11,7 +11,6 @@ import com.google.inject.Inject;
 import com.google.inject.Provider;
 
 import frc.robot.commands.DrivetrainControllerCommand;
-import frc.robot.common.CompetitionRobot;
 import frc.robot.common.ILogger;
 import edu.wpi.first.wpilibj2.command.Command;
 
@@ -20,15 +19,16 @@ import edu.wpi.first.wpilibj2.command.Command;
  * classes that have a dependency on hardware as this will break the ability to
  * unit test.
  */
-public class RobotContainer extends CompetitionRobot {
+public class RobotContainer {
   private final Provider<DrivetrainControllerCommand> _autonomousCommand;
+  private final ILogger _logger;
 
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
    */
   @Inject
   public RobotContainer(final ILogger logger, final Provider<DrivetrainControllerCommand> autonomousCommand) {
-    super(logger);
+    _logger = logger;
     _autonomousCommand = autonomousCommand;
 
   }

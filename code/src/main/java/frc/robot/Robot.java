@@ -22,6 +22,12 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
  * documentation. If you change the name of this class or the package after
  * creating this project, you must also update the build.gradle file in the
  * project.
+ * 
+ * The use of this class is slightly modified from the FRC template. This class
+ * is the one that has non-user/competition code. The idea is to put all
+ * competition code in the RobotContainer class. This class will delegate to the
+ * RobotContainer
+ * 
  */
 public class Robot extends TimedRobot {
   private Command m_autonomousCommand;
@@ -107,7 +113,6 @@ public class Robot extends TimedRobot {
     // block in order for anything in the Command-based framework to work.
     CommandScheduler.getInstance().run();
 
-    _robot.robotPeriodic();
   }
 
   /**
@@ -115,12 +120,12 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void disabledInit() {
-    _robot.disabledInit();
+
   }
 
   @Override
   public void disabledPeriodic() {
-    _robot.disabledPeriodic();
+
   }
 
   /**
@@ -142,7 +147,7 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void autonomousPeriodic() {
-    _robot.autonomousPeriodic();
+
   }
 
   @Override
@@ -154,8 +159,6 @@ public class Robot extends TimedRobot {
     if (m_autonomousCommand != null) {
       m_autonomousCommand.cancel();
     }
-
-    _robot.teleopInit();
   }
 
   /**
@@ -163,14 +166,14 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void teleopPeriodic() {
-    _robot.teleopPeriodic();
+
   }
 
   @Override
   public void testInit() {
     // Cancels all running commands at the start of test mode.
     CommandScheduler.getInstance().cancelAll();
-    _robot.teleopInit();
+
   }
 
   /**
@@ -178,6 +181,6 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void testPeriodic() {
-    _robot.testPeriodic();
+
   }
 }
