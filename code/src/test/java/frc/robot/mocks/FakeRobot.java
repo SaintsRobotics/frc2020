@@ -20,6 +20,7 @@ import frc.robot.RobotConfig;
  * A Mocked version of the Real RobotHost. This class acts as a simple
  * replacement for the real host, providing periodic calls.
  */
+// TODO: [GM] Remove this class once MockRobot is working
 public class FakeRobot {
     private Command m_autonomousCommand;
     private RobotContainer _robot;
@@ -134,18 +135,15 @@ public class FakeRobot {
         // block in order for anything in the Command-based framework to work.
         CommandScheduler.getInstance().run();
 
-        _robot.robotInit();
     }
 
     /**
      * This function is called once each time the robot enters Disabled mode.
      */
     public void disabledInit() {
-        _robot.disabledInit();
     }
 
     public void disabledPeriodic() {
-        _robot.disabledPeriodic();
     }
 
     /**
@@ -165,7 +163,6 @@ public class FakeRobot {
      * This function is called periodically during autonomous.
      */
     public void autonomousPeriodic() {
-        _robot.autonomousPeriodic();
     }
 
     public void teleopInit() {
@@ -176,28 +173,23 @@ public class FakeRobot {
         if (m_autonomousCommand != null) {
             m_autonomousCommand.cancel();
         }
-
-        _robot.teleopInit();
     }
 
     /**
      * This function is called periodically during operator control.
      */
     public void teleopPeriodic() {
-        _robot.teleopPeriodic();
     }
 
     public void testInit() {
         // Cancels all running commands at the start of test mode.
         CommandScheduler.getInstance().cancelAll();
-        _robot.teleopInit();
     }
 
     /**
      * This function is called periodically during test mode.
      */
     public void testPeriodic() {
-        _robot.testPeriodic();
     }
 
     protected void loopFunc() {
