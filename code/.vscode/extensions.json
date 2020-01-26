@@ -8,7 +8,8 @@
 		"eamodio.gitlens",
 		"shd101wyy.markdown-preview-enhanced",
 		"gruntfuggly.todo-tree",
-		"madhavd1.javadoc-tools"
+		"madhavd1.javadoc-tools",
+		"github.vscode-pull-request-github"
 	],
 	// List of extensions recommended by VS Code that should not be recommended for users of this workspace.
 	"unwantedRecommendations": []
