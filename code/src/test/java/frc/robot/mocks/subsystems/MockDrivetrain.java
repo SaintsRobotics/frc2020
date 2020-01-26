@@ -79,7 +79,7 @@ public class MockDrivetrain extends TraceableMockSubsystem implements IDrivetrai
     }
 
     @Override
-    public void moveLeft(double distance) {//do
+    public void moveLeft(double distance) {// do
         this.turnLeft();
         // TODO: Calculate the correct path
         this.moveForward(distance);
@@ -91,7 +91,7 @@ public class MockDrivetrain extends TraceableMockSubsystem implements IDrivetrai
     }
 
     @Override
-    public void moveRight(double distance) {//do
+    public void moveRight(double distance) {// do
         this.turnRight();
         // TODO: Calculate the correct path
         this.moveForward(distance);
@@ -103,7 +103,7 @@ public class MockDrivetrain extends TraceableMockSubsystem implements IDrivetrai
     }
 
     @Override
-    public void moveNorth(double distance) {//do
+    public void moveNorth(double distance) {// do
         this.faceNorth();
         this.moveForward(distance);
     }
@@ -114,7 +114,7 @@ public class MockDrivetrain extends TraceableMockSubsystem implements IDrivetrai
     }
 
     @Override
-    public void moveSouth(double distance) {//do
+    public void moveSouth(double distance) {// do
         this.faceSouth();
         this.moveForward(distance);
 
@@ -126,7 +126,7 @@ public class MockDrivetrain extends TraceableMockSubsystem implements IDrivetrai
     }
 
     @Override
-    public void moveEast(double distance) {//do
+    public void moveEast(double distance) {// do
         this.faceEast();
         this.moveForward(distance);
     }
@@ -137,7 +137,7 @@ public class MockDrivetrain extends TraceableMockSubsystem implements IDrivetrai
     }
 
     @Override
-    public void moveWest(double distance) {//do
+    public void moveWest(double distance) {// do
         this.faceWest();
         this.moveForward(distance);
     }
@@ -157,12 +157,12 @@ public class MockDrivetrain extends TraceableMockSubsystem implements IDrivetrai
     }
 
     @Override
-    public void turnLeft() {//do
+    public void turnLeft() {// do
         this.rotate(-90);
     }
 
     @Override
-    public void turnRight() {//do
+    public void turnRight() {// do
         this.rotate(90);
     }
 
@@ -182,7 +182,7 @@ public class MockDrivetrain extends TraceableMockSubsystem implements IDrivetrai
     }
 
     @Override
-    public void faceWest() {//do all
+    public void faceWest() {// do all
         _location.updateHeading(270);
     }
 
@@ -193,9 +193,12 @@ public class MockDrivetrain extends TraceableMockSubsystem implements IDrivetrai
     }
 
     @Override
-    public void followPath(double maxSpeed, double finalHeading, Position... waypoint) {
-        // TODO Auto-generated method stub
+    public void followPath(double maxSpeed, double finalHeading, Position... waypoints) {
 
+        for (int i = 0; i < waypoints.length; i++) {
+            _location.updatePosition(waypoints[i]);
+        }
+        _location.updateHeading(finalHeading);
     }
 
     private void updateRelativeLocation2(double distance) {
