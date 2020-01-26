@@ -16,6 +16,7 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.SpeedController;
 import edu.wpi.first.wpilibj.VictorSP;
+import edu.wpi.first.wpilibj.controller.PIDController;
 import edu.wpi.first.wpilibj.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -25,7 +26,8 @@ import frc.robot.common.IDrivetrainSubsystem;
 import frc.robot.common.ILogger;
 import frc.robot.common.Position;
 import frc.robot.common.TraceableSubsystem;
-
+import com.kauailabs.navx.frc.AHRS;
+import edu.wpi.first.wpilibj.SPI;
 /**
  * Add your docs here.
  */
@@ -49,6 +51,10 @@ public class SwerveDrivetrain extends TraceableSubsystem implements IDrivetrainS
     public AbsoluteEncoder m_backRightEncoder;
     public AbsoluteEncoder m_backLeftEncoder;
     private SwerveDriveKinematics m_kinematics;
+    private AHRS m_gyro;
+    private PIDController m_pidController;
+    
+    private boolean m_isTurning;
 
     @Inject
     public SwerveDrivetrain(final ILogger logger, final RobotConfig config) {
@@ -85,6 +91,14 @@ public class SwerveDrivetrain extends TraceableSubsystem implements IDrivetrainS
                 -config.Drivetrain.swerveY, m_backRightEncoder, "Right back");
         m_kinematics = new SwerveDriveKinematics(m_frontLeft.getlocation(), m_frontRight.getlocation(),
                 m_backLeft.getlocation(), m_backRight.getlocation());
+
+        m_gyro = new AHRS(SPI.Port.kMXP);
+
+        m_pidController = new PIDController(0.02, 0, 0);
+        m_pidController.setContinuousInput(0, 360);
+        m_pidController.setAbsoluteTolerance(2.5);
+        
+        
 
     }
 
@@ -129,9 +143,27 @@ public class SwerveDrivetrain extends TraceableSubsystem implements IDrivetrainS
         // TODO Auto-generated method stub
 
         this.getLogger().verbose("x: " + x + ", y: " + y + ", theta: " + theta);
+        
+        // Drag Heading Correction
+        if (theta != 0.0){
+            m_isTurning = true;
+        }
+        else if (theta == 0.0 && this.m_isTurning){
+            this.m_pidController.setSetpoint((((this.m_gyro.getAngle() % 360) + 360) % 360));
+            this.m_isTurning = false;
+            theta = this.calculate((((this.m_gyro.getAngle() % 360) + 360) % 360));
+        }
+        else {
+            theta = this.calculate((((this.m_gyro.getAngle() % 360) + 360) % 360));
+        }
+
+
+
+
+
         if (fieldRelative){
             var swerveModuleStates = m_kinematics.toSwerveModuleStates(ChassisSpeeds.fromFieldRelativeSpeeds(
-                x, y,theta, gyro.getAngle());
+                x, y,theta, new Rotation2d(m_gyro.getAngle())));
         }
         else {
             var swerveModuleStates = m_kinematics.toSwerveModuleStates(new ChassisSpeeds(x, y, theta));
