@@ -35,11 +35,6 @@ public class Feature_move_robot_using_high_level_commands {
     Location _location;
     ILogger _logger;
     IDrivetrainSubsystem _drivetrain;
-    /// ---------------------------------------------------------------------------------------
-
-    /// DATA
-
-    /// ---------------------------------------------------------------------------------------
 
     @DataProvider
     public static Object[][] rotationData() {
