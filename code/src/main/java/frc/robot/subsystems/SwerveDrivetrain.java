@@ -12,13 +12,17 @@ import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
 import com.google.inject.Inject;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+import com.kauailabs.navx.frc.AHRS;
+
 
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.SpeedController;
 import edu.wpi.first.wpilibj.VictorSP;
 import edu.wpi.first.wpilibj.controller.PIDController;
+import edu.wpi.first.wpilibj.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.kinematics.SwerveDriveKinematics;
+import edu.wpi.first.wpilibj.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.RobotConfig;
 import frc.robot.common.AbsoluteEncoder;
@@ -26,8 +30,8 @@ import frc.robot.common.IDrivetrainSubsystem;
 import frc.robot.common.ILogger;
 import frc.robot.common.Position;
 import frc.robot.common.TraceableSubsystem;
-import com.kauailabs.navx.frc.AHRS;
 import edu.wpi.first.wpilibj.SPI;
+
 /**
  * Add your docs here.
  */
@@ -95,8 +99,8 @@ public class SwerveDrivetrain extends TraceableSubsystem implements IDrivetrainS
         m_gyro = new AHRS(SPI.Port.kMXP);
 
         m_pidController = new PIDController(0.02, 0, 0);
-        m_pidController.setContinuousInput(0, 360);
-        m_pidController.setAbsoluteTolerance(2.5);
+        m_pidController.enableContinuousInput(0, 360);
+        m_pidController.setTolerance(2.5);
         
         
 
@@ -151,22 +155,22 @@ public class SwerveDrivetrain extends TraceableSubsystem implements IDrivetrainS
         else if (theta == 0.0 && this.m_isTurning){
             this.m_pidController.setSetpoint((((this.m_gyro.getAngle() % 360) + 360) % 360));
             this.m_isTurning = false;
-            theta = this.calculate((((this.m_gyro.getAngle() % 360) + 360) % 360));
+            theta = this.m_pidController.calculate((((this.m_gyro.getAngle() % 360) + 360) % 360));
         }
         else {
-            theta = this.calculate((((this.m_gyro.getAngle() % 360) + 360) % 360));
+            theta = this.m_pidController.calculate((((this.m_gyro.getAngle() % 360) + 360) % 360));
         }
 
 
 
 
-
+        SwerveModuleState[] swerveModuleStates;
         if (fieldRelative){
-            var swerveModuleStates = m_kinematics.toSwerveModuleStates(ChassisSpeeds.fromFieldRelativeSpeeds(
+            swerveModuleStates = m_kinematics.toSwerveModuleStates(ChassisSpeeds.fromFieldRelativeSpeeds(
                 x, y,theta, new Rotation2d(m_gyro.getAngle())));
         }
         else {
-            var swerveModuleStates = m_kinematics.toSwerveModuleStates(new ChassisSpeeds(x, y, theta));
+            swerveModuleStates = m_kinematics.toSwerveModuleStates(new ChassisSpeeds(x, y, theta));
         }
         SwerveDriveKinematics.normalizeWheelSpeeds(swerveModuleStates, this.getMaxSpeed());
         // order of wheels in swerve module states is the same order as the wheels being
