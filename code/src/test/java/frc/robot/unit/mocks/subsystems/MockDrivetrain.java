@@ -66,7 +66,7 @@ public class MockDrivetrain extends TraceableMockSubsystem implements IDrivetrai
     }
 
     @Override
-    public void move(double x, double y, double theta) {
+    public void move(double x, double y, double theta, boolean fieldRelative) {
         // TODO Auto-generated method stub
 
     }
