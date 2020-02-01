@@ -104,29 +104,12 @@ public class SwerveWheel {
     // TODO ds
     var driveOutput = state.speedMetersPerSecond / 3.63;// m_drivePIDController.calculate(m_driveEncoder.getVelocity()*0.0355,
                                                         // state.speedMetersPerSecond);
-    SmartDashboard.putNumber(m_name + " target m/s", state.speedMetersPerSecond);
 
     // Calculate the turning motor output from the turning PID controller.
     var turnOutput = m_turningPIDController.calculate(m_turningEncoder.getRadians(),
         (state.angle.getRadians() % (2 * Math.PI) + (2 * Math.PI)) % (2 * Math.PI));
-    // if (Math.abs(state.angle.getRadians() - m_turningEncoder.getRadians()) >
-    // Math.PI) {
-    // if ((turnOutput > 0 && state.angle.getRadians() -
-    // m_turningEncoder.getRadians() > 0)
-    // || (turnOutput < 0 && state.angle.getRadians() -
-    // m_turningEncoder.getRadians() < 0)) {
-    // turnOutput = m_turningPIDController.calculate(m_turningEncoder.getRadians(),
-    // ((state.angle.getRadians() + Math.PI) % (2 * Math.PI) + (2 * Math.PI)) % (2 *
-    // Math.PI));
-    // driveOutput = 0 - driveOutput;
-    // }
-    // }
 
-    SmartDashboard.putNumber(m_name + " Encoder Reading", m_turningEncoder.getRadians());
-    SmartDashboard.putNumber(m_name + " Angle Target",
-        (state.angle.getRadians() % (2 * Math.PI) + (2 * Math.PI)) % (2 * Math.PI));
-    SmartDashboard.putNumber(m_name + " Turning PID output", m_turningPIDController.calculate(
-        m_turningEncoder.getRadians(), (state.angle.getRadians() % (2 * Math.PI) + (2 * Math.PI)) % (2 * Math.PI)));
+  
     // Calculate the turning motor output from the turning PID controller.
     m_driveMotor.set(driveOutput);
     m_turningMotor.set(turnOutput);

@@ -12,12 +12,17 @@ import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
 import com.google.inject.Inject;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+import com.kauailabs.navx.frc.AHRS;
+
 
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.SpeedController;
 import edu.wpi.first.wpilibj.VictorSP;
+import edu.wpi.first.wpilibj.controller.PIDController;
+import edu.wpi.first.wpilibj.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.kinematics.SwerveDriveKinematics;
+import edu.wpi.first.wpilibj.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.RobotConfig;
 import frc.robot.common.AbsoluteEncoder;
@@ -25,6 +30,7 @@ import frc.robot.common.IDrivetrainSubsystem;
 import frc.robot.common.ILogger;
 import frc.robot.common.Position;
 import frc.robot.common.TraceableSubsystem;
+import edu.wpi.first.wpilibj.SPI;
 
 /**
  * Add your docs here.
@@ -49,6 +55,10 @@ public class SwerveDrivetrain extends TraceableSubsystem implements IDrivetrainS
     public AbsoluteEncoder m_backRightEncoder;
     public AbsoluteEncoder m_backLeftEncoder;
     private SwerveDriveKinematics m_kinematics;
+    private AHRS m_gyro;
+    private PIDController m_pidController;
+    
+    private boolean m_isTurning;
 
     @Inject
     public SwerveDrivetrain(final ILogger logger, final RobotConfig config) {
@@ -58,35 +68,43 @@ public class SwerveDrivetrain extends TraceableSubsystem implements IDrivetrainS
         m_frontLeftDrive = new CANSparkMax(config.Drivetrain.frontLeftDriveMotorPort, MotorType.kBrushless);
         m_frontLeftDrive.setInverted(true);
         m_frontLeftTurn = new CANSparkMax(config.Drivetrain.frontLeftTurnMotorPort, MotorType.kBrushless);
-        m_frontLeftEncoder = new AbsoluteEncoder(config.Drivetrain.frontLeftAbsoluteEncoder, 6.25, true);
+        m_frontLeftEncoder = new AbsoluteEncoder(config.Drivetrain.frontLeftAbsoluteEncoder, 0.17, true);
 
         m_frontLeft = new SwerveWheel(m_frontLeftDrive, m_frontLeftTurn, config.Drivetrain.swerveX,
                 config.Drivetrain.swerveY, m_frontLeftEncoder, "Left front");
 
         m_frontRightDrive = new CANSparkMax(config.Drivetrain.frontRightDriveMotorPort, MotorType.kBrushless);
-        m_frontRightDrive.setInverted(false);
+        m_frontRightDrive.setInverted(true);
         m_frontRightTurn = new CANSparkMax(config.Drivetrain.frontRightTurnMotorPort, MotorType.kBrushless);
-        m_frontRightEncoder = new AbsoluteEncoder(config.Drivetrain.frontRightAbsoluteEncoder, 0.322, true);
+        m_frontRightEncoder = new AbsoluteEncoder(config.Drivetrain.frontRightAbsoluteEncoder, 3.47, true);
         m_frontRight = new SwerveWheel(m_frontRightDrive, m_frontRightTurn, config.Drivetrain.swerveX,
                 -config.Drivetrain.swerveY, m_frontRightEncoder, "Right front");
 
         m_backLeftDrive = new CANSparkMax(config.Drivetrain.rearLeftDriveMotorPort, MotorType.kBrushless);
         m_backLeftDrive.setInverted(true);
         m_backLeftTurn = new CANSparkMax(config.Drivetrain.rearLeftTurnMotorPort, MotorType.kBrushless);
-        m_backLeftEncoder = new AbsoluteEncoder(config.Drivetrain.rearLeftAbsoluteEncoder, 3.377, true);
+        m_backLeftEncoder = new AbsoluteEncoder(config.Drivetrain.rearLeftAbsoluteEncoder, 3.50, true);
         m_backLeft = new SwerveWheel(m_backLeftDrive, m_backLeftTurn, -config.Drivetrain.swerveX,
                 config.Drivetrain.swerveY, m_backLeftEncoder, "Left back");
 
         m_backRightDrive = new CANSparkMax(config.Drivetrain.rearRightDriveMotorPort, MotorType.kBrushless);
-        m_backRightDrive.setInverted(false);
+        m_backRightDrive.setInverted(true);
         m_backRightTurn = new CANSparkMax(config.Drivetrain.rearRightturnMotorPort, MotorType.kBrushless);
-        m_backRightEncoder = new AbsoluteEncoder(config.Drivetrain.rearRightAbsoluteEncoder, 5.55, true);
+        m_backRightEncoder = new AbsoluteEncoder(config.Drivetrain.rearRightAbsoluteEncoder, 2.52, true);
         m_backRight = new SwerveWheel(m_backRightDrive, m_backRightTurn, -config.Drivetrain.swerveX,
                 -config.Drivetrain.swerveY, m_backRightEncoder, "Right back");
         m_kinematics = new SwerveDriveKinematics(m_frontLeft.getlocation(), m_frontRight.getlocation(),
                 m_backLeft.getlocation(), m_backRight.getlocation());
 
+        m_gyro = new AHRS(SPI.Port.kMXP);
+
+        m_pidController = new PIDController((getMaxSpeed()/180) * 10, 0, 0);
+        m_pidController.enableContinuousInput(0, 360);
+        m_pidController.setTolerance(2.5);
+        
+
     }
+
 
     @Override
     public double getMinSpeed() {
@@ -97,7 +115,7 @@ public class SwerveDrivetrain extends TraceableSubsystem implements IDrivetrainS
     @Override
     public double getMaxSpeed() {
         // TODO Auto-generated method stub
-        return 3.63;
+        return 1;
     }
 
     @Override
@@ -124,32 +142,62 @@ public class SwerveDrivetrain extends TraceableSubsystem implements IDrivetrainS
 
     }
 
+    /**
+     * @param x vertical speed, positive is forward in meters per second (max is 3.66 m/s)
+     * @param y horizontal speed, postive is to the left in meters per second (max is 3.66 m/s)
+     * @param theta rotational speed, positive is clockwise in radians per second (max unknown)
+     */
     @Override
     public void move(double x, double y, double theta, final boolean fieldRelative) {
         // TODO Auto-generated method stub
 
         this.getLogger().verbose("x: " + x + ", y: " + y + ", theta: " + theta);
-        // if (fieldRelative){
-        //     var swerveModuleStates = m_kinematics.toSwerveModuleStates(ChassisSpeeds.fromFieldRelativeSpeeds(
-        //         x, y,theta, gyro.getAngle());
-        // }
-        // else {
-        //     var swerveModuleStates = m_kinematics.toSwerveModuleStates(new ChassisSpeeds(x, y, theta));
-        // }
-       var swerveModuleStates = m_kinematics.toSwerveModuleStates(new ChassisSpeeds(x, y, theta));
+        
+        // // Drag Heading Correction
+        if (theta != 0.0){
+            m_isTurning = true;
+        }
+        else if (theta == 0.0 && this.m_isTurning){
+           this.m_pidController.setSetpoint((((this.m_gyro.getAngle() % (360)) + (360)) % (360)));
+           this.m_isTurning = false;
+           theta = this.m_pidController.calculate((((this.m_gyro.getAngle() % (360)) + (360)) % (360)));
+        }
+        else {
+            theta = this.m_pidController.calculate((((this.m_gyro.getAngle() % (360)) + (360)) % (360)));
+        }
+        
+        //theta = this.m_pidController.calculate((((this.m_gyro.getAngle() % (360)) + (360)) % (360)));
 
+        SmartDashboard.putNumber("gyro angle ", ((this.m_gyro.getAngle() % (360)) + (360)) % (360));
+        SmartDashboard.putNumber("heading pid calc ", this.m_pidController.calculate((((this.m_gyro.getAngle() % (360)) + (360)) % (360))));
+        SmartDashboard.putNumber("heading pid error ", this.m_pidController.getPositionError());
+        SmartDashboard.putBoolean("is turning ", this.m_isTurning);
+
+        SwerveModuleState[] swerveModuleStates;
+        if (fieldRelative){
+            swerveModuleStates = m_kinematics.toSwerveModuleStates(ChassisSpeeds.fromFieldRelativeSpeeds(
+                x, y,theta, new Rotation2d(m_gyro.getAngle())));
+        }
+        else {
+            swerveModuleStates = m_kinematics.toSwerveModuleStates(new ChassisSpeeds(x, y, theta));
+        }
         SwerveDriveKinematics.normalizeWheelSpeeds(swerveModuleStates, this.getMaxSpeed());
         // order of wheels in swerve module states is the same order as the wheels being
         // inputed to Swerve kinematics
+        SmartDashboard.putNumber("trans x ", x);
+        SmartDashboard.putNumber("trans y ", y);
+        SmartDashboard.putNumber("theta ", theta);
+        SmartDashboard.putNumber("heading pid setpoint ", this.m_pidController.getSetpoint());
         m_frontLeft.setDesiredState(swerveModuleStates[0]);
         m_frontRight.setDesiredState(swerveModuleStates[1]);
         m_backLeft.setDesiredState(swerveModuleStates[2]);
         m_backRight.setDesiredState(swerveModuleStates[3]);
-        // this.getLogger("frontLeft: ", m)
-        SmartDashboard.putNumber("frontleft encoder ", m_frontLeftEncoder.getRadians());
-        SmartDashboard.putNumber("frontright encoder ", m_frontRightEncoder.getRadians());
-        SmartDashboard.putNumber("backleft encoder ", m_backLeftEncoder.getRadians());
-        SmartDashboard.putNumber("backright encoder ", m_backRightEncoder.getRadians());
+
+        
+        // SmartDashboard.putNumber("frontleft encoder ", m_frontLeftEncoder.getRadians());
+        // SmartDashboard.putNumber("frontright encoder ", m_frontRightEncoder.getRadians());
+        // SmartDashboard.putNumber("backleft encoder ", m_backLeftEncoder.getRadians());
+        // SmartDashboard.putNumber("backright encoder ", m_backRightEncoder.getRadians());
 
     }
 
