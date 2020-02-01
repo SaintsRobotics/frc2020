@@ -111,7 +111,6 @@ public class SwerveWheel {
     // Calculate the drive output from the drive PID controller.
     var driveOutput = state.speedMetersPerSecond / maxWheelSpeed;// m_drivePIDController.calculate(m_driveEncoder.getVelocity()*0.0355,
                                                         // state.speedMetersPerSecond);
-    SmartDashboard.putNumber(m_name + " target m/s", driveOutput);
 
     // Calculate the turning motor output from the turning PID controller.
     
@@ -120,10 +119,6 @@ public class SwerveWheel {
     m_driveMotor.set(driveOutput);
     m_turningMotor.set(m_turningPIDController.calculate(m_turningEncoder.getRadians()));
 
-    SmartDashboard.putNumber(m_name + " Encoder Reading", m_turningEncoder.getRadians());
-    SmartDashboard.putNumber(m_name + " state angle ",
-        (state.angle.getRadians() % (kTwoPi) + (kTwoPi)) % (kTwoPi));
-    SmartDashboard.putNumber(m_name + " pid error", m_turningPIDController.getPositionError());
   }
 
   /**

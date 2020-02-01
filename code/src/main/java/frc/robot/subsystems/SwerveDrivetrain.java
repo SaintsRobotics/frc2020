@@ -150,17 +150,17 @@ public class SwerveDrivetrain extends TraceableSubsystem implements IDrivetrainS
         this.getLogger().verbose("x: " + x + ", y: " + y + ", theta: " + theta);
         
         // Drag Heading Correction
-        // if (theta != 0.0){
-        //     m_isTurning = true;
-        // }
-        // else if (theta == 0.0 && this.m_isTurning){
-        //     this.m_pidController.setSetpoint((((this.m_gyro.getAngle() % 360) + 360) % 360));
-        //     this.m_isTurning = false;
-        //     theta = this.m_pidController.calculate((((this.m_gyro.getAngle() % 360) + 360) % 360));
-        // }
-        // else {
-        //     theta = this.m_pidController.calculate((((this.m_gyro.getAngle() % 360) + 360) % 360));
-        // }
+        if (theta != 0.0){
+            m_isTurning = true;
+        }
+        else if (theta == 0.0 && this.m_isTurning){
+            this.m_pidController.setSetpoint((((this.m_gyro.getAngle() % 360) + 360) % 360));
+            this.m_isTurning = false;
+            theta = this.m_pidController.calculate((((this.m_gyro.getAngle() % 360) + 360) % 360));
+        }
+        else {
+            theta = this.m_pidController.calculate((((this.m_gyro.getAngle() % 360) + 360) % 360));
+        }
 
         SwerveModuleState[] swerveModuleStates;
         if (fieldRelative){
