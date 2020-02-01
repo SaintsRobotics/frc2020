@@ -7,11 +7,14 @@
 
 package frc.robot.subsystems;
 
+import java.sql.Driver;
+
 import com.fasterxml.jackson.core.sym.Name;
 import com.revrobotics.CANEncoder;
 import com.revrobotics.CANSparkMax;
 
 import edu.wpi.first.wpilibj.AnalogEncoder;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.PWMVictorSPX;
 import edu.wpi.first.wpilibj.SpeedController;
@@ -30,6 +33,7 @@ public class SwerveWheel {
 
   private static final double kModuleMaxAngularVelocity = Math.PI;
   private static final double kModuleMaxAngularAcceleration = 2 * Math.PI; // radians per second squared
+  private static final double kTwoPi = 2*Math.PI;
 
   private CANSparkMax m_driveMotor;
   private final SpeedController m_turningMotor;
@@ -43,7 +47,7 @@ public class SwerveWheel {
 
   private String m_name;
 
-  private final double twoPI = 2 * Math.PI; 
+  private final double twoPI = kTwoPi; 
   /**
    * Constructs a SwerveModule.
    *
@@ -71,11 +75,11 @@ public class SwerveWheel {
     // Set the distance (in this case, angle) per pulse for the turning encoder.
     // This is the the angle through an entire rotation (2 * wpi::math::pi)
     // divided by the encoder resolution.
-    // m_turningEncoder.setDistancePerPulse(2 * Math.PI / kEncoderResolution);
+    // m_turningEncoder.setDistancePerPulse(kTwoPi / kEncoderResolution);
 
     // Limit the PID Controller's input range between -pi and pi and set the input
     // to be continuous.
-    m_turningPIDController.enableContinuousInput(0, 6);
+    m_turningPIDController.enableContinuousInput(0, kTwoPi);
 
   }
 
@@ -101,65 +105,47 @@ public class SwerveWheel {
    * Sets the desired state for the module.
    *
    * @param state Desired state with speed and angle.
+   * @param maxWheelSpeed the maximum speed of a wheel in meters/second.  use the getMaxSpeed() method of the drivetrain
    */
-  public void setDesiredState(SwerveModuleState state) {
+  public void setDesiredState(SwerveModuleState state, double maxWheelSpeed) {
     // Calculate the drive output from the drive PID controller.
-    // TODO ds
-    var driveOutput = state.speedMetersPerSecond / 3.63;// m_drivePIDController.calculate(m_driveEncoder.getVelocity()*0.0355,
+    var driveOutput = state.speedMetersPerSecond / maxWheelSpeed;// m_drivePIDController.calculate(m_driveEncoder.getVelocity()*0.0355,
                                                         // state.speedMetersPerSecond);
-    SmartDashboard.putNumber(m_name + " target m/s", state.speedMetersPerSecond);
+    SmartDashboard.putNumber(m_name + " target m/s", driveOutput);
 
     // Calculate the turning motor output from the turning PID controller.
-    var turnOutput = m_turningPIDController.calculate(m_turningEncoder.getRadians(),
-        (state.angle.getRadians() % (2 * Math.PI) + (2 * Math.PI)) % (2 * Math.PI));
-    // if (Math.abs(state.angle.getRadians() - m_turningEncoder.getRadians()) >
-    // Math.PI) {
-    // if ((turnOutput > 0 && state.angle.getRadians() -
-    // m_turningEncoder.getRadians() > 0)
-    // || (turnOutput < 0 && state.angle.getRadians() -
-    // m_turningEncoder.getRadians() < 0)) {
-    // turnOutput = m_turningPIDController.calculate(m_turningEncoder.getRadians(),
-    // ((state.angle.getRadians() + Math.PI) % (2 * Math.PI) + (2 * Math.PI)) % (2 *
-    // Math.PI));
-    // driveOutput = 0 - driveOutput;
-    // }
-    // }
-
-    SmartDashboard.putNumber(m_name + " Encoder Reading", m_turningEncoder.getRadians());
-    SmartDashboard.putNumber(m_name + " Angle Target",
-        (state.angle.getRadians() % (2 * Math.PI) + (2 * Math.PI)) % (2 * Math.PI));
-    SmartDashboard.putNumber(m_name + " Turning PID output", m_turningPIDController.calculate(
-        m_turningEncoder.getRadians(), (state.angle.getRadians() % (2 * Math.PI) + (2 * Math.PI)) % (2 * Math.PI)));
+    
     // Calculate the turning motor output from the turning PID controller.
     driveOutput = smartInversion(state.angle.getRadians(), driveOutput);
     m_driveMotor.set(driveOutput);
-    m_turningMotor.set(turnOutput);
+    m_turningMotor.set(m_turningPIDController.calculate(m_turningEncoder.getRadians()));
+
+    SmartDashboard.putNumber(m_name + " Encoder Reading", m_turningEncoder.getRadians());
+    SmartDashboard.putNumber(m_name + " state angle ",
+        (state.angle.getRadians() % (kTwoPi) + (kTwoPi)) % (kTwoPi));
+    SmartDashboard.putNumber(m_name + " pid error", m_turningPIDController.getPositionError());
   }
 
-
+  /**
+   * Note: automatically sets the pid setpoint to the new targetHead; it doesn't get returned
+   * @param targetHead      heading value from swerve state
+   * @param targetVelocity  velocity value from swerve state
+   * @return                new target velocity.  should be either the same or negative of the one given
+   */
   public double smartInversion (double targetHead, double targetVelocity){
-    //double diff = 0.0;
     double currentHead = this.m_turningEncoder.getRadians();
+    double diff = Math.abs(targetHead - currentHead);
 
-    /*
-    if (Math.abs(targetHead - currentHead) > Math.PI) {
-      diff = 2 * Math.PI - Math.abs(targetHead - currentHead);
-    } else{
-      diff = Math.abs(targetHead - currentHead);
+    if (diff > Math.PI) {
+      diff = kTwoPi - diff;
     }
 
     if (diff > Math.PI/2) {
       targetHead += Math.PI;
-      targetHead %= 2 * Math.PI;
-      targetVelocity = -targetVelocity;
-    }
-    */
-
-    if (Math.abs(targetHead - currentHead) > Math.PI/2){
-      targetHead += Math.PI;
-      targetHead = (targetHead + twoPI) % twoPI;
+      targetHead %= kTwoPi;
       targetVelocity *= -1;
-    } 
+      DriverStation.reportWarning("reached smart inversion section!! :)", false);
+    }
 
     //this.mpsToVoltOutput(targetVelocity);
     this.m_turningPIDController.setSetpoint(targetHead);
