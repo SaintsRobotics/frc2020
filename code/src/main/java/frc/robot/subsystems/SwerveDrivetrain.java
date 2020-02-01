@@ -97,6 +97,7 @@ public class SwerveDrivetrain extends TraceableSubsystem implements IDrivetrainS
                 m_backLeft.getlocation(), m_backRight.getlocation());
 
         m_gyro = new AHRS(SPI.Port.kMXP);
+        m_gyro.reset();
 
         m_pidController = new PIDController((getMaxSpeed()/180) * 10, 0, 0);
         m_pidController.enableContinuousInput(0, 360);
