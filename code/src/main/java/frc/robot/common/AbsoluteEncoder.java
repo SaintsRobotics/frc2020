@@ -23,6 +23,7 @@ public class AbsoluteEncoder {
 	 * Constructor for an absolute encoder
 	 * 
 	 * @param channel    Analog port for the Encoder
+	 * @param offset	 the value subtracted from the raw encoder value
 	 * @param isInverted Changes which direction increases/decreases the encoder
 	 */
 	public AbsoluteEncoder(int channel, double offset, boolean isInverted) {

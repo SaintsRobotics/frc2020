@@ -109,10 +109,7 @@ public class SwerveWheel {
    */
   public void setDesiredState(SwerveModuleState state, double maxWheelSpeed) {
     // Calculate the drive output from the drive PID controller.
-    var driveOutput = state.speedMetersPerSecond / maxWheelSpeed;// m_drivePIDController.calculate(m_driveEncoder.getVelocity()*0.0355,
-                                                        // state.speedMetersPerSecond);
-
-    // Calculate the turning motor output from the turning PID controller.
+    var driveOutput = state.speedMetersPerSecond / maxWheelSpeed;
     
     // Calculate the turning motor output from the turning PID controller.
     driveOutput = smartInversion(state.angle.getRadians(), driveOutput);

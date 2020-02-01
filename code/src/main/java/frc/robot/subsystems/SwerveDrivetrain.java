@@ -97,15 +97,14 @@ public class SwerveDrivetrain extends TraceableSubsystem implements IDrivetrainS
                 m_backLeft.getlocation(), m_backRight.getlocation());
 
         m_gyro = new AHRS(SPI.Port.kMXP);
-        m_gyro.reset();
 
-        m_pidController = new PIDController(0.02, 0, 0);
+        m_pidController = new PIDController((getMaxSpeed()/180) * 10, 0, 0);
         m_pidController.enableContinuousInput(0, 360);
         m_pidController.setTolerance(2.5);
         
-        
 
     }
+
 
     @Override
     public double getMinSpeed() {
@@ -116,7 +115,7 @@ public class SwerveDrivetrain extends TraceableSubsystem implements IDrivetrainS
     @Override
     public double getMaxSpeed() {
         // TODO Auto-generated method stub
-        return 3.63;
+        return 1;
     }
 
     @Override
@@ -143,6 +142,11 @@ public class SwerveDrivetrain extends TraceableSubsystem implements IDrivetrainS
 
     }
 
+    /**
+     * @param x vertical speed, positive is forward in meters per second (max is 3.66 m/s)
+     * @param y horizontal speed, postive is to the left in meters per second (max is 3.66 m/s)
+     * @param theta rotational speed, positive is clockwise in radians per second (max unknown)
+     */
     @Override
     public void move(double x, double y, double theta, final boolean fieldRelative) {
         // TODO Auto-generated method stub
@@ -161,6 +165,11 @@ public class SwerveDrivetrain extends TraceableSubsystem implements IDrivetrainS
         else {
             theta = this.m_pidController.calculate((((this.m_gyro.getAngle() % 360) + 360) % 360));
         }
+
+        SmartDashboard.putNumber("gyro angle ", ((this.m_gyro.getAngle() % (360)) + (360)) % (360));
+        SmartDashboard.putNumber("heading pid calc ", this.m_pidController.calculate((((this.m_gyro.getAngle() % (360)) + (360)) % (360))));
+        SmartDashboard.putNumber("heading pid error ", this.m_pidController.getPositionError());
+        SmartDashboard.putBoolean("is turning ", this.m_isTurning);
 
         SwerveModuleState[] swerveModuleStates;
         if (fieldRelative){
