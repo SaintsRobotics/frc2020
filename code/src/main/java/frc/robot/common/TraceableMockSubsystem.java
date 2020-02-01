@@ -24,7 +24,7 @@ public class TraceableMockSubsystem implements Subsystem {
     @Override
     public void periodic() {
         // This method will be called once per scheduler run
-        _logger.verbose("periodic");
+        _logger.debug("periodic");
     }
 
     public String getName() {

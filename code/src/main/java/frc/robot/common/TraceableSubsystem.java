@@ -28,7 +28,7 @@ public class TraceableSubsystem extends SubsystemBase {
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
-    _logger.verbose("periodic");
+    _logger.debug("periodic");
     super.periodic();
   }
 

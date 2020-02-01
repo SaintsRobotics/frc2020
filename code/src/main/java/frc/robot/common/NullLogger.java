@@ -10,38 +10,9 @@ package frc.robot.common;
 /**
  * Add your docs here.
  */
-public class NullLogger implements ILogger {
-    private String _componentType;
-    private String _componentName;
-
+public class NullLogger extends LoggerBase {
     @Override
-    public String getComponentType() {
-        return _componentType;
-    }
-
-    @Override
-    public String getComponentName() {
-        return _componentName;
-    }
-
-    @Override
-    public void setComponentType(String name) {
-        _componentType = name;
-
-    }
-
-    @Override
-    public void setComponentName(String name) {
-        _componentName = name;
-    }
-
-    @Override
-    public void verbose(String message) {
-        // No-Op
-    }
-
-    @Override
-    public void error(String message) {
-        // No-Op
+    public void log(LogLevel level, Object... message) {
+        // NO-OP
     }
 }

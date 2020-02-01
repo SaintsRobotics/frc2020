@@ -18,7 +18,7 @@ import frc.robot.subsystems.*;
 public class DependenciesModule extends AbstractModule {
     protected void configure() {
         // create logger for injecting
-        ILogger logger = new LoggerGroup(new ConsoleLogger());
+        ILogger logger = new LoggerGroup(new ConsoleLogger(), new ShuffleboardLogger());
 
         this.bind(ILogger.class).toInstance(logger);
         this.bind(IDrivetrainSubsystem.class).to(SwerveDrivetrain.class).asEagerSingleton();

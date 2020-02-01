@@ -33,13 +33,13 @@ public class TraceableCommand extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    _logger.verbose("execute");
+    _logger.debug("execute");
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    _logger.verbose("interrupted:" + Boolean.toString(interrupted));
+    _logger.debug("interrupted:" + Boolean.toString(interrupted));
   }
 
   // Returns true when the command should end.
