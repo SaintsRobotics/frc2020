@@ -130,12 +130,13 @@ public class SwerveWheel {
     SmartDashboard.putNumber(m_name + " Turning PID output", m_turningPIDController.calculate(
         m_turningEncoder.getRadians(), (state.angle.getRadians() % (2 * Math.PI) + (2 * Math.PI)) % (2 * Math.PI)));
     // Calculate the turning motor output from the turning PID controller.
+    driveOutput = smartInversion(state.angle.getRadians(), driveOutput);
     m_driveMotor.set(driveOutput);
     m_turningMotor.set(turnOutput);
   }
 
 
-  public void smartInversion (double targetHead, double targetVelocity){
+  public double smartInversion (double targetHead, double targetVelocity){
     double diff = 0.0;
     double currentHead = this.m_turningEncoder.getRadians();
 
@@ -150,7 +151,8 @@ public class SwerveWheel {
       targetHead %= 2 * Math.PI;
       targetVelocity = -targetVelocity;
     }
-    this.mpsToVoltOutput(targetVelocity);
+    //this.mpsToVoltOutput(targetVelocity);
     this.m_turningPIDController.setSetpoint(targetHead);
+    return targetVelocity;
   }
 }
