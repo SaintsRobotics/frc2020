@@ -68,7 +68,7 @@ public class SwerveDrivetrain extends TraceableSubsystem implements IDrivetrainS
         m_frontLeftDrive = new CANSparkMax(config.Drivetrain.frontLeftDriveMotorPort, MotorType.kBrushless);
         m_frontLeftDrive.setInverted(true);
         m_frontLeftTurn = new CANSparkMax(config.Drivetrain.frontLeftTurnMotorPort, MotorType.kBrushless);
-        m_frontLeftEncoder = new AbsoluteEncoder(config.Drivetrain.frontLeftAbsoluteEncoder, 6.25, true);
+        m_frontLeftEncoder = new AbsoluteEncoder(config.Drivetrain.frontLeftAbsoluteEncoder, 0.17, true);
 
         m_frontLeft = new SwerveWheel(m_frontLeftDrive, m_frontLeftTurn, config.Drivetrain.swerveX,
                 config.Drivetrain.swerveY, m_frontLeftEncoder, "Left front");
@@ -76,21 +76,21 @@ public class SwerveDrivetrain extends TraceableSubsystem implements IDrivetrainS
         m_frontRightDrive = new CANSparkMax(config.Drivetrain.frontRightDriveMotorPort, MotorType.kBrushless);
         m_frontRightDrive.setInverted(false);
         m_frontRightTurn = new CANSparkMax(config.Drivetrain.frontRightTurnMotorPort, MotorType.kBrushless);
-        m_frontRightEncoder = new AbsoluteEncoder(config.Drivetrain.frontRightAbsoluteEncoder, 0.322, true);
+        m_frontRightEncoder = new AbsoluteEncoder(config.Drivetrain.frontRightAbsoluteEncoder, 3.47, true);
         m_frontRight = new SwerveWheel(m_frontRightDrive, m_frontRightTurn, config.Drivetrain.swerveX,
                 -config.Drivetrain.swerveY, m_frontRightEncoder, "Right front");
 
         m_backLeftDrive = new CANSparkMax(config.Drivetrain.rearLeftDriveMotorPort, MotorType.kBrushless);
         m_backLeftDrive.setInverted(true);
         m_backLeftTurn = new CANSparkMax(config.Drivetrain.rearLeftTurnMotorPort, MotorType.kBrushless);
-        m_backLeftEncoder = new AbsoluteEncoder(config.Drivetrain.rearLeftAbsoluteEncoder, 3.377, true);
+        m_backLeftEncoder = new AbsoluteEncoder(config.Drivetrain.rearLeftAbsoluteEncoder, 3.50, true);
         m_backLeft = new SwerveWheel(m_backLeftDrive, m_backLeftTurn, -config.Drivetrain.swerveX,
                 config.Drivetrain.swerveY, m_backLeftEncoder, "Left back");
 
         m_backRightDrive = new CANSparkMax(config.Drivetrain.rearRightDriveMotorPort, MotorType.kBrushless);
         m_backRightDrive.setInverted(false);
         m_backRightTurn = new CANSparkMax(config.Drivetrain.rearRightturnMotorPort, MotorType.kBrushless);
-        m_backRightEncoder = new AbsoluteEncoder(config.Drivetrain.rearRightAbsoluteEncoder, 5.55, true);
+        m_backRightEncoder = new AbsoluteEncoder(config.Drivetrain.rearRightAbsoluteEncoder, 2.52, true);
         m_backRight = new SwerveWheel(m_backRightDrive, m_backRightTurn, -config.Drivetrain.swerveX,
                 -config.Drivetrain.swerveY, m_backRightEncoder, "Right back");
         m_kinematics = new SwerveDriveKinematics(m_frontLeft.getlocation(), m_frontRight.getlocation(),
@@ -105,6 +105,7 @@ public class SwerveDrivetrain extends TraceableSubsystem implements IDrivetrainS
         
 
     }
+
 
     @Override
     public double getMinSpeed() {
@@ -148,20 +149,22 @@ public class SwerveDrivetrain extends TraceableSubsystem implements IDrivetrainS
 
         this.getLogger().verbose("x: " + x + ", y: " + y + ", theta: " + theta);
         
-        // Drag Heading Correction
-        if (theta != 0.0){
-            m_isTurning = true;
-        }
-        else if (theta == 0.0 && this.m_isTurning){
-            this.m_pidController.setSetpoint((((this.m_gyro.getAngle() % 360) + 360) % 360));
-            this.m_isTurning = false;
-            theta = this.m_pidController.calculate((((this.m_gyro.getAngle() % 360) + 360) % 360));
-        }
-        else {
-            theta = this.m_pidController.calculate((((this.m_gyro.getAngle() % 360) + 360) % 360));
-        }
+        // // Drag Heading Correction
+        // if (theta != 0.0){
+        //     m_isTurning = true;
+        // }
+        // else if (theta == 0.0 && this.m_isTurning){
+        //     this.m_pidController.setSetpoint((((this.m_gyro.getAngle() % 360) + 360) % 360));
+        //     this.m_isTurning = false;
+        //     theta = this.m_pidController.calculate((((this.m_gyro.getAngle() % 360) + 360) % 360));
+        // }
+        // else {
+        //     theta = this.m_pidController.calculate((((this.m_gyro.getAngle() % 360) + 360) % 360));
+        // }
+        
+        theta = this.m_pidController.calculate((((this.m_gyro.getAngle() % (2 *Math.PI)) + (2 *Math.PI)) % (2 *Math.PI)));
 
-
+        SmartDashboard.putNumber("gyro angle ", ((this.m_gyro.getAngle() % (2 *Math.PI)) + (2 *Math.PI)) % (2 *Math.PI));
 
 
         SwerveModuleState[] swerveModuleStates;
@@ -175,15 +178,20 @@ public class SwerveDrivetrain extends TraceableSubsystem implements IDrivetrainS
         SwerveDriveKinematics.normalizeWheelSpeeds(swerveModuleStates, this.getMaxSpeed());
         // order of wheels in swerve module states is the same order as the wheels being
         // inputed to Swerve kinematics
+        SmartDashboard.putNumber("trans x ", x);
+        SmartDashboard.putNumber("trans y ", y);
+        SmartDashboard.putNumber("theta ", theta);
+        SmartDashboard.putNumber("heading pid setpoint ", this.m_pidController.getSetpoint());
         m_frontLeft.setDesiredState(swerveModuleStates[0]);
         m_frontRight.setDesiredState(swerveModuleStates[1]);
         m_backLeft.setDesiredState(swerveModuleStates[2]);
         m_backRight.setDesiredState(swerveModuleStates[3]);
-        // this.getLogger("frontLeft: ", m)
-        SmartDashboard.putNumber("frontleft encoder ", m_frontLeftEncoder.getRadians());
-        SmartDashboard.putNumber("frontright encoder ", m_frontRightEncoder.getRadians());
-        SmartDashboard.putNumber("backleft encoder ", m_backLeftEncoder.getRadians());
-        SmartDashboard.putNumber("backright encoder ", m_backRightEncoder.getRadians());
+
+        
+        // SmartDashboard.putNumber("frontleft encoder ", m_frontLeftEncoder.getRadians());
+        // SmartDashboard.putNumber("frontright encoder ", m_frontRightEncoder.getRadians());
+        // SmartDashboard.putNumber("backleft encoder ", m_backLeftEncoder.getRadians());
+        // SmartDashboard.putNumber("backright encoder ", m_backRightEncoder.getRadians());
 
     }
 
