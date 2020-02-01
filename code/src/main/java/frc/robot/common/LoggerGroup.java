@@ -12,28 +12,16 @@ import java.util.List;
 /**
  * Provides ability to chain multiple loggers that will act as one
  */
-public class LoggerGroup implements ILogger {
+public class LoggerGroup extends LoggerBase {
     private List<ILogger> _loggers;
-    private String _componentType;
-    private String _componentName;
 
     public LoggerGroup(ILogger... loggers) {
         _loggers = List.of(loggers);
     }
 
     @Override
-    public String getComponentType() {
-        return _componentType;
-    }
-
-    @Override
-    public String getComponentName() {
-        return _componentName;
-    }
-
-    @Override
     public void setComponentType(String name) {
-        _componentType = name;
+        super.setComponentType(name);
         // now also apply to the collection of actual loggers
         for (int i = 0; i < _loggers.size(); i++) {
             _loggers.get(i).setComponentType(name);
@@ -42,7 +30,7 @@ public class LoggerGroup implements ILogger {
 
     @Override
     public void setComponentName(String name) {
-        _componentName = name;
+        super.setComponentName(name);
         // now also apply to the collection of actual loggers
         for (int i = 0; i < _loggers.size(); i++) {
             _loggers.get(i).setComponentName(name);
@@ -50,16 +38,16 @@ public class LoggerGroup implements ILogger {
     }
 
     @Override
-    public void verbose(String message) {
+    public void log(LogLevel level, Object... message) {
         for (int i = 0; i < _loggers.size(); i++) {
-            _loggers.get(i).verbose(message);
+            _loggers.get(i).log(level, message);
         }
     }
 
     @Override
-    public void error(String message) {
+    public void monitor(Object... keyValuesToMonitor) throws Exception {
         for (int i = 0; i < _loggers.size(); i++) {
-            _loggers.get(i).error(message);
+            _loggers.get(i).monitor(keyValuesToMonitor);
         }
     }
 }

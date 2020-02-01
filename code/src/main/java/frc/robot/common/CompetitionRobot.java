@@ -127,7 +127,6 @@ public class CompetitionRobot {
      */
     public void robotPeriodic() {
         // TODO Auto-generated method stub
-        System.out.println("Robot:Periodic");
     }
 
     /**

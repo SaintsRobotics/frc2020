@@ -15,13 +15,13 @@
 	],
 	"settings": {
 		"java.configuration.updateBuildConfiguration": "automatic",
-		"editor.formatOnSave": true,
 		"cSpell.words": [
 			"Guice",
 			"Xbox",
 			"tankdrive",
 			"teleop",
 			"waypoint"
-		]
+		],
+		"editor.formatOnSave": true
 	}
 }

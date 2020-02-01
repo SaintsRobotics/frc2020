@@ -12,7 +12,9 @@ import static org.junit.Assert.assertEquals;
 import org.junit.Test;
 
 import frc.robot.commands.ExampleCommand;
+import frc.robot.common.ILogger;
 import frc.robot.common.NullLogger;
+import frc.robot.common.ShuffleboardLogger;
 import frc.robot.common.TraceableMockSubsystem;
 
 /**
