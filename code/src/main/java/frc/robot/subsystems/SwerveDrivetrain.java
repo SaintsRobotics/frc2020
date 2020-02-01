@@ -74,7 +74,7 @@ public class SwerveDrivetrain extends TraceableSubsystem implements IDrivetrainS
                 config.Drivetrain.swerveY, m_frontLeftEncoder, "Left front");
 
         m_frontRightDrive = new CANSparkMax(config.Drivetrain.frontRightDriveMotorPort, MotorType.kBrushless);
-        m_frontRightDrive.setInverted(false);
+        m_frontRightDrive.setInverted(true);
         m_frontRightTurn = new CANSparkMax(config.Drivetrain.frontRightTurnMotorPort, MotorType.kBrushless);
         m_frontRightEncoder = new AbsoluteEncoder(config.Drivetrain.frontRightAbsoluteEncoder, 3.47, true);
         m_frontRight = new SwerveWheel(m_frontRightDrive, m_frontRightTurn, config.Drivetrain.swerveX,
@@ -88,7 +88,7 @@ public class SwerveDrivetrain extends TraceableSubsystem implements IDrivetrainS
                 config.Drivetrain.swerveY, m_backLeftEncoder, "Left back");
 
         m_backRightDrive = new CANSparkMax(config.Drivetrain.rearRightDriveMotorPort, MotorType.kBrushless);
-        m_backRightDrive.setInverted(false);
+        m_backRightDrive.setInverted(true);
         m_backRightTurn = new CANSparkMax(config.Drivetrain.rearRightturnMotorPort, MotorType.kBrushless);
         m_backRightEncoder = new AbsoluteEncoder(config.Drivetrain.rearRightAbsoluteEncoder, 2.52, true);
         m_backRight = new SwerveWheel(m_backRightDrive, m_backRightTurn, -config.Drivetrain.swerveX,
@@ -150,19 +150,19 @@ public class SwerveDrivetrain extends TraceableSubsystem implements IDrivetrainS
         this.getLogger().verbose("x: " + x + ", y: " + y + ", theta: " + theta);
         
         // // Drag Heading Correction
-        // if (theta != 0.0){
-        //     m_isTurning = true;
-        // }
-        // else if (theta == 0.0 && this.m_isTurning){
-        //     this.m_pidController.setSetpoint((((this.m_gyro.getAngle() % 360) + 360) % 360));
-        //     this.m_isTurning = false;
-        //     theta = this.m_pidController.calculate((((this.m_gyro.getAngle() % 360) + 360) % 360));
-        // }
-        // else {
-        //     theta = this.m_pidController.calculate((((this.m_gyro.getAngle() % 360) + 360) % 360));
-        // }
+        if (theta != 0.0){
+            m_isTurning = true;
+        }
+        else if (theta == 0.0 && this.m_isTurning){
+           this.m_pidController.setSetpoint((((this.m_gyro.getAngle() % (2 *Math.PI)) + (2 *Math.PI)) % (2 *Math.PI)));
+           this.m_isTurning = false;
+           theta = this.m_pidController.calculate((((this.m_gyro.getAngle() % (2 *Math.PI)) + (2 *Math.PI)) % (2 *Math.PI)));
+        }
+        else {
+            theta = this.m_pidController.calculate((((this.m_gyro.getAngle() % (2 *Math.PI)) + (2 *Math.PI)) % (2 *Math.PI)));
+        }
         
-        theta = this.m_pidController.calculate((((this.m_gyro.getAngle() % (2 *Math.PI)) + (2 *Math.PI)) % (2 *Math.PI)));
+        //theta = this.m_pidController.calculate((((this.m_gyro.getAngle() % (2 *Math.PI)) + (2 *Math.PI)) % (2 *Math.PI)));
 
         SmartDashboard.putNumber("gyro angle ", ((this.m_gyro.getAngle() % (2 *Math.PI)) + (2 *Math.PI)) % (2 *Math.PI));
 
