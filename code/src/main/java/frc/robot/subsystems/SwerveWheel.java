@@ -43,6 +43,7 @@ public class SwerveWheel {
 
   private String m_name;
 
+  private final double twoPI = 2 * Math.PI; 
   /**
    * Constructs a SwerveModule.
    *
@@ -137,9 +138,10 @@ public class SwerveWheel {
 
 
   public double smartInversion (double targetHead, double targetVelocity){
-    double diff = 0.0;
+    //double diff = 0.0;
     double currentHead = this.m_turningEncoder.getRadians();
 
+    /*
     if (Math.abs(targetHead - currentHead) > Math.PI) {
       diff = 2 * Math.PI - Math.abs(targetHead - currentHead);
     } else{
@@ -151,6 +153,14 @@ public class SwerveWheel {
       targetHead %= 2 * Math.PI;
       targetVelocity = -targetVelocity;
     }
+    */
+
+    if (Math.abs(targetHead - currentHead) > Math.PI/2){
+      targetHead += Math.PI;
+      targetHead = (targetHead + twoPI) % twoPI;
+      targetVelocity *= -1;
+    } 
+
     //this.mpsToVoltOutput(targetVelocity);
     this.m_turningPIDController.setSetpoint(targetHead);
     return targetVelocity;
