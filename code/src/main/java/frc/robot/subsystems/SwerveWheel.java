@@ -37,7 +37,7 @@ public class SwerveWheel {
   private final CANEncoder m_driveEncoder;
   private final AbsoluteEncoder m_turningEncoder;
 
-  private final PIDController m_drivePIDController = new PIDController(1, 0, 0);
+  //private final PIDController m_drivePIDController = new PIDController(1, 0, 0);
 
   private final PIDController m_turningPIDController = new PIDController(.1, 0, 0);
 
@@ -77,6 +77,8 @@ public class SwerveWheel {
     m_turningPIDController.enableContinuousInput(0, 6);
 
   }
+
+  
 
   /**
    * @return the m_location
@@ -130,5 +132,25 @@ public class SwerveWheel {
     // Calculate the turning motor output from the turning PID controller.
     m_driveMotor.set(driveOutput);
     m_turningMotor.set(turnOutput);
+  }
+
+
+  public void smartInversion (double targetHead, double targetVelocity){
+    double diff = 0.0;
+    double currentHead = this.m_turningEncoder.getRadians();
+
+    if (Math.abs(targetHead - currentHead) > Math.PI) {
+      diff = 2 * Math.PI - Math.abs(targetHead - currentHead);
+    } else{
+      diff = Math.abs(targetHead - currentHead);
+    }
+
+    if (diff > Math.PI/2) {
+      targetHead += Math.PI;
+      targetHead %= 2 * Math.PI;
+      targetVelocity = -targetVelocity;
+    }
+    this.mpsToVoltOutput(targetVelocity);
+    this.m_turningPIDController.setSetpoint(targetHead);
   }
 }
