@@ -31,11 +31,16 @@ public class Robot extends TimedRobot {
   private RobotContainer _robot;
   private RobotConfig _config;
 
-  private final Injector _container = Guice.createInjector(new DependenciesModule());
+  private final Injector _container;
   // The driver's controller
   XboxController m_driverController;
 
   public Robot() {
+    this(new DependenciesModule());
+  }
+
+  public Robot(AbstractModule dependencies) {
+    _container = Guice.createInjector(dependencies);
     _config = _container.getInstance(RobotConfig.class);
     m_driverController = new XboxController(_config.Controller.controllerPort);
   }
