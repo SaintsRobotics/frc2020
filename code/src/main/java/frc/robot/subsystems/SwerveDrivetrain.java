@@ -152,7 +152,7 @@ public class SwerveDrivetrain extends TraceableSubsystem implements IDrivetrainS
     public void move(double x, double y, double theta, final boolean fieldRelative) {
         // TODO Auto-generated method stub
 
-        this.getLogger().verbose("x: " + x + ", y: " + y + ", theta: " + theta);
+        this.getLogger().debug("x: " + x + ", y: " + y + ", theta: " + theta);
         
         // Drag Heading Correction
         if (theta != 0.0){
