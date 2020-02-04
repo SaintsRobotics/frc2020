@@ -5,21 +5,13 @@
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
 
-package frc.robot.common;
+package frc.robot.unit.subsystems.drivetrain;
 
 /**
- * Tracks the current position of the robot
+ * Add your docs here.
  */
-public interface ILocation {
-    Position getPosition();
+public class Feature_can_simulate_teleop {
+    public void Scenario_input_from_controller_moves_robot() {
 
-    double getSpeed();
-
-    double getHeading();
-
-    void updatePosition(Position pos);
-
-    void updateSpeed(double speed);
-
-    void updateHeading(double heading);
+   }
 }

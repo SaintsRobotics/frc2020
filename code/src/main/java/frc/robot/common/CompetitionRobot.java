@@ -108,8 +108,8 @@ public class CompetitionRobot {
     }
 
     /**
-     * This autonomous runs the autonomous command selected by your
-     * {@link Robot} class.
+     * This autonomous runs the autonomous command selected by your {@link Robot}
+     * class.
      */
     public void autonomousInit() {
         // TODO Auto-generated method stub

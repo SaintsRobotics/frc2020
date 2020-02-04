@@ -5,22 +5,27 @@
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
 
-package frc.robot.unit.mocks.subsystems;
+package frc.robot.mocks.subsystems;
 
 import com.google.inject.Inject;
 
 import frc.robot.common.IDrivetrainSubsystem;
 import frc.robot.common.ILogger;
+import frc.robot.common.Location;
 import frc.robot.common.Position;
 import frc.robot.common.TraceableMockSubsystem;
 
 public class MockDrivetrain extends TraceableMockSubsystem implements IDrivetrainSubsystem {
+    private Location _location;
+
     /**
      * Creates a new ExampleSubsystem.
      */
     @Inject
-    public MockDrivetrain(final ILogger logger) {
+    public MockDrivetrain(ILogger logger, Location location) {
         super(logger);
+
+        _location = location;
     }
 
     @Override
@@ -43,26 +48,28 @@ public class MockDrivetrain extends TraceableMockSubsystem implements IDrivetrai
 
     @Override
     public void moveForward(double distance) {
-        // TODO Auto-generated method stub
-
+        // check for invalid values
+        if (this.isPositiveNumber(distance))
+            this.updateRelativeLocation(distance);
     }
 
     @Override
     public void moveForward(double maxSpeed, double distance) {
-        // TODO Auto-generated method stub
-
+        // dont care about the speed for mock purposes
+        this.moveForward(distance);
     }
 
     @Override
     public void moveBackward(double distance) {
-        // TODO Auto-generated method stub
+        // check for invalid values
+        if (this.isPositiveNumber(distance))
+            this.updateRelativeLocation(-distance);
 
     }
 
     @Override
     public void moveBackward(double maxSpeed, double distance) {
-        // TODO Auto-generated method stub
-
+        this.moveBackward(-distance);
     }
 
     @Override
@@ -73,116 +80,110 @@ public class MockDrivetrain extends TraceableMockSubsystem implements IDrivetrai
 
     @Override
     public void moveLeft(double distance) {
-        // TODO Auto-generated method stub
-
+        this.turnLeft();
+        // TODO: Calculate the correct path
+        this.moveForward(distance);
     }
 
     @Override
     public void moveLeft(double maxSpeed, double distance) {
-        // TODO Auto-generated method stub
-
+        this.moveLeft(distance);
     }
 
     @Override
     public void moveRight(double distance) {
-        // TODO Auto-generated method stub
-
+        this.turnRight();
+        // TODO: Calculate the correct path
+        this.moveForward(distance);
     }
 
     @Override
     public void moveRight(double maxSpeed, double distance) {
-        // TODO Auto-generated method stub
-
+        this.moveRight(distance);
     }
 
     @Override
     public void moveNorth(double distance) {
-        // TODO Auto-generated method stub
-
+        this.faceNorth();
+        this.moveForward(distance);
     }
 
     @Override
     public void moveNorth(double maxSpeed, double distance) {
-        // TODO Auto-generated method stub
-
+        this.moveNorth(distance);
     }
 
     @Override
     public void moveSouth(double distance) {
-        // TODO Auto-generated method stub
+        this.faceSouth();
+        this.moveForward(distance);
 
     }
 
     @Override
     public void moveSouth(double maxSpeed, double distance) {
-        // TODO Auto-generated method stub
-
+        this.moveSouth(distance);
     }
 
     @Override
     public void moveEast(double distance) {
-        // TODO Auto-generated method stub
-
+        this.faceEast();
+        this.moveForward(distance);
     }
 
     @Override
     public void moveEast(double maxSpeed, double distance) {
-        // TODO Auto-generated method stub
-
+        this.moveEast(distance);
     }
 
     @Override
     public void moveWest(double distance) {
-        // TODO Auto-generated method stub
-
+        this.faceWest();
+        this.moveForward(distance);
     }
 
     @Override
     public void moveWest(double maxSpeed, double distance) {
-        // TODO Auto-generated method stub
-
+        this.moveWest(distance);
     }
 
     @Override
     public void rotate(double degrees) {
         // TODO Auto-generated method stub
 
+        double heading = _location.getHeading();
+        heading += degrees;
+        _location.updateHeading(heading >= 360 ? heading - 360 : heading < 0 ? heading + 360 : heading);
     }
 
     @Override
     public void turnLeft() {
-        // TODO Auto-generated method stub
-
+        this.rotate(-90);
     }
 
     @Override
     public void turnRight() {
-        // TODO Auto-generated method stub
-
+        this.rotate(90);
     }
 
     @Override
     public void faceNorth() {
-        // TODO Auto-generated method stub
-
+        _location.updateHeading(0);
     }
 
     @Override
     public void faceSouth() {
-        // TODO Auto-generated method stub
-
+        _location.updateHeading(180);
     }
 
     @Override
     public void faceEast() {
-        // TODO Auto-generated method stub
-
+        _location.updateHeading(90);
     }
 
     @Override
     public void faceWest() {
-        // TODO Auto-generated method stub
-
+        _location.updateHeading(270);
     }
 
     @Override
@@ -192,8 +193,45 @@ public class MockDrivetrain extends TraceableMockSubsystem implements IDrivetrai
     }
 
     @Override
-    public void followPath(double maxSpeed, double finalHeading, Position... waypoint) {
-        // TODO Auto-generated method stub
+    public void followPath(double maxSpeed, double finalHeading, Position... waypoints) {
 
+        for (int i = 0; i < waypoints.length; i++) {
+            _location.updatePosition(waypoints[i]);
+        }
+        _location.updateHeading(finalHeading);
+    }
+
+    private void updateRelativeLocation(double distance) {
+        double x = 0;
+        double y = 0;
+        double heading = _location.getHeading();
+        Position pos = _location.getPosition();
+        if (heading == 0) {
+            y = distance;
+        } else {
+            double radianHeading = Math.toRadians(heading);
+            x = Math.sin(radianHeading) * distance;
+            y = Math.cos(radianHeading) * distance;
+        }
+
+        double newXPos = pos.getX() + x;
+        double newYPos = pos.getY() + y;
+
+        // constrain the movement
+        if (newXPos < 0) {
+            newXPos = 0;
+        }
+        if (newYPos < 0) {
+            newYPos = 0;
+        }
+        _location.updatePosition(new Position(newXPos, newYPos));
+    }
+
+    private boolean isPositiveNumber(double value) {
+        if (value < 0) {
+            this.getLogger().error("Expected a value > 0, but received: " + value);
+            return false;
+        }
+        return true;
     }
 }

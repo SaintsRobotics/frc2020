@@ -5,7 +5,7 @@
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
 
-package frc.robot.unit.mocks;
+package frc.robot.mocks;
 
 import com.google.inject.Guice;
 import com.google.inject.Injector;
@@ -13,6 +13,7 @@ import com.google.inject.Injector;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.RobotContainer;
+import frc.robot.TestDependenciesModule;
 import frc.robot.RobotConfig;
 
 /**
@@ -148,8 +149,8 @@ public class FakeRobot {
     }
 
     /**
-     * This autonomous runs the autonomous command selected by your {@link RobotContainer}
-     * class.
+     * This autonomous runs the autonomous command selected by your
+     * {@link RobotContainer} class.
      */
     public void autonomousInit() {
         m_autonomousCommand = _robot.getAutonomousCommand();
