@@ -41,6 +41,7 @@ public class Robot extends TimedRobot {
 
   public Robot(AbstractModule dependencies) {
     _container = Guice.createInjector(dependencies);
+    
     _config = _container.getInstance(RobotConfig.class);
     m_driverController = _container.getInstance(XboxController.class);
   }

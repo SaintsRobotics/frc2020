@@ -176,7 +176,7 @@ public class SwerveDrivetrain extends TraceableSubsystem implements IDrivetrainS
         SwerveModuleState[] swerveModuleStates;
         if (fieldRelative){
             swerveModuleStates = m_kinematics.toSwerveModuleStates(ChassisSpeeds.fromFieldRelativeSpeeds(
-                x, y,theta, new Rotation2d(Math.toRadians(m_gyro.getAngle()))));
+                x, y,theta, new Rotation2d(2*Math.PI - Math.toRadians(((m_gyro.getAngle() % 360) + 360) % 360))));
         }
         else {
             swerveModuleStates = m_kinematics.toSwerveModuleStates(new ChassisSpeeds(x, y, theta));
