@@ -18,31 +18,31 @@ public interface IShooterSubsystem {
      * @param targetVelocity the target velocity in rpm
      */
 
-    void setSpeed(double targetVelocity);
-
+    void startShooter(double targetVelocity);
 
     /**
      * 
      * @return returns true if the shooter is at target velocity and is ready to
      *         shoot
      */
-    boolean isReady();
+    boolean isReadyToShoot();
 
     /**
-     * feeds the shooter when the shooter is up to speed until told to stop
+     * Shoots a single ball
+     * 
+     * @param balls number of balls shot
      */
-    void enableFeeding();
+    void shoot();
 
     /**
-    * stops feeding the shooter balls
-    */
-    void disableFeeding();
+     * determines if the last call to shoot() resulted in a ball being fired. When
+     * used to determine the end of a command, should be used with a timeout to
+     * account for a ball not firing as expect.
+     * 
+     * @return true if ball was fired
+     */
+    boolean shotFired();
 
-    /**
-    *
-    * @param balls number of balls shot
-    */
-    void shootBalls(int balls);
     /**
      * turns off the shooter motors
      */
