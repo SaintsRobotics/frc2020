@@ -13,10 +13,22 @@ public interface IIntakeSubsystem extends Subsystem {
     // Disengages arm to be normal with the ground
     void lowerArm();
 
+    /**
+     * 
+     * @return whether or not the intake arm is currently lowered
+     */
+    boolean isLowered();
+
     /*
      * @param specified speed of the intake (negative velocity used for reversing
      * intake)
      */
     void spinIntake(double velocity);
+
+    /**
+     * 
+     * @return whether or not the intake is currently spinning
+     */
+    boolean isSpinning();
 
 }
