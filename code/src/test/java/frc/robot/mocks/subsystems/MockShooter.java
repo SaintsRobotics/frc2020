@@ -26,7 +26,7 @@ public class MockShooter extends TraceableMockSubsystem implements IShooterSubsy
     * @param targetVelocity the rpm of shooter
     */
     @Override
-    public void startup(double targetVelocity) {
+    public void setSpeed(double targetVelocity) {
         // TODO Auto-generated method stub
         _isReady = true;
     }
@@ -38,12 +38,12 @@ public class MockShooter extends TraceableMockSubsystem implements IShooterSubsy
     }
 
     @Override
-    public void enableShoot() {
+    public void enableFeeding() {
         // TODO Auto-generated method stub
 
     }
     @Override
-    public void disableShoot() {
+    public void disableFeeding() {
         // TODO Auto-generated method stub
 
     }
@@ -51,7 +51,11 @@ public class MockShooter extends TraceableMockSubsystem implements IShooterSubsy
     public void shootBalls(int balls){
         // TODO Auto-generated method stub
     }
-    
+    @Override
+    public void stopShooter(){
+       // TODO Auto-generated method stub
+
+    }
 
    
 

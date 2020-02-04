@@ -18,7 +18,8 @@ public interface IShooterSubsystem {
      * @param targetVelocity the target velocity in rpm
      */
 
-    void startup(double targetVelocity);
+    void setSpeed(double targetVelocity);
+
 
     /**
      * 
@@ -28,21 +29,16 @@ public interface IShooterSubsystem {
     boolean isReady();
 
     /**
-     * 
-     *
-     */
-    
-    /**
      * feeds the shooter when the shooter is up to speed until told to stop
      */
-    void enableShoot();
+    void enableFeeding();
 
-    /*
+    /**
     * stops feeding the shooter balls
     */
-    void disableShoot();
+    void disableFeeding();
 
-    /*
+    /**
     *
     * @param balls number of balls shot
     */
@@ -50,5 +46,6 @@ public interface IShooterSubsystem {
     /**
      * turns off the shooter motors
      */
+    void stopShooter();
     
 }
