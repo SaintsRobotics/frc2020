@@ -17,7 +17,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.commands.DrivetrainControllerCommand;
-
+import frc.robot.ioc.DependenciesModule;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -42,7 +42,7 @@ public class Robot extends TimedRobot {
   public Robot(AbstractModule dependencies) {
     _container = Guice.createInjector(dependencies);
     _config = _container.getInstance(RobotConfig.class);
-    m_driverController = new XboxController(_config.Controller.controllerPort);
+    m_driverController = _container.getInstance(XboxController.class);
   }
 
   public RobotContainer getRobot() {
@@ -103,7 +103,7 @@ public class Robot extends TimedRobot {
     CommandScheduler.getInstance().run();
 
     _robot.robotPeriodic();
-    
+
   }
 
   /**
@@ -120,8 +120,8 @@ public class Robot extends TimedRobot {
   }
 
   /**
-   * This autonomous runs the autonomous command selected by your {@link RobotContainer}
-   * class.
+   * This autonomous runs the autonomous command selected by your
+   * {@link RobotContainer} class.
    */
   @Override
   public void autonomousInit() {

@@ -23,7 +23,7 @@ import frc.robot.common.IDrivetrainSubsystem;
 import frc.robot.common.ILogger;
 import frc.robot.common.Location;
 import frc.robot.common.Position;
-import frc.robot.mocks.subsystems.MockDrivetrain;
+import frc.robot.subsystems.mocks.MockDrivetrain;
 
 /**
  * Add your docs here.@
@@ -31,10 +31,16 @@ import frc.robot.mocks.subsystems.MockDrivetrain;
 
 @RunWith(DataProviderRunner.class)
 public class Feature_move_robot_using_high_level_commands {
-
     Location _location;
     ILogger _logger;
     IDrivetrainSubsystem _drivetrain;
+
+    @Before
+    public void beforeEachTest() {
+        _location = new Location();
+        _logger = new ConsoleLogger();
+        _drivetrain = new MockDrivetrain(_logger, _location);
+    }
 
     @DataProvider
     public static Object[][] rotationData() {
@@ -306,11 +312,4 @@ public class Feature_move_robot_using_high_level_commands {
     }
 
     /// ---------------------------------------------------------------------------------------
-    @Before
-    public void beforeEachTest() {
-        _location = new Location();
-        _logger = new ConsoleLogger();
-        _drivetrain = new MockDrivetrain(_logger, _location);
-    }
-
 }
