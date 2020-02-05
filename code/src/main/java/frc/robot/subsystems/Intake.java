@@ -43,7 +43,6 @@ public class Intake extends TraceableSubsystem implements IIntakeSubsystem {
 
     public boolean isLowered() {
         boolean isArmStopped = armEncoder.getStopped();
-            
 
     }
 
