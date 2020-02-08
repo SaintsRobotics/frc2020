@@ -22,6 +22,7 @@ import edu.wpi.first.wpilibj.controller.PIDController;
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.kinematics.SwerveDriveKinematics;
+import edu.wpi.first.wpilibj.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.wpilibj.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.RobotConfig;
@@ -57,6 +58,7 @@ public class SwerveDrivetrain extends TraceableSubsystem implements IDrivetrainS
     private SwerveDriveKinematics m_kinematics;
     private AHRS m_gyro;
     private PIDController m_pidController;
+    private SwerveDriveOdometry m_currentOdometry;
     
     private boolean m_isTurning;
 
@@ -104,6 +106,8 @@ public class SwerveDrivetrain extends TraceableSubsystem implements IDrivetrainS
         m_gyro.reset();
         
         m_pidController.setSetpoint(m_gyro.getAngle());
+
+        m_currentOdometry = new SwerveDriveOdometry(m_kinematics, new Rotation2d(0));
 
     }
 
@@ -188,6 +192,10 @@ public class SwerveDrivetrain extends TraceableSubsystem implements IDrivetrainS
         m_frontRight.setDesiredState(swerveModuleStates[1], this.getMaxSpeed());
         m_backLeft.setDesiredState(swerveModuleStates[2], this.getMaxSpeed());
         m_backRight.setDesiredState(swerveModuleStates[3], this.getMaxSpeed());
+
+        m_currentOdometry.update(new Rotation2d(Math.toRadians(m_gyro.getAngle())), m_frontLeft.getState(), m_frontRight.getState(), m_backLeft.getState(), m_backRight.getState());
+        SmartDashboard.putString("Current pose", m_currentOdometry.getPoseMeters().toString());
+
         // this.getLogger("frontLeft: ", m)
 
     }
