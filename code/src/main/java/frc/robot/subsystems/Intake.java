@@ -4,6 +4,7 @@ import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.PWMVictorSPX;
 import edu.wpi.first.wpilibj.SpeedController;
+import edu.wpi.first.wpilibj.controller.PIDController;
 import frc.robot.common.IIntakeSubsystem;
 import frc.robot.common.ILogger;
 import frc.robot.common.TraceableSubsystem;
@@ -13,6 +14,7 @@ public class Intake extends TraceableSubsystem implements IIntakeSubsystem {
     public SpeedController intakeController = new PWMVictorSPX(1);
     public SpeedController armController = new PWMVictorSPX(2);
     public Encoder armEncoder = new Encoder(1, 1);
+    private final PIDController m_armPIDController = new PIDController(0.1, 0, 0);
 
     public Intake(final ILogger logger) {
         super(logger);
@@ -20,6 +22,8 @@ public class Intake extends TraceableSubsystem implements IIntakeSubsystem {
         intakeController.setInverted(true);
         armController.setInverted(true);
         armEncoder.reset();
+        // m_armPIDController.setS
+
         // Motor is inverted
     }
 
@@ -46,11 +50,14 @@ public class Intake extends TraceableSubsystem implements IIntakeSubsystem {
 
     }
 
-    public void spinIntake(double velocity) {
+    public void spinIntake(boolean direction) {
 
         double scaledvelocity;
-        if (velocity < 1 && velocity > -1) {
-            scaledvelocity = velocity;
+        if (direction) {
+            scaledvelocity = 1;
+        }
+        if (!direction) {
+            scaledvelocity = -1;
         }
 
         intakeController.set(scaledvelocity);
@@ -58,11 +65,11 @@ public class Intake extends TraceableSubsystem implements IIntakeSubsystem {
     }
 
     public void stopIntake() {
-        intakeController.stopMotor();
+        intakeController.set(0);
     }
 
     public boolean isSpinning() {
-        if (intakeController.get() > 0) {
+        if (Math.abs(intakeController.get()) > 0) {
             return true;
         } else {
             return false;
