@@ -48,10 +48,10 @@ public final class RobotConfig {
     }
 
     public final class Intake {
-        public final int intakeControllerChannel = 1;
-        public final int armControllerChannel = 2;
-        public final int armEncoderChannelA = 1;
-        public final int armEncoderChannelB = 1;
+        public final int intakeControllerPort = 1;
+        public final int armControllerPort = 2;
+        public final int armEncoderPortA = 1;
+        public final int armEncoderPortB = 1;
 
     }
 }
