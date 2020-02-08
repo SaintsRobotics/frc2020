@@ -7,10 +7,12 @@
 
 package frc.robot.common;
 
+import edu.wpi.first.wpilibj2.command.Subsystem;
+
 /**
  * Add your docs here.
  */
-public interface IShooterSubsystem {
+public interface IShooterSubsystem extends Subsystem {
 
     /**
      * starts the shooter
@@ -18,30 +20,30 @@ public interface IShooterSubsystem {
      * @param targetVelocity the target velocity in rpm
      */
 
-    void startShooter(double targetVelocity);
+    void setSpeed(double targetVelocity);
 
     /**
      * 
      * @return returns true if the shooter is at target velocity and is ready to
      *         shoot
      */
-    boolean isReadyToShoot();
+    boolean isReady();
 
     /**
-     * Shoots a single ball
-     * 
+     * feeds the shooter when the shooter is up to speed until told to stop
+     */
+    void enableFeeding();
+
+    /**
+     * stops feeding the shooter balls
+     */
+    void disableFeeding();
+
+    /**
+     *
      * @param balls number of balls shot
      */
-    void shoot();
-
-    /**
-     * determines if the last call to shoot() resulted in a ball being fired. When
-     * used to determine the end of a command, should be used with a timeout to
-     * account for a ball not firing as expect.
-     * 
-     * @return true if ball was fired
-     */
-    boolean shotFired();
+    void shootBalls(int balls);
 
     /**
      * turns off the shooter motors

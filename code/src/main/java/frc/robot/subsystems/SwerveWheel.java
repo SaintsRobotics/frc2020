@@ -1,3 +1,4 @@
+
 /*----------------------------------------------------------------------------*/
 /* Copyright (c) 2019 FIRST. All Rights Reserved.                             */
 /* Open Source Software - may be modified and shared by FRC teams. The code   */
@@ -33,7 +34,7 @@ public class SwerveWheel {
 
   private static final double kModuleMaxAngularVelocity = Math.PI;
   private static final double kModuleMaxAngularAcceleration = 2 * Math.PI; // radians per second squared
-  private static final double kTwoPi = 2*Math.PI;
+  private static final double kTwoPi = 2 * Math.PI;
 
   private CANSparkMax m_driveMotor;
   private final SpeedController m_turningMotor;
@@ -41,13 +42,15 @@ public class SwerveWheel {
   private final CANEncoder m_driveEncoder;
   private final AbsoluteEncoder m_turningEncoder;
 
-  //private final PIDController m_drivePIDController = new PIDController(1, 0, 0);
+  // private final PIDController m_drivePIDController = new PIDController(1, 0,
+  // 0);
 
   private final PIDController m_turningPIDController = new PIDController(.1, 0, 0);
 
   private String m_name;
 
-  private final double twoPI = kTwoPi; 
+  private final double twoPI = kTwoPi;
+
   /**
    * Constructs a SwerveModule.
    *
@@ -83,8 +86,6 @@ public class SwerveWheel {
 
   }
 
-  
-
   /**
    * @return the m_location
    */
@@ -104,27 +105,31 @@ public class SwerveWheel {
   /**
    * Sets the desired state for the module.
    *
-   * @param state Desired state with speed and angle.
-   * @param maxWheelSpeed the maximum speed of a wheel in meters/second.  use the getMaxSpeed() method of the drivetrain
+   * @param state         Desired state with speed and angle.
+   * @param maxWheelSpeed the maximum speed of a wheel in meters/second. use the
+   *                      getMaxSpeed() method of the drivetrain
    */
   public void setDesiredState(SwerveModuleState state, double maxWheelSpeed) {
     // Calculate the drive output from the drive PID controller.
     var driveOutput = state.speedMetersPerSecond / maxWheelSpeed;
-    
+
     // Calculate the turning motor output from the turning PID controller.
     driveOutput = smartInversion(state.angle.getRadians(), driveOutput);
-    m_driveMotor.set(driveOutput);
-    m_turningMotor.set(m_turningPIDController.calculate(m_turningEncoder.getRadians()));
+    // m_driveMotor.set(driveOutput);
+    // m_turningMotor.set(m_turningPIDController.calculate(m_turningEncoder.getRadians()));
 
   }
 
   /**
-   * Note: automatically sets the pid setpoint to the new targetHead; it doesn't get returned
-   * @param targetHead      heading value from swerve state
-   * @param targetVelocity  velocity value from swerve state
-   * @return                new target velocity.  should be either the same or negative of the one given
+   * Note: automatically sets the pid setpoint to the new targetHead; it doesn't
+   * get returned
+   * 
+   * @param targetHead     heading value from swerve state
+   * @param targetVelocity velocity value from swerve state
+   * @return new target velocity. should be either the same or negative of the one
+   *         given
    */
-  public double smartInversion (double targetHead, double targetVelocity){
+  public double smartInversion(double targetHead, double targetVelocity) {
     double currentHead = this.m_turningEncoder.getRadians();
     double diff = Math.abs(targetHead - currentHead);
 
@@ -132,13 +137,13 @@ public class SwerveWheel {
       diff = kTwoPi - diff;
     }
 
-    if (diff > Math.PI/2) {
+    if (diff > Math.PI / 2) {
       targetHead += Math.PI;
       targetHead %= kTwoPi;
       targetVelocity *= -1;
     }
 
-    //this.mpsToVoltOutput(targetVelocity);
+    // this.mpsToVoltOutput(targetVelocity);
     this.m_turningPIDController.setSetpoint(((targetHead % kTwoPi) + kTwoPi) % kTwoPi);
     return targetVelocity;
   }

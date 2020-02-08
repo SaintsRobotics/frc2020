@@ -9,6 +9,7 @@ package frc.robot.commands;
 
 import com.google.inject.Inject;
 
+import edu.wpi.first.wpilibj.Controller;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.GenericHID.*;
 import frc.robot.common.*;
@@ -16,17 +17,17 @@ import frc.robot.common.*;
 /**
  * Add your docs here.
  */
-public class DrivetrainControllerCommand extends TraceableCommand {
-    private final IDrivetrainSubsystem _drivetrain;
+public class ShooterCommand extends TraceableCommand {
+    private final IShooterSubsystem _shooter;
     private final XboxController _controller;
 
     @Inject
-    public DrivetrainControllerCommand(final ILogger logger, IDrivetrainSubsystem drivetrain) {
+    public ShooterCommand(final ILogger logger, IShooterSubsystem shooter) {
         super(logger);
-        _drivetrain = drivetrain;
+        _shooter = shooter;
         _controller = new XboxController(0);
 
-        addRequirements(_drivetrain);
+        addRequirements(_shooter);
     }
 
     @Override
@@ -37,11 +38,18 @@ public class DrivetrainControllerCommand extends TraceableCommand {
     @Override
     public void execute() {
         super.execute();
-        // _drivetrain.move(deadZones(_controller.getY(Hand.kLeft) *
-        // _drivetrain.getMaxSpeed(), 0.1), deadZones(_controller.getX(Hand.kLeft) *
-        // _drivetrain.getMaxSpeed(), 0.1), deadZones(_controller.getX(Hand.kRight)*
-        // _drivetrain.getMaxSpeed(), 0.1), _controller.getBumper(Hand.kRight)); //
-        // theta
+        if (_controller.getAButton()) {
+            _shooter.setSpeed(5450);
+        }
+        if (_controller.getBButton()) {
+            _shooter.enableFeeding();
+        }
+        if (_controller.getXButton()) {
+            _shooter.disableFeeding();
+        }
+        if (_controller.getYButton()) {
+            _shooter.stopShooter();
+        }
         // ==
         // axis??
 

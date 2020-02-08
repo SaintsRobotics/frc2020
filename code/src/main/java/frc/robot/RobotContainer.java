@@ -11,9 +11,11 @@ import com.google.inject.Inject;
 import com.google.inject.Provider;
 
 import frc.robot.commands.DrivetrainControllerCommand;
+import frc.robot.commands.ShooterCommand;
 import frc.robot.common.CompetitionRobot;
 import frc.robot.common.IDrivetrainSubsystem;
 import frc.robot.common.ILogger;
+import frc.robot.common.IShooterSubsystem;
 import edu.wpi.first.wpilibj2.command.Command;
 
 /**
@@ -28,10 +30,11 @@ public class RobotContainer extends CompetitionRobot {
    * The container for the robot. Contains subsystems, OI devices, and commands.
    */
   @Inject
-  private RobotContainer(final ILogger logger, IDrivetrainSubsystem drivetrain, DrivetrainControllerCommand driveCommand) {
+  private RobotContainer(final ILogger logger, IDrivetrainSubsystem drivetrain,
+      DrivetrainControllerCommand driveCommand, IShooterSubsystem shooterSubsystem, ShooterCommand shooterCommand) {
     super(logger);
     // _autonomousCommand = autonomousCommand;
-
+    shooterSubsystem.setDefaultCommand(shooterCommand);
     drivetrain.setDefaultCommand(driveCommand);
 
   }
@@ -42,8 +45,8 @@ public class RobotContainer extends CompetitionRobot {
    * @return the command to run in autonomous
    */
   // public Command getAutonomousCommand() {
-  //   // An ExampleCommand will run in autonomous
-  //   return _autonomousCommand.get();
+  // // An ExampleCommand will run in autonomous
+  // return _autonomousCommand.get();
   // }
 
   public Command whenButtonAPressed() {
