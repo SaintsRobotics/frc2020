@@ -15,6 +15,7 @@ package frc.robot;
 public final class RobotConfig {
     public final RobotConfig.Controller Controller = new RobotConfig.Controller();
     public final RobotConfig.SwerveDrivetrain Drivetrain = new RobotConfig.SwerveDrivetrain();
+    public final RobotConfig.SwerveWheel SwerveWheel = new RobotConfig.SwerveWheel();
     public final RobotConfig.Physical Physical = new RobotConfig.Physical();
 
     public final class Controller {
@@ -36,8 +37,25 @@ public final class RobotConfig {
         public final int frontRightAbsoluteEncoder = 1;
         public final int rearLeftAbsoluteEncoder = 3;
         public final int rearRightAbsoluteEncoder = 2;
+
+        public final double frontLeftAbsoluteEncoderOffest = 0.17;
+        public final double frontRightAbsoluteEncoderOffset = 3.47;
+        public final double rearLeftAbsoluteEncoderOffest = 3.50;
+        public final double rearRightAbsoluteEncoderOffset = 2.52;
+        public final double headingPIDTollerance = 2.5;
         public final double swerveX = .67/2;
         public final double swerveY = .25;
+    }
+
+    public final class SwerveWheel {
+        public final int driveMotorStallLimit = 35;
+        public final int driveMotorfreeLimit = 60;
+        public final int driveMotorlimitRPM = 150;
+        
+        public final int turningMotorStallLimit = 17;
+        public final int turningMotorfreeLimit = 30;
+        public final int turningMotorlimitRPM = 75;
+
     }
 
     public final class Physical {

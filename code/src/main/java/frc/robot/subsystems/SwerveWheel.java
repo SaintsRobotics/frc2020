@@ -25,9 +25,11 @@ import edu.wpi.first.wpilibj.geometry.Translation2d;
 import edu.wpi.first.wpilibj.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.trajectory.TrapezoidProfile;
+import frc.robot.RobotConfig;
 import frc.robot.common.AbsoluteEncoder;
 
 public class SwerveWheel {
+  private RobotConfig _config;
   private static final double kWheelRadius = 0.0508;
   private static final int kEncoderResolution = 4096;
 
@@ -59,15 +61,18 @@ public class SwerveWheel {
    *                     robot
    */
   public SwerveWheel(CANSparkMax driveMotor, CANSparkMax turningMotor, double X, double Y, AbsoluteEncoder turnEncoder,
-      String name) {
+      String name, RobotConfig config) {
+    _config = config;
     m_name = name;
     m_driveMotor = driveMotor;
     m_turningMotor = turningMotor;
     m_driveEncoder = m_driveMotor.getEncoder();
     m_turningEncoder = turnEncoder;
     m_location = new Translation2d(X, Y);
-    ((CANSparkMax) m_driveMotor).setSmartCurrentLimit(35, 60, 150);
-    ((CANSparkMax) m_turningMotor).setSmartCurrentLimit(17, 30, 75);
+    ((CANSparkMax) m_driveMotor).setSmartCurrentLimit(config.SwerveWheel.driveMotorStallLimit, 
+        config.SwerveWheel.driveMotorfreeLimit, config.SwerveWheel.driveMotorlimitRPM);
+    ((CANSparkMax) m_turningMotor).setSmartCurrentLimit(config.SwerveWheel.turningMotorStallLimit, 
+        config.SwerveWheel.turningMotorfreeLimit, config.SwerveWheel.turningMotorlimitRPM);
     // Set the distance per pulse for the drive encoder. We can simply use the
     // distance traveled for one rotation of the wheel divided by the encoder
     // resolution.

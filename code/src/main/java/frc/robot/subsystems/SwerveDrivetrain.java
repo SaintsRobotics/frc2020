@@ -68,37 +68,42 @@ public class SwerveDrivetrain extends TraceableSubsystem implements IDrivetrainS
         m_frontLeftDrive = new CANSparkMax(config.Drivetrain.frontLeftDriveMotorPort, MotorType.kBrushless);
         m_frontLeftDrive.setInverted(true);
         m_frontLeftTurn = new CANSparkMax(config.Drivetrain.frontLeftTurnMotorPort, MotorType.kBrushless);
-        m_frontLeftEncoder = new AbsoluteEncoder(config.Drivetrain.frontLeftAbsoluteEncoder, 0.17, true);
+        m_frontLeftEncoder = new AbsoluteEncoder(config.Drivetrain.frontLeftAbsoluteEncoder, 
+                config.Drivetrain.frontLeftAbsoluteEncoderOffest, true);
 
         m_frontLeft = new SwerveWheel(m_frontLeftDrive, m_frontLeftTurn, config.Drivetrain.swerveX,
-                config.Drivetrain.swerveY, m_frontLeftEncoder, "Left front");
+                config.Drivetrain.swerveY, m_frontLeftEncoder, "Left front", config);
 
         m_frontRightDrive = new CANSparkMax(config.Drivetrain.frontRightDriveMotorPort, MotorType.kBrushless);
         m_frontRightDrive.setInverted(true);
         m_frontRightTurn = new CANSparkMax(config.Drivetrain.frontRightTurnMotorPort, MotorType.kBrushless);
-        m_frontRightEncoder = new AbsoluteEncoder(config.Drivetrain.frontRightAbsoluteEncoder, 3.47, true);
+        m_frontRightEncoder = new AbsoluteEncoder(config.Drivetrain.frontRightAbsoluteEncoder, 
+                config.Drivetrain.frontRightAbsoluteEncoderOffset, true);
         m_frontRight = new SwerveWheel(m_frontRightDrive, m_frontRightTurn, config.Drivetrain.swerveX,
-                -config.Drivetrain.swerveY, m_frontRightEncoder, "Right front");
+                -config.Drivetrain.swerveY, m_frontRightEncoder, "Right front", config);
 
         m_backLeftDrive = new CANSparkMax(config.Drivetrain.rearLeftDriveMotorPort, MotorType.kBrushless);
         m_backLeftDrive.setInverted(true);
         m_backLeftTurn = new CANSparkMax(config.Drivetrain.rearLeftTurnMotorPort, MotorType.kBrushless);
-        m_backLeftEncoder = new AbsoluteEncoder(config.Drivetrain.rearLeftAbsoluteEncoder, 3.50, true);
+        m_backLeftEncoder = new AbsoluteEncoder(config.Drivetrain.rearLeftAbsoluteEncoder, 
+                config.Drivetrain.rearLeftAbsoluteEncoderOffest, true);
         m_backLeft = new SwerveWheel(m_backLeftDrive, m_backLeftTurn, -config.Drivetrain.swerveX,
-                config.Drivetrain.swerveY, m_backLeftEncoder, "Left back");
+                config.Drivetrain.swerveY, m_backLeftEncoder, "Left back", config);
 
         m_backRightDrive = new CANSparkMax(config.Drivetrain.rearRightDriveMotorPort, MotorType.kBrushless);
         m_backRightDrive.setInverted(true);
         m_backRightTurn = new CANSparkMax(config.Drivetrain.rearRightturnMotorPort, MotorType.kBrushless);
-        m_backRightEncoder = new AbsoluteEncoder(config.Drivetrain.rearRightAbsoluteEncoder, 2.52, true);
+        m_backRightEncoder = new AbsoluteEncoder(config.Drivetrain.rearRightAbsoluteEncoder, 
+                config.Drivetrain.rearRightAbsoluteEncoderOffset, true);
         m_backRight = new SwerveWheel(m_backRightDrive, m_backRightTurn, -config.Drivetrain.swerveX,
-                -config.Drivetrain.swerveY, m_backRightEncoder, "Right back");
+                -config.Drivetrain.swerveY, m_backRightEncoder, "Right back", config);
         m_kinematics = new SwerveDriveKinematics(m_frontLeft.getlocation(), m_frontRight.getlocation(),
                 m_backLeft.getlocation(), m_backRight.getlocation());
 
-        m_pidController = new PIDController((getMaxSpeed()/180) * 10, 0, 0);
+
+        m_pidController = new PIDController((getMaxSpeed()/180) * 10, 0, 0);//maxSpeed can't be moved to RobotConfig
         m_pidController.enableContinuousInput(0, 360);
-        m_pidController.setTolerance(2.5);
+        m_pidController.setTolerance(config.Drivetrain.headingPIDTollerance);
 
         m_gyro = new AHRS(SPI.Port.kMXP);
         m_gyro.reset();
