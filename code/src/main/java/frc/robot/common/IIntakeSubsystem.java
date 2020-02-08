@@ -25,6 +25,8 @@ public interface IIntakeSubsystem extends Subsystem {
      */
     void spinIntake(boolean direction);
 
+    void stopIntake();
+
     /**
      * 
      * @return whether or not the intake is currently spinning
