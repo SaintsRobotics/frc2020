@@ -9,19 +9,22 @@ import edu.wpi.first.wpilibj.PWMVictorSPX;
 import edu.wpi.first.wpilibj.SpeedController;
 import edu.wpi.first.wpilibj.controller.PIDController;
 import frc.robot.RobotConfig;
+
 import frc.robot.common.IIntakeSubsystem;
 import frc.robot.common.ILogger;
 import frc.robot.common.TraceableSubsystem;
 
 public class Intake extends TraceableSubsystem implements IIntakeSubsystem {
 
-    private RobotConfig _config;
     public SpeedController intakeController;
     public SpeedController armController;
     public Encoder armEncoder;
     private final PIDController m_armPIDController = new PIDController(0.1, 0, 0);
+    private RobotConfig _config;
+
     @Inject
     public Intake(final ILogger logger, final RobotConfig config) {
+
         super(logger);
         _config = config;
         intakeController = new PWMVictorSPX(config.Intake.intakeControllerChannel);

@@ -5,7 +5,7 @@
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
 
-package frc.robot.mocks.subsystems;
+package frc.robot.subsystems.mocks;
 
 import com.google.inject.Inject;
 

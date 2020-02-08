@@ -95,12 +95,14 @@ public class SwerveDrivetrain extends TraceableSubsystem implements IDrivetrainS
         m_kinematics = new SwerveDriveKinematics(m_frontLeft.getlocation(), m_frontRight.getlocation(),
                 m_backLeft.getlocation(), m_backRight.getlocation());
 
-        m_gyro = new AHRS(SPI.Port.kMXP);
-        m_gyro.reset();
-
         m_pidController = new PIDController((getMaxSpeed() / 180) * 10, 0, 0);
         m_pidController.enableContinuousInput(0, 360);
         m_pidController.setTolerance(2.5);
+
+        m_gyro = new AHRS(SPI.Port.kMXP);
+        m_gyro.reset();
+
+        m_pidController.setSetpoint(m_gyro.getAngle());
 
     }
 
@@ -173,8 +175,8 @@ public class SwerveDrivetrain extends TraceableSubsystem implements IDrivetrainS
 
         SwerveModuleState[] swerveModuleStates;
         if (fieldRelative) {
-            swerveModuleStates = m_kinematics.toSwerveModuleStates(
-                    ChassisSpeeds.fromFieldRelativeSpeeds(x, y, theta, new Rotation2d(m_gyro.getAngle())));
+            swerveModuleStates = m_kinematics.toSwerveModuleStates(ChassisSpeeds.fromFieldRelativeSpeeds(x, y, theta,
+                    new Rotation2d(2 * Math.PI - Math.toRadians(((m_gyro.getAngle() % 360) + 360) % 360))));
         } else {
             swerveModuleStates = m_kinematics.toSwerveModuleStates(new ChassisSpeeds(x, y, theta));
         }
