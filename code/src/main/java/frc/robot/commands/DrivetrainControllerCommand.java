@@ -37,20 +37,23 @@ public class DrivetrainControllerCommand extends TraceableCommand {
     @Override
     public void execute() {
         super.execute();
-        _drivetrain.move(deadZones(_controller.getY(Hand.kLeft) * _drivetrain.getMaxSpeed(), 0.1), deadZones(_controller.getX(Hand.kLeft) * _drivetrain.getMaxSpeed(), 0.1), deadZones(_controller.getX(Hand.kRight)* _drivetrain.getMaxSpeed(), 0.1), _controller.getBumper(Hand.kRight)); // theta
-                                                                                                                     // ==
-                                                                                                                     // axis??
+        _drivetrain.move(deadZones(_controller.getY(Hand.kLeft) * _drivetrain.getMaxSpeed(), 0.1),
+                deadZones(_controller.getX(Hand.kLeft) * _drivetrain.getMaxSpeed(), 0.1),
+                deadZones(_controller.getX(Hand.kRight) * _drivetrain.getMaxSpeed(), 0.1),
+                _controller.getBumper(Hand.kRight)); // theta
+        // ==
+        // axis??
 
     }
 
     /**
      * 
-     * @param input     value to be modified (deadzoned)
-     * @param deadZone  the maximum value to be considered zero
-     * @return          the modified version of input
+     * @param input    value to be modified (deadzoned)
+     * @param deadZone the maximum value to be considered zero
+     * @return the modified version of input
      */
-    public double deadZones (double input, double deadZone) {
-        if (Math.abs(input) < deadZone){
+    public double deadZones(double input, double deadZone) {
+        if (Math.abs(input) < deadZone) {
             return 0;
         }
         return input;

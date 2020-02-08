@@ -25,15 +25,15 @@ public class IntakeControllerCommand extends TraceableCommand {
         super.initialize();
     }
 
-    public void execute(){
+    public void execute() {
 
         _intake.stopIntake();
 
-        if(_controller.getBumper(Hand.kLeft)){
+        if (_controller.getBumper(Hand.kLeft)) {
             _intake.spinIntake(true);
         }
 
-        if(_controller.getBumper(Hand.kRight){
+        if (_controller.getBumper(Hand.kRight)) {
             _intake.spinIntake(false);
         }
 

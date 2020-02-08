@@ -2,6 +2,7 @@
 package frc.robot.subsystems;
 
 import com.ctre.phoenix.motorcontrol.can.VictorSPX;
+import com.google.inject.Inject;
 
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.PWMVictorSPX;
@@ -19,7 +20,7 @@ public class Intake extends TraceableSubsystem implements IIntakeSubsystem {
     public SpeedController armController;
     public Encoder armEncoder;
     private final PIDController m_armPIDController = new PIDController(0.1, 0, 0);
-
+    @Inject
     public Intake(final ILogger logger, final RobotConfig config) {
         super(logger);
         _config = config;
