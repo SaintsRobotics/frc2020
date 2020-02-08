@@ -41,8 +41,12 @@ public class MockIntake extends TraceableMockSubsystem implements IIntakeSubsyst
     }
 
     @Override
-    public void spinIntake(double velocity) {
+    public void spinIntake(boolean direction) {
         _isSpinning = true;
+    }
+
+    public void stopIntake() {
+
     }
 
     @Override
