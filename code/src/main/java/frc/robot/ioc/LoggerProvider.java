@@ -5,22 +5,20 @@
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
 
-package frc.robot;
+package frc.robot.ioc;
 
-import com.google.inject.AbstractModule;
-
+import com.google.inject.Provider;
+import frc.robot.common.ILogger;
 import frc.robot.common.*;
-import frc.robot.subsystems.mocks.MockDrivetrain;
 
 /**
  * Add your docs here.
  */
-public class TestDependenciesModule extends AbstractModule {
-    protected void configure() {
-        // create logger for injecting
-        ILogger logger = new LoggerGroup(new ConsoleLogger());
+public class LoggerProvider implements Provider<ILogger> {
 
-        this.bind(ILogger.class).toInstance(logger);
-        this.bind(IDrivetrainSubsystem.class).to(MockDrivetrain.class);
+    @Override
+    public ILogger get() {
+        return new LoggerGroup(new ConsoleLogger(), new ShuffleboardLogger());
     }
+
 }

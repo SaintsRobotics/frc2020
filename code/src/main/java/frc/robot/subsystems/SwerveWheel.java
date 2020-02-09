@@ -136,11 +136,10 @@ public class SwerveWheel {
       targetHead += Math.PI;
       targetHead %= kTwoPi;
       targetVelocity *= -1;
-      DriverStation.reportWarning("reached smart inversion section!! :)", false);
     }
 
     //this.mpsToVoltOutput(targetVelocity);
-    this.m_turningPIDController.setSetpoint(targetHead);
+    this.m_turningPIDController.setSetpoint(((targetHead % kTwoPi) + kTwoPi) % kTwoPi);
     return targetVelocity;
   }
 }

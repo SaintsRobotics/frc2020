@@ -16,6 +16,7 @@ public final class RobotConfig {
     public final RobotConfig.Controller Controller = new RobotConfig.Controller();
     public final RobotConfig.SwerveDrivetrain Drivetrain = new RobotConfig.SwerveDrivetrain();
     public final RobotConfig.Physical Physical = new RobotConfig.Physical();
+    public final RobotConfig.Intake Intake = new RobotConfig.Intake();
 
     public final class Controller {
         public final int controllerPort = 0;
@@ -36,13 +37,21 @@ public final class RobotConfig {
         public final int frontRightAbsoluteEncoder = 1;
         public final int rearLeftAbsoluteEncoder = 3;
         public final int rearRightAbsoluteEncoder = 2;
-        public final double swerveX = .67/2;
+        public final double swerveX = .67 / 2;
         public final double swerveY = .25;
     }
 
-    public final class Physical {
+s    public final class Physical {
         public final double widthInCms = 0;
         public final double lengthInCms = 0;
         public final double weightInKgs = 0;
+    }
+
+    public final class Intake {
+        public final int intakeControllerPort = 1;
+        public final int armControllerPort = 2;
+        public final int armEncoderPortA = 1;
+        public final int armEncoderPortB = 1;
+
     }
 }
