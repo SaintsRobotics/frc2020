@@ -11,8 +11,10 @@ import com.google.inject.Inject;
 import com.google.inject.Provider;
 
 import frc.robot.commands.DrivetrainControllerCommand;
+import frc.robot.commands.IntakeControllerCommand;
 import frc.robot.common.CompetitionRobot;
 import frc.robot.common.IDrivetrainSubsystem;
+import frc.robot.common.IIntakeSubsystem;
 import frc.robot.common.ILogger;
 import edu.wpi.first.wpilibj2.command.Command;
 
@@ -28,11 +30,12 @@ public class RobotContainer extends CompetitionRobot {
    * The container for the robot. Contains subsystems, OI devices, and commands.
    */
   @Inject
-  private RobotContainer(final ILogger logger, IDrivetrainSubsystem drivetrain, DrivetrainControllerCommand driveCommand) {
+  private RobotContainer(final ILogger logger, IDrivetrainSubsystem drivetrain, DrivetrainControllerCommand driveCommand, IIntakeSubsystem intake, IntakeControllerCommand intakeCommand) {
     super(logger);
     // _autonomousCommand = autonomousCommand;
-
+    intake.setDefaultCommand(intakeCommand);
     drivetrain.setDefaultCommand(driveCommand);
+    
 
   }
 

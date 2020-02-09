@@ -33,8 +33,6 @@ public class Intake extends TraceableSubsystem implements IIntakeSubsystem {
         intakeController = new PWMVictorSPX(config.Intake.intakeControllerPort);
         armController = new PWMVictorSPX(config.Intake.armControllerPort);
         
-
-        intakeController.setInverted(true);
         armController.setInverted(true);
         armEncoder.reset();
 
@@ -74,13 +72,14 @@ public class Intake extends TraceableSubsystem implements IIntakeSubsystem {
 
     // Spin the intake to accept balls into robot
     public void spinIntake() {
-        intakeController.set(1);
+        intakeController.set(.4);
     }
 
     // Reverse the intake to push balls away from intake
     public void reverseIntake() {
-        intakeController.set(-1);
+        intakeController.set(-.4);
     }
+    
 
     // Stops the intake
     public void stopIntake() {
@@ -95,4 +94,8 @@ public class Intake extends TraceableSubsystem implements IIntakeSubsystem {
         SmartDashboard.putNumber("Arm Encoder", armEncoder.get());
     }
 
+    
+  public void controlledSpinIntake(double amount){
+      intakeController.set(amount);
+  }
 }

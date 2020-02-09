@@ -29,6 +29,7 @@ public class DependenciesModule extends AbstractModule {
         // mocks instead
         if (RobotBase.isReal()) {
             this.bind(IDrivetrainSubsystem.class).to(SwerveDrivetrain.class).in(Singleton.class);
+            this.bind(IIntakeSubsystem.class).to(Intake.class).in(Singleton.class);
         } else {
             this.bind(IDrivetrainSubsystem.class).to(MockDrivetrain.class).in(Singleton.class);
         }

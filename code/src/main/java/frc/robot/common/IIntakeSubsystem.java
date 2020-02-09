@@ -27,11 +27,14 @@ public interface IIntakeSubsystem extends Subsystem {
 
     // Stop intake
     void stopIntake();
+    void controlledSpinIntake(double amount);
 
     /**
      * 
      * @return whether or not the intake is currently spinning
      */
     boolean isSpinning();
+
+
 
 }

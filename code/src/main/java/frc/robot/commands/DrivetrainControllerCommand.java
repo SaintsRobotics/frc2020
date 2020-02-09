@@ -37,11 +37,11 @@ public class DrivetrainControllerCommand extends TraceableCommand {
     @Override
     public void execute() {
         super.execute();
-        _drivetrain.move(deadZones(_controller.getY(Hand.kLeft) * _drivetrain.getMaxSpeed(), 0.1),
-                deadZones(_controller.getX(Hand.kLeft) * _drivetrain.getMaxSpeed(), 0.1),
-                deadZones(_controller.getX(Hand.kRight) * _drivetrain.getMaxSpeed(), 0.1),
-                _controller.getBumper(Hand.kRight)); // theta
-        // ==
+        // _drivetrain.move(deadZones(_controller.getY(Hand.kLeft) * _drivetrain.getMaxSpeed(), 0.1),
+        //         deadZones(_controller.getX(Hand.kLeft) * _drivetrain.getMaxSpeed(), 0.1),
+        //         deadZones(_controller.getX(Hand.kRight) * _drivetrain.getMaxSpeed(), 0.1),
+        //         _controller.getBumper(Hand.kRight)); // theta
+        // // ==
         // axis??
 
     }

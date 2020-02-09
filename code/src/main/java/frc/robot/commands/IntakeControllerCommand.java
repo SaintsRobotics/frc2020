@@ -4,6 +4,7 @@ import com.google.inject.Inject;
 
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.GenericHID.*;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.common.*;
 
 public class IntakeControllerCommand extends TraceableCommand {
@@ -12,7 +13,6 @@ public class IntakeControllerCommand extends TraceableCommand {
     private final XboxController _controller;
 
     @Inject
-
     public IntakeControllerCommand(final ILogger logger, IIntakeSubsystem intakeSubsystem) {
         super(logger);
         _intake = intakeSubsystem;
@@ -26,16 +26,12 @@ public class IntakeControllerCommand extends TraceableCommand {
     }
 
     public void execute() {
-
-        _intake.stopIntake();
-
+        
         if (_controller.getBumper(Hand.kLeft)) {
             _intake.spinIntake();
-        }
-
-        if (_controller.getBumper(Hand.kRight)) {
+        }else if (_controller.getBumper(Hand.kRight)) {
             _intake.reverseIntake();
-        }
+        } else{_intake.stopIntake();}
 
     }
 
