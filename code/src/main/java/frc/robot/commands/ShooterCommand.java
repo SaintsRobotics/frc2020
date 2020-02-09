@@ -39,7 +39,7 @@ public class ShooterCommand extends TraceableCommand {
     public void execute() {
         super.execute();
         if (_controller.getAButton()) {
-            _shooter.setSpeed(5450);
+            _shooter.setSpeed(4900);
         }
         if (_controller.getBButton()) {
             _shooter.enableFeeding();

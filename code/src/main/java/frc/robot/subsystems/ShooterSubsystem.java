@@ -16,6 +16,7 @@ import edu.wpi.first.wpilibj.PWMVictorSPX;
 import edu.wpi.first.wpilibj.SpeedController;
 import edu.wpi.first.wpilibj.SpeedControllerGroup;
 import edu.wpi.first.wpilibj.controller.PIDController;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.common.ILogger;
 import frc.robot.common.IShooterSubsystem;
 import frc.robot.common.TraceableMockSubsystem;
@@ -50,10 +51,10 @@ public class ShooterSubsystem extends TraceableMockSubsystem implements IShooter
         m_leftEncoder = m_leftShooter.getEncoder();
         m_rightEncoder = m_rightShooter.getEncoder();
         m_shooter = new SpeedControllerGroup(m_leftShooter, m_rightShooter);
-        m_shooterPID = new PIDController(0.1, 0, 0);
+        m_shooterPID = new PIDController(0.0003, 0.00001, 0);
         m_kicker = new PWMVictorSPX(0);
         m_shooterPID.setTolerance(10);
-
+        
         // TODO Auto-generated constructor stub
     }
 
@@ -96,13 +97,20 @@ public class ShooterSubsystem extends TraceableMockSubsystem implements IShooter
     public void stopShooter() {
 
         setSpeed(0);
-        m_shooterPID.setSetpoint(1000);
+        
 
     }
 
     public void periodic() {
         isUpToSpeed = Math.abs(m_leftEncoder.getVelocity() - m_targetVelocity) < 50;
-        m_shooter.set(m_shooterPID.calculate(m_leftEncoder.getVelocity()));
+        SmartDashboard.putNumber("Shooter Currnet RPM", m_leftEncoder.getVelocity());
+        
+        double shooterSpeed = m_shooterPID.calculate(m_leftEncoder.getVelocity());
+        SmartDashboard.putNumber("Shooter Pid Output", shooterSpeed);
+        if (shooterSpeed > 0)
+            m_shooter.set(shooterSpeed);
+            //m_shooter.set(shooterSpeed);
+        else {m_shooter.set(0);}
         if (kickerEnabled && isUpToSpeed)
             m_kicker.set(1);
         else
