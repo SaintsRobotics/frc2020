@@ -113,8 +113,8 @@ public class SwerveWheel {
     
     // Calculate the turning motor output from the turning PID controller.
     driveOutput = smartInversion(state.angle.getRadians(), driveOutput);
-    m_driveMotor.set(driveOutput);
-    m_turningMotor.set(m_turningPIDController.calculate(m_turningEncoder.getRadians()));
+    //m_driveMotor.set(driveOutput);
+    //m_turningMotor.set(m_turningPIDController.calculate(m_turningEncoder.getRadians()));
 
   }
 

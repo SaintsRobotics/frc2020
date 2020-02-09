@@ -1,10 +1,12 @@
+package frc.robot.subsystems;
 
-import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 
+import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.PWMVictorSPX;
 import edu.wpi.first.wpilibj.SpeedController;
 import edu.wpi.first.wpilibj.controller.PIDController;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.common.IIntakeSubsystem;
 import frc.robot.common.ILogger;
 import frc.robot.common.TraceableSubsystem;
@@ -13,7 +15,7 @@ public class Intake extends TraceableSubsystem implements IIntakeSubsystem {
 
     public SpeedController intakeController = new PWMVictorSPX(1);
     public SpeedController armController = new PWMVictorSPX(2);
-    public Encoder armEncoder = new Encoder(1, 1);
+    public DutyCycleEncoder armEncoder = new DutyCycleEncoder(0);
     private final PIDController m_armPIDController = new PIDController(0.1, 0, 0);
 
     public Intake(final ILogger logger) {
@@ -28,16 +30,15 @@ public class Intake extends TraceableSubsystem implements IIntakeSubsystem {
     }
 
     public void raiseArm() {
-        int count = armEncoder.get();
+        double count = armEncoder.getDistance();
 
         // Based on the gear ratio of the motor
         int PulsesPerRevolution;
 
         // Finding the pulses per revolution will then help find the number of pulses
         // needed to move a quarter of the distance (90deg) needed for the arm
-        int PulsesPerQuarter = PulsesPerRevolution / 4;
+        //int PulsesPerQuarter = PulsesPerRevolution / 4;
 
-        double distancePerPulse = armEncoder.getDistancePerPulse();
         // Arm is pwmVictorspx on port 2
     }
 
@@ -46,13 +47,13 @@ public class Intake extends TraceableSubsystem implements IIntakeSubsystem {
     }
 
     public boolean isLowered() {
-        boolean isArmStopped = armEncoder.getStopped();
-
+        
+        return false;
     }
 
     public void spinIntake(boolean direction) {
 
-        double scaledvelocity;
+        double scaledvelocity = 0;
         if (direction) {
             scaledvelocity = 1;
         }
@@ -74,6 +75,9 @@ public class Intake extends TraceableSubsystem implements IIntakeSubsystem {
         } else {
             return false;
         }
+    }
+    public void periodic(){
+        SmartDashboard.putNumber("Arm Encoder", armEncoder.get());
     }
 
 }
