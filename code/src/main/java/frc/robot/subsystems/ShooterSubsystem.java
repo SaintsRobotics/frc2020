@@ -51,9 +51,10 @@ public class ShooterSubsystem extends TraceableMockSubsystem implements IShooter
         m_leftEncoder = m_leftShooter.getEncoder();
         m_rightEncoder = m_rightShooter.getEncoder();
         m_shooter = new SpeedControllerGroup(m_leftShooter, m_rightShooter);
-        m_shooterPID = new PIDController(0.0003, 0.00001, 0);
+        m_shooterPID = new PIDController(0.0003, 0.0004, 0);
         m_kicker = new PWMVictorSPX(0);
         m_shooterPID.setTolerance(10);
+        m_shooterPID.reset();       
         
         // TODO Auto-generated constructor stub
     }
@@ -103,14 +104,15 @@ public class ShooterSubsystem extends TraceableMockSubsystem implements IShooter
 
     public void periodic() {
         isUpToSpeed = Math.abs(m_leftEncoder.getVelocity() - m_targetVelocity) < 50;
-        SmartDashboard.putNumber("Shooter Currnet RPM", m_leftEncoder.getVelocity());
+        SmartDashboard.putNumber("Shooter Current RPM", m_leftEncoder.getVelocity());
+        SmartDashboard.putNumber("Shooter Current RPM not graph", m_leftEncoder.getVelocity());
         
         double shooterSpeed = m_shooterPID.calculate(m_leftEncoder.getVelocity());
         SmartDashboard.putNumber("Shooter Pid Output", shooterSpeed);
-        if (shooterSpeed > 0)
+        if (shooterSpeed > -0.2)
             m_shooter.set(shooterSpeed);
             //m_shooter.set(shooterSpeed);
-        else {m_shooter.set(0);}
+        else {m_shooter.set(-0.2);}
         if (kickerEnabled && isUpToSpeed)
             m_kicker.set(1);
         else
