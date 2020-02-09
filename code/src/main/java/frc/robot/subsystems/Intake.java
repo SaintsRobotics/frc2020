@@ -27,9 +27,9 @@ public class Intake extends TraceableSubsystem implements IIntakeSubsystem {
 
         super(logger);
         _config = config;
-        intakeController = new PWMVictorSPX(config.Intake.intakeControllerChannel);
-        armController = new PWMVictorSPX(config.Intake.armControllerChannel);
-        armEncoder = new Encoder(config.Intake.armEncoderChannelA, config.Intake.armEncoderChannelB);
+        intakeController = new PWMVictorSPX(config.Intake.intakeControllerPort);
+        armController = new PWMVictorSPX(config.Intake.armControllerPort);
+        armEncoder = new Encoder(config.Intake.armEncoderPortA, config.Intake.armEncoderPortB);
 
         intakeController.setInverted(true);
         armController.setInverted(true);
@@ -40,6 +40,7 @@ public class Intake extends TraceableSubsystem implements IIntakeSubsystem {
         // Motor is inverted
     }
 
+    // Raises the intake arm
     public void raiseArm() {
         int count = armEncoder.get();
 
@@ -54,10 +55,12 @@ public class Intake extends TraceableSubsystem implements IIntakeSubsystem {
         // Arm is pwmVictorspx on port 2
     }
 
+    // Lowers the arm
     public void lowerArm() {
 
     }
 
+    // Checks if arm is currently lowered
     public boolean isLowered() {
 
         boolean isArmStopped = armEncoder.getStopped();
@@ -67,24 +70,22 @@ public class Intake extends TraceableSubsystem implements IIntakeSubsystem {
 
     }
 
-    public void spinIntake(boolean direction) {
-
-        double scaledVelocity = 0;
-        if (direction) {
-            scaledVelocity = 1;
-        }
-        if (!direction) {
-            scaledVelocity = -1;
-        }
-
-        intakeController.set(scaledVelocity);
-
+    // Spin the intake to accept balls into robot
+    public void spinIntake() {
+        intakeController.set(1);
     }
 
+    // Reverse the intake to push balls away from intake
+    public void reverseIntake() {
+        intakeController.set(-1);
+    }
+
+    // Stops the intake
     public void stopIntake() {
         intakeController.set(0);
     }
 
+    // Checks if intake is spinning
     public boolean isSpinning() {
         return Math.abs(intakeController.get()) > 0;
     }

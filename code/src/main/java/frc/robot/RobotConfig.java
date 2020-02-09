@@ -41,7 +41,7 @@ public final class RobotConfig {
         public final double swerveY = .25;
     }
 
-    public final class Physical {
+s    public final class Physical {
         public final double widthInCms = 0;
         public final double lengthInCms = 0;
         public final double weightInKgs = 0;
