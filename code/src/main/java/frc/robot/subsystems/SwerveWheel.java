@@ -26,6 +26,7 @@ import edu.wpi.first.wpilibj.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.trajectory.TrapezoidProfile;
 import frc.robot.common.AbsoluteEncoder;
+import frc.robot.common.MathUtilities;
 
 public class SwerveWheel {
   private static final double kWheelRadius = 0.0508;
@@ -139,7 +140,7 @@ public class SwerveWheel {
     }
 
     //this.mpsToVoltOutput(targetVelocity);
-    this.m_turningPIDController.setSetpoint(((targetHead % kTwoPi) + kTwoPi) % kTwoPi);
+    this.m_turningPIDController.setSetpoint(MathUtilities.getPositiveRadians(targetHead));
     return targetVelocity;
   }
 }

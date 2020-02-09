@@ -27,6 +27,7 @@ import frc.robot.RobotConfig;
 import frc.robot.common.AbsoluteEncoder;
 import frc.robot.common.IDrivetrainSubsystem;
 import frc.robot.common.ILogger;
+import frc.robot.common.MathUtilities;
 import frc.robot.common.Position;
 import frc.robot.common.TraceableSubsystem;
 import edu.wpi.first.wpilibj.SPI;
@@ -95,8 +96,8 @@ public class SwerveDrivetrain extends TraceableSubsystem implements IDrivetrainS
         m_kinematics = new SwerveDriveKinematics(m_frontLeft.getlocation(), m_frontRight.getlocation(),
                 m_backLeft.getlocation(), m_backRight.getlocation());
 
-        m_pidController = new PIDController((getMaxSpeed() / 180) * 10, 0, 0);
-        m_pidController.enableContinuousInput(0, 360);
+        m_pidController = new PIDController((getMaxSpeed() / Math.PI) * 10, 0, 0);
+        m_pidController.enableContinuousInput(0, 2*Math.PI);
         m_pidController.setTolerance(2.5);
 
         m_gyro = new AHRS(SPI.Port.kMXP);
@@ -150,9 +151,13 @@ public class SwerveDrivetrain extends TraceableSubsystem implements IDrivetrainS
      * @param theta rotational speed, positive is clockwise in radians per second
      *              (max unknown)
      */
+
+     
+    /** added variable to store gyro value in radians. */
     @Override
     public void move(double x, double y, double theta, final boolean fieldRelative) {
         // TODO Auto-generated method stub
+        double gyroRadians = MathUtilities.getPositiveRadians(Math.toRadians(this.m_gyro.getAngle()));
 
         this.getLogger().debug("x: " + x + ", y: " + y + ", theta: " + theta);
 
@@ -160,23 +165,23 @@ public class SwerveDrivetrain extends TraceableSubsystem implements IDrivetrainS
         if (theta != 0.0) {
             m_isTurning = true;
         } else if (theta == 0.0 && this.m_isTurning) {
-            this.m_pidController.setSetpoint((((this.m_gyro.getAngle() % 360) + 360) % 360));
+            this.m_pidController.setSetpoint(gyroRadians);
             this.m_isTurning = false;
-            theta = this.m_pidController.calculate((((this.m_gyro.getAngle() % 360) + 360) % 360));
+            theta = this.m_pidController.calculate(gyroRadians);
         } else {
-            theta = this.m_pidController.calculate((((this.m_gyro.getAngle() % 360) + 360) % 360));
+            theta = this.m_pidController.calculate(gyroRadians);
         }
 
-        SmartDashboard.putNumber("gyro angle ", ((this.m_gyro.getAngle() % (360)) + (360)) % (360));
+        SmartDashboard.putNumber("gyro angle ", (gyroRadians));
         SmartDashboard.putNumber("heading pid calc ",
-                this.m_pidController.calculate((((this.m_gyro.getAngle() % (360)) + (360)) % (360))));
+                this.m_pidController.calculate(gyroRadians));
         SmartDashboard.putNumber("heading pid error ", this.m_pidController.getPositionError());
         SmartDashboard.putBoolean("is turning ", this.m_isTurning);
 
         SwerveModuleState[] swerveModuleStates;
         if (fieldRelative) {
             swerveModuleStates = m_kinematics.toSwerveModuleStates(ChassisSpeeds.fromFieldRelativeSpeeds(x, y, theta,
-                    new Rotation2d(2 * Math.PI - Math.toRadians(((m_gyro.getAngle() % 360) + 360) % 360))));
+                    new Rotation2d(2 * Math.PI - gyroRadians)));
         } else {
             swerveModuleStates = m_kinematics.toSwerveModuleStates(new ChassisSpeeds(x, y, theta));
         }
