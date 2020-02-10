@@ -34,6 +34,7 @@ public class Robot extends TimedRobot {
   private final Injector _container;
   // The driver's controller
   XboxController m_driverController;
+  XboxController m_operatorController;
 
   public Robot() {
     this(new DependenciesModule());
@@ -44,6 +45,7 @@ public class Robot extends TimedRobot {
     
     _config = _container.getInstance(RobotConfig.class);
     m_driverController = _container.getInstance(XboxController.class);
+
   }
 
   public RobotContainer getRobot() {

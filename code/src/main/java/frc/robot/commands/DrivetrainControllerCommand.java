@@ -11,6 +11,7 @@ import com.google.inject.Inject;
 
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.GenericHID.*;
+import frc.robot.RobotConfig;
 import frc.robot.common.*;
 
 /**
@@ -19,12 +20,14 @@ import frc.robot.common.*;
 public class DrivetrainControllerCommand extends TraceableCommand {
     private final IDrivetrainSubsystem _drivetrain;
     private final XboxController _controller;
+    private final RobotConfig _Config;
 
     @Inject
-    public DrivetrainControllerCommand(final ILogger logger, IDrivetrainSubsystem drivetrain) {
+    public DrivetrainControllerCommand(final ILogger logger, IDrivetrainSubsystem drivetrain, final RobotConfig config) {
         super(logger);
+        _Config = config;
         _drivetrain = drivetrain;
-        _controller = new XboxController(0);
+        _controller = new XboxController(_Config.Controller.driverPort);
 
         addRequirements(_drivetrain);
     }
@@ -37,9 +40,9 @@ public class DrivetrainControllerCommand extends TraceableCommand {
     @Override
     public void execute() {
         super.execute();
-        _drivetrain.move(deadZones(_controller.getY(Hand.kLeft) * _drivetrain.getMaxSpeed(), 0.1),
-                deadZones(_controller.getX(Hand.kLeft) * _drivetrain.getMaxSpeed(), 0.1),
-                deadZones(_controller.getX(Hand.kRight) * _drivetrain.getMaxSpeed(), 0.1),
+        _drivetrain.move(deadZones(_controller.getY(Hand.kLeft) * _drivetrain.getMaxSpeed(), _Config.Controller.leftXdeadzone),
+                deadZones(_controller.getX(Hand.kLeft) * _drivetrain.getMaxSpeed(), _Config.Controller.leftYdeadzone),
+                deadZones(_controller.getX(Hand.kRight) * _drivetrain.getMaxSpeed(), _Config.Controller.rightXdeadzone),
                 _controller.getBumper(Hand.kRight)); // theta
         // ==
         // axis??
