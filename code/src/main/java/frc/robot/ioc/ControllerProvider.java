@@ -26,6 +26,12 @@ public class ControllerProvider implements Provider<XboxController> {
 
     @Override
     public XboxController get() {
-        return new XboxController(_config.Controller.controllerPort);
+        return new XboxController(_config.Controller.driverPort);
+    }
+    public XboxController getDriverController(){
+        return new XboxController(_config.Controller.driverPort);
+    }
+    public XboxController getOperatorController() {
+        return new XboxController(_config.Controller.operatorPort);
     }
 }

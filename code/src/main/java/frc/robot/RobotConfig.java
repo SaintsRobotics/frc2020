@@ -35,7 +35,7 @@ public final class RobotConfig {
         public final int frontRightDriveMotorPort = 4;
         public final int frontRightTurnMotorPort = 5;
         public final int rearRightDriveMotorPort = 6;
-        public final int rearRightturnMotorPort = 7;
+        public final int rearRightTurnMotorPort = 7;
 
         public final int frontLeftAbsoluteEncoder = 0;
         public final int frontRightAbsoluteEncoder = 1;
@@ -47,7 +47,23 @@ public final class RobotConfig {
         public final double rearLeftOffset = 3.50;
         public final double rearRightOffset = 2.50;
 
+        public final double minSpeed = 0; //in m/s
+        public final double maxSpeed = 1; //in m/s
+
+        public final double PID_kProportional = maxSpeed/18;
+        public final double PID_kIntegral = 0;
+        public final double PID_kDerivative = 0;
         public final double PIDTolerance = 2.5;
+                
+        public final int driveCurrentStallLimit = 35; //in Amps
+        public final int driveCurrentFreeLimit = 60; //in Amps
+        public final int driveCurrentRPMLimit = 150; //in Amps
+
+        public final int turnCurrentStallLimit = 17; //in Amps
+        public final int turnCurrentFreeLimit = 30; //in Amps
+        public final int turnCurrentRPMLimit = 75; //in Amps
+
+   
 
         public final double swerveX = .335;
         public final double swerveY = .25;

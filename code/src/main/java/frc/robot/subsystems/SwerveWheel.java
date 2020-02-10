@@ -25,6 +25,7 @@ import edu.wpi.first.wpilibj.geometry.Translation2d;
 import edu.wpi.first.wpilibj.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.trajectory.TrapezoidProfile;
+import frc.robot.RobotConfig;
 import frc.robot.common.AbsoluteEncoder;
 
 public class SwerveWheel {
@@ -40,11 +41,11 @@ public class SwerveWheel {
   private final Translation2d m_location;
   private final CANEncoder m_driveEncoder;
   private final AbsoluteEncoder m_turningEncoder;
-
+  private final RobotConfig _config;
   //private final PIDController m_drivePIDController = new PIDController(1, 0, 0);
 
-  private final PIDController m_turningPIDController = new PIDController(.1, 0, 0);
-
+  // private final PIDController m_turningPIDController = new PIDController(.1, 0, 0);
+  private final PIDController m_turningPIDController;
   private String m_name;
 
   private final double twoPI = kTwoPi; 
@@ -58,16 +59,18 @@ public class SwerveWheel {
    * @param Y            Y displacement in meters from the pivot point of the
    *                     robot
    */
-  public SwerveWheel(CANSparkMax driveMotor, CANSparkMax turningMotor, double X, double Y, AbsoluteEncoder turnEncoder,
-      String name) {
+  public SwerveWheel(CANSparkMax driveMotor, CANSparkMax turningMotor, double X, double Y, AbsoluteEncoder turnEncoder, String name, RobotConfig config) {
+    
+    _config = config;
     m_name = name;
     m_driveMotor = driveMotor;
+    m_turningPIDController = new PIDController(.1, 0, 0);
     m_turningMotor = turningMotor;
     m_driveEncoder = m_driveMotor.getEncoder();
     m_turningEncoder = turnEncoder;
     m_location = new Translation2d(X, Y);
-    ((CANSparkMax) m_driveMotor).setSmartCurrentLimit(35, 60, 150);
-    ((CANSparkMax) m_turningMotor).setSmartCurrentLimit(17, 30, 75);
+    ((CANSparkMax) m_driveMotor).setSmartCurrentLimit(_config.Drivetrain.driveCurrentStallLimit, _config.Drivetrain.driveCurrentFreeLimit, _config.Drivetrain.driveCurrentRPMLimit);
+    ((CANSparkMax) m_turningMotor).setSmartCurrentLimit(_config.Drivetrain.turnCurrentStallLimit, _config.Drivetrain.turnCurrentFreeLimit, _config.Drivetrain.turnCurrentRPMLimit);
     // Set the distance per pulse for the drive encoder. We can simply use the
     // distance traveled for one rotation of the wheel divided by the encoder
     // resolution.

@@ -88,14 +88,14 @@ public class SwerveDrivetrain extends TraceableSubsystem implements IDrivetrainS
 
         m_backRightDrive = new CANSparkMax(config.Drivetrain.rearRightDriveMotorPort, MotorType.kBrushless);
         m_backRightDrive.setInverted(true);
-        m_backRightTurn = new CANSparkMax(config.Drivetrain.rearRightturnMotorPort, MotorType.kBrushless);
+        m_backRightTurn = new CANSparkMax(config.Drivetrain.rearRightTurnMotorPort, MotorType.kBrushless);
         m_backRightEncoder = new AbsoluteEncoder(config.Drivetrain.rearRightAbsoluteEncoder, config.Drivetrain.rearRightOffset, true);
         m_backRight = new SwerveWheel(m_backRightDrive, m_backRightTurn, -config.Drivetrain.swerveX,
                 -config.Drivetrain.swerveY, m_backRightEncoder, "Right back");
         m_kinematics = new SwerveDriveKinematics(m_frontLeft.getlocation(), m_frontRight.getlocation(),
                 m_backLeft.getlocation(), m_backRight.getlocation());
 
-        m_pidController = new PIDController((getMaxSpeed() / 180) * 10, 0, 0);
+        m_pidController = new PIDController(_config.Drivetrain.PID_kDerivative, _config.Drivetrain.PID_kIntegral, _config.Drivetrain.PID_kProportional);
         m_pidController.enableContinuousInput(0, 360);
         m_pidController.setTolerance(config.Drivetrain.PIDTolerance);
 
@@ -109,13 +109,13 @@ public class SwerveDrivetrain extends TraceableSubsystem implements IDrivetrainS
     @Override
     public double getMinSpeed() {
         // TODO Auto-generated method stub
-        return 0;
+        return _config.Drivetrain.minSpeed;
     }
 
     @Override
     public double getMaxSpeed() {
         // TODO Auto-generated method stub
-        return 1;
+        return _config.Drivetrain.maxSpeed;
     }
 
     @Override
