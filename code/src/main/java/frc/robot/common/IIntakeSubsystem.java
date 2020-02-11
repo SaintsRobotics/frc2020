@@ -23,7 +23,11 @@ public interface IIntakeSubsystem extends Subsystem {
      * @param specified speed of the intake (negative velocity used for reversing
      * intake)
      */
-    void spinIntake(double velocity);
+
+    void spinIntake(boolean direction);
+
+    void stopIntake();
+
 
     /**
      * 

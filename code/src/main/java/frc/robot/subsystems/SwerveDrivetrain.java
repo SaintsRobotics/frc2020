@@ -14,7 +14,6 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import com.kauailabs.navx.frc.AHRS;
 
-
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.SpeedController;
 import edu.wpi.first.wpilibj.VictorSP;
@@ -57,7 +56,7 @@ public class SwerveDrivetrain extends TraceableSubsystem implements IDrivetrainS
     private SwerveDriveKinematics m_kinematics;
     private AHRS m_gyro;
     private PIDController m_pidController;
-    
+
     private boolean m_isTurning;
 
     @Inject
@@ -96,20 +95,24 @@ public class SwerveDrivetrain extends TraceableSubsystem implements IDrivetrainS
         m_kinematics = new SwerveDriveKinematics(m_frontLeft.getlocation(), m_frontRight.getlocation(),
                 m_backLeft.getlocation(), m_backRight.getlocation());
 
+
         m_pidController = new PIDController((getMaxSpeed()/180) * 5, 0, 0);
+
         m_pidController.enableContinuousInput(0, 360);
         m_pidController.setTolerance(10);
 
         m_gyro = new AHRS(SPI.Port.kMXP);
         m_gyro.reset();
-        
+
         m_pidController.setSetpoint(m_gyro.getAngle());
 
     }
+
     public void resetGyro(){
         this.m_gyro.reset();
         this.m_pidController.setSetpoint(0);
     }
+
 
     @Override
     public double getMinSpeed() {
@@ -148,24 +151,27 @@ public class SwerveDrivetrain extends TraceableSubsystem implements IDrivetrainS
     }
 
     /**
-     * @param x vertical speed, positive is forward in meters per second (max is 3.66 m/s)
-     * @param y horizontal speed, postive is to the left in meters per second (max is 3.66 m/s)
-     * @param theta rotational speed, positive is clockwise in radians per second (max unknown)
+     * @param x     vertical speed, positive is forward in meters per second (max is
+     *              3.66 m/s)
+     * @param y     horizontal speed, postive is to the left in meters per second
+     *              (max is 3.66 m/s)
+     * @param theta rotational speed, positive is clockwise in radians per second
+     *              (max unknown)
      */
     @Override
     public void move(double x, double y, double theta, final boolean fieldRelative) {
         // TODO Auto-generated method stub
 
         this.getLogger().debug("x: " + x + ", y: " + y + ", theta: " + theta);
-        
+
         // Drag Heading Correction
-        if (theta != 0.0){
+        if (theta != 0.0) {
             m_isTurning = true;
-        }
-        else if (theta == 0.0 && this.m_isTurning){
+        } else if (theta == 0.0 && this.m_isTurning) {
             this.m_pidController.setSetpoint((((this.m_gyro.getAngle() % 360) + 360) % 360));
             this.m_isTurning = false;
             theta = this.m_pidController.calculate((((this.m_gyro.getAngle() % 360) + 360) % 360));
+
         }
         else if (x != 0 && y!=0) {
             theta = this.m_pidController.calculate((((this.m_gyro.getAngle() % 360) + 360) % 360));
@@ -173,15 +179,15 @@ public class SwerveDrivetrain extends TraceableSubsystem implements IDrivetrainS
 
         SmartDashboard.putNumber("gyro angle ", (360 - (this.m_gyro.getAngle() % (360)) + (360)) % (360));
         SmartDashboard.putNumber("heading pid calc ", this.m_pidController.calculate((((this.m_gyro.getAngle() % (360)) + (360)) % (360))));
+
         SmartDashboard.putNumber("heading pid error ", this.m_pidController.getPositionError());
         SmartDashboard.putBoolean("is turning ", this.m_isTurning);
 
         SwerveModuleState[] swerveModuleStates;
-        if (fieldRelative){
-            swerveModuleStates = m_kinematics.toSwerveModuleStates(ChassisSpeeds.fromFieldRelativeSpeeds(
-                x, y,theta, new Rotation2d(2*Math.PI - Math.toRadians(((m_gyro.getAngle() % 360) + 360) % 360))));
-        }
-        else {
+        if (fieldRelative) {
+            swerveModuleStates = m_kinematics.toSwerveModuleStates(ChassisSpeeds.fromFieldRelativeSpeeds(x, y, theta,
+                    new Rotation2d(2 * Math.PI - Math.toRadians(((m_gyro.getAngle() % 360) + 360) % 360))));
+        } else {
             swerveModuleStates = m_kinematics.toSwerveModuleStates(new ChassisSpeeds(x, y, theta));
         }
         SwerveDriveKinematics.normalizeWheelSpeeds(swerveModuleStates, this.getMaxSpeed());
