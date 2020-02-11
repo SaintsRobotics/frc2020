@@ -41,13 +41,14 @@ public class SwerveWheel {
   private final Translation2d m_location;
   private final CANEncoder m_driveEncoder;
   private final AbsoluteEncoder m_turningEncoder;
+  private double PIDOutput;
 
   // private final PIDController m_drivePIDController = new PIDController(1, 0,
   // 0);
 
-  private final PIDController m_turningPIDController = new PIDController(.1, 0, 0);
+  private final PIDController m_turningPIDController = new PIDController(.3, 0, 0);
 
-  private String m_name;
+  public String m_name;
 
   private final double twoPI = kTwoPi;
 
@@ -63,6 +64,7 @@ public class SwerveWheel {
    */
   public SwerveWheel(CANSparkMax driveMotor, CANSparkMax turningMotor, double X, double Y, AbsoluteEncoder turnEncoder,
       String name) {
+        PIDOutput = 0;
     m_name = name;
     m_driveMotor = driveMotor;
     m_turningMotor = turningMotor;
@@ -115,8 +117,10 @@ public class SwerveWheel {
 
     // Calculate the turning motor output from the turning PID controller.
     driveOutput = smartInversion(state.angle.getRadians(), driveOutput);
-    // m_driveMotor.set(driveOutput);
-    // m_turningMotor.set(m_turningPIDController.calculate(m_turningEncoder.getRadians()));
+
+    m_driveMotor.set(driveOutput);
+    PIDOutput = m_turningPIDController.calculate(m_turningEncoder.getRadians());
+    m_turningMotor.set(PIDOutput);
 
   }
 
@@ -147,4 +151,7 @@ public class SwerveWheel {
     this.m_turningPIDController.setSetpoint(((targetHead % kTwoPi) + kTwoPi) % kTwoPi);
     return targetVelocity;
   }
+    public double getPID(){
+      return this.PIDOutput;
+    }
 }

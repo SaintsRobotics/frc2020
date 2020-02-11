@@ -8,6 +8,7 @@
 package frc.robot.ioc;
 
 import com.google.inject.AbstractModule;
+import com.google.inject.Singleton;
 
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.XboxController;
@@ -27,10 +28,12 @@ public class DependenciesModule extends AbstractModule {
         // Due to some subsystems not being compatible with the HAL Sims we need to use
         // mocks instead
         if (RobotBase.isReal()) {
-            this.bind(IDrivetrainSubsystem.class).to(SwerveDrivetrain.class).asEagerSingleton();
-            this.bind(IShooterSubsystem.class).to(ShooterSubsystem.class).asEagerSingleton();
+            this.bind(IShooterSubsystem.class).to(ShooterSubsystem.class).in(Singleton.class);
+            this.bind(IDrivetrainSubsystem.class).to(SwerveDrivetrain.class).in(Singleton.class);
+
         } else {
-            this.bind(IDrivetrainSubsystem.class).to(MockDrivetrain.class).asEagerSingleton();
+            this.bind(IShooterSubsystem.class).to(MockShooter.class).in(Singleton.class);
+            this.bind(IDrivetrainSubsystem.class).to(MockDrivetrain.class).in(Singleton.class);
         }
     }
 }
