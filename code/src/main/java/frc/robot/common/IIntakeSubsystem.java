@@ -34,5 +34,5 @@ public interface IIntakeSubsystem extends Subsystem {
      * @return whether or not the intake is currently spinning
      */
     boolean isSpinning();
-
+    
 }

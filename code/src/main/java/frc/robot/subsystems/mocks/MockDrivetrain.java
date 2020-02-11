@@ -39,7 +39,10 @@ public class MockDrivetrain extends TraceableMockSubsystem implements IDrivetrai
         // TODO Auto-generated method stub
         return 0;
     }
-
+     @Override
+    public void resetGyro() {
+        
+    }
     @Override
     public double getMaxSpeed() {
         // TODO Auto-generated method stub
