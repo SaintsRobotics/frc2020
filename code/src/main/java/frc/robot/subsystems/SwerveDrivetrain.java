@@ -167,12 +167,14 @@ public class SwerveDrivetrain extends TraceableSubsystem implements IDrivetrainS
         // Drag Heading Correction
         if (theta != 0.0) {
             m_isTurning = true;
+        //Sets the setpoint to maintain the heading the tick after you release the joystick
         } else if (theta == 0.0 && this.m_isTurning) {
             this.m_pidController.setSetpoint((((this.m_gyro.getAngle() % 360) + 360) % 360));
             this.m_isTurning = false;
             theta = this.m_pidController.calculate((((this.m_gyro.getAngle() % 360) + 360) % 360));
 
         }
+        //applies heading  correction only when moving and not sending a input command
         else if (x != 0 && y!=0) {
             theta = this.m_pidController.calculate((((this.m_gyro.getAngle() % 360) + 360) % 360));
         }
@@ -184,6 +186,7 @@ public class SwerveDrivetrain extends TraceableSubsystem implements IDrivetrainS
         SmartDashboard.putBoolean("is turning ", this.m_isTurning);
 
         SwerveModuleState[] swerveModuleStates;
+        //Field relative conversion
         if (fieldRelative) {
             swerveModuleStates = m_kinematics.toSwerveModuleStates(ChassisSpeeds.fromFieldRelativeSpeeds(x, y, theta,
                     new Rotation2d(2 * Math.PI - Math.toRadians(((m_gyro.getAngle() % 360) + 360) % 360))));
