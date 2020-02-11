@@ -70,28 +70,28 @@ public class SwerveDrivetrain extends TraceableSubsystem implements IDrivetrainS
         m_frontLeftEncoder = new AbsoluteEncoder(config.Drivetrain.frontLeftAbsoluteEncoder, config.Drivetrain.frontLeftOffset, true);
 
         m_frontLeft = new SwerveWheel(m_frontLeftDrive, m_frontLeftTurn, config.Drivetrain.swerveX,
-                config.Drivetrain.swerveY, m_frontLeftEncoder, "Left front");
+                config.Drivetrain.swerveY, m_frontLeftEncoder, "Left front", _config);
 
         m_frontRightDrive = new CANSparkMax(config.Drivetrain.frontRightDriveMotorPort, MotorType.kBrushless);
         m_frontRightDrive.setInverted(true);
         m_frontRightTurn = new CANSparkMax(config.Drivetrain.frontRightTurnMotorPort, MotorType.kBrushless);
         m_frontRightEncoder = new AbsoluteEncoder(config.Drivetrain.frontRightAbsoluteEncoder, config.Drivetrain.frontRightOffset, true);
         m_frontRight = new SwerveWheel(m_frontRightDrive, m_frontRightTurn, config.Drivetrain.swerveX,
-                -config.Drivetrain.swerveY, m_frontRightEncoder, "Right front");
+                -config.Drivetrain.swerveY, m_frontRightEncoder, "Right front", _config);
 
         m_backLeftDrive = new CANSparkMax(config.Drivetrain.rearLeftDriveMotorPort, MotorType.kBrushless);
         m_backLeftDrive.setInverted(true);
         m_backLeftTurn = new CANSparkMax(config.Drivetrain.rearLeftTurnMotorPort, MotorType.kBrushless);
         m_backLeftEncoder = new AbsoluteEncoder(config.Drivetrain.rearLeftAbsoluteEncoder, config.Drivetrain.rearLeftOffset, true);
         m_backLeft = new SwerveWheel(m_backLeftDrive, m_backLeftTurn, -config.Drivetrain.swerveX,
-                config.Drivetrain.swerveY, m_backLeftEncoder, "Left back");
+                config.Drivetrain.swerveY, m_backLeftEncoder, "Left back", _config);
 
         m_backRightDrive = new CANSparkMax(config.Drivetrain.rearRightDriveMotorPort, MotorType.kBrushless);
         m_backRightDrive.setInverted(true);
         m_backRightTurn = new CANSparkMax(config.Drivetrain.rearRightTurnMotorPort, MotorType.kBrushless);
         m_backRightEncoder = new AbsoluteEncoder(config.Drivetrain.rearRightAbsoluteEncoder, config.Drivetrain.rearRightOffset, true);
         m_backRight = new SwerveWheel(m_backRightDrive, m_backRightTurn, -config.Drivetrain.swerveX,
-                -config.Drivetrain.swerveY, m_backRightEncoder, "Right back");
+                -config.Drivetrain.swerveY, m_backRightEncoder, "Right back", _config);
         m_kinematics = new SwerveDriveKinematics(m_frontLeft.getlocation(), m_frontRight.getlocation(),
                 m_backLeft.getlocation(), m_backRight.getlocation());
 
