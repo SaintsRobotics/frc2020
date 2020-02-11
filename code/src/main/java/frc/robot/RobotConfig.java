@@ -47,6 +47,16 @@ public final class RobotConfig {
         public final double rearLeftOffset = 3.50;
         public final double rearRightOffset = 2.50;
 
+        public final boolean frontLeftDriveMotorInverted = true;
+        public final boolean frontLeftEncoderInverted = true;
+        public final boolean rearLeftDriveMotorInverted = true;
+        public final boolean rearLeftEncoderInverted = true;
+        public final boolean frontRightDriveMotorInverted = true;
+        public final boolean frontRightEncoderInverted = true;
+        public final boolean rearRightDriveMotorInverted = true;
+        public final boolean rearRightEncoderInverted = true;
+
+
         public final double minSpeed = 0; //in m/s
         public final double maxSpeed = 1; //in m/s
 
