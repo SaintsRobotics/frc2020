@@ -41,6 +41,7 @@ public class MockIntake extends TraceableMockSubsystem implements IIntakeSubsyst
     }
 
     @Override
+
     public void spinIntake() {
         _isSpinning = true;
     }
@@ -51,6 +52,7 @@ public class MockIntake extends TraceableMockSubsystem implements IIntakeSubsyst
 
     public void stopIntake() {
         _isSpinning = false;
+
     }
 
     @Override

@@ -19,6 +19,7 @@ public interface IIntakeSubsystem extends Subsystem {
      */
     boolean isLowered();
 
+
     // Spin the intake to accept balls into robot
     void spinIntake();
 
@@ -29,12 +30,11 @@ public interface IIntakeSubsystem extends Subsystem {
     void stopIntake();
     void controlledSpinIntake(double amount);
 
+
     /**
      * 
      * @return whether or not the intake is currently spinning
      */
     boolean isSpinning();
-
-
 
 }
