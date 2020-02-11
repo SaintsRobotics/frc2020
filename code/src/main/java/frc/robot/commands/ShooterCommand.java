@@ -25,7 +25,7 @@ public class ShooterCommand extends TraceableCommand {
     public ShooterCommand(final ILogger logger, IShooterSubsystem shooter) {
         super(logger);
         _shooter = shooter;
-        _controller = new XboxController(0);
+        _controller = new XboxController(1);
 
         addRequirements(_shooter);
     }
