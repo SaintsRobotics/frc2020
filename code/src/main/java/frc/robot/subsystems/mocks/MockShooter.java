@@ -17,46 +17,47 @@ import frc.robot.common.TraceableMockSubsystem;
 public class MockShooter extends TraceableMockSubsystem implements IShooterSubsystem {
 
     private boolean _isReady = false;
-    private boolean _shotFired = false;
 
     public MockShooter(ILogger logger) {
         super(logger);
+        // TODO Auto-generated constructor stub
     }
-
     /*
-     *
-     * @param targetVelocity the rpm of shooter
-     */
+    * @param targetVelocity the rpm of shooter
+    */
     @Override
-    public void startShooter(double targetVelocity) {
+    public void setSpeed(double targetVelocity) {
+        // TODO Auto-generated method stub
         _isReady = true;
-        this.getLogger().debug("startShooter");
     }
 
     @Override
-    public boolean isReadyToShoot() {
+    public boolean isReady() {
+        // TODO Auto-generated method stub
         return _isReady;
     }
 
     @Override
-    public void shoot() {
-        // as there's no delay a shot will always be fired
-        _shotFired = false;
-        if (this.isReadyToShoot()) {
-            _shotFired = true;
-            this.getLogger().information("shot fired");
-        }
+    public void enableFeeding() {
+        // TODO Auto-generated method stub
+
+    }
+    @Override
+    public void disableFeeding() {
+        // TODO Auto-generated method stub
+
+    }
+    @Override
+    public void shootBalls(int balls){
+        // TODO Auto-generated method stub
+    }
+    @Override
+    public void stopShooter(){
+       // TODO Auto-generated method stub
+
     }
 
-    @Override
-    public boolean shotFired() {
-        return _shotFired;
-    }
 
-    @Override
-    public void stopShooter() {
-        _isReady = false;
-        _shotFired = false;
-        this.getLogger().debug("stopShooter");
-    }
+
+
 }

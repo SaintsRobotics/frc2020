@@ -92,6 +92,7 @@ public interface IDrivetrainSubsystem extends Subsystem {
     void followPath(double finalHeading, Position... waypoint);
 
     void followPath(double maxSpeed, double finalHeading, Position... waypoint);
+    void resetGyro();
 }
 
 // distance

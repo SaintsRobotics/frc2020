@@ -27,7 +27,11 @@ public class Intake extends TraceableSubsystem implements IIntakeSubsystem {
     public SpeedController intakeController;
     public SpeedController armController;
 
+<<<<<<< HEAD
     public Encoder armEncoder;
+=======
+    public DutyCycleEncoder armEncoder = new DutyCycleEncoder(7);
+>>>>>>> origin/master
 
     private final PIDController m_armPIDController = new PIDController(0.1, 0, 0);
     private RobotConfig _config;
@@ -37,6 +41,7 @@ public class Intake extends TraceableSubsystem implements IIntakeSubsystem {
 
         super(logger);
         _config = config;
+<<<<<<< HEAD
         intakeController = new PWMVictorSPX(config.Intake.intakeControllerPort);
         armController = new PWMVictorSPX(config.Intake.armControllerPort);
         armEncoder = new Encoder(config.Intake.armEncoderPortA, config.Intake.armEncoderPortB);
@@ -45,6 +50,13 @@ public class Intake extends TraceableSubsystem implements IIntakeSubsystem {
         armController = new PWMVictorSPX(config.Intake.armControllerPort);
         
 
+=======
+
+        intakeController = new PWMVictorSPX(config.Intake.intakeControllerPort);
+        armController = new PWMVictorSPX(config.Intake.armControllerPort);
+        
+
+>>>>>>> origin/master
         armController.setInverted(true);
         armEncoder.reset();
 
@@ -121,10 +133,13 @@ public class Intake extends TraceableSubsystem implements IIntakeSubsystem {
       intakeController.set(amount);
   }
 
+<<<<<<< HEAD
     @Override
     public void spinIntake(boolean direction) {
         // TODO Auto-generated method stub
 
     }
 
+=======
+>>>>>>> origin/master
 }
