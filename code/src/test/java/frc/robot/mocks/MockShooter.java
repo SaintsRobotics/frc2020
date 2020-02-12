@@ -5,7 +5,7 @@
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
 
-package frc.robot.mocks.subsystems;
+package frc.robot.mocks;
 
 import frc.robot.common.ILogger;
 import frc.robot.common.IShooterSubsystem;

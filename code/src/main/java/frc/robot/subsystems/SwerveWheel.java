@@ -149,13 +149,8 @@ public class SwerveWheel {
       targetVelocity *= -1;
     }
 
-<<<<<<< HEAD
-    //this.mpsToVoltOutput(targetVelocity);
-    this.m_turningPIDController.setSetpoint(MathUtilities.getPositiveRadians(targetHead));
-=======
     // this.mpsToVoltOutput(targetVelocity);
     this.m_turningPIDController.setSetpoint(((targetHead % kTwoPi) + kTwoPi) % kTwoPi);
->>>>>>> origin/master
     return targetVelocity;
   }
     public double getPID(){

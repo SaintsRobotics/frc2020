@@ -96,18 +96,12 @@ public class SwerveDrivetrain extends TraceableSubsystem implements IDrivetrainS
         m_kinematics = new SwerveDriveKinematics(m_frontLeft.getlocation(), m_frontRight.getlocation(),
                 m_backLeft.getlocation(), m_backRight.getlocation());
 
-<<<<<<< HEAD
-        m_pidController = new PIDController((getMaxSpeed() / Math.PI) * 10, 0, 0);
-        m_pidController.enableContinuousInput(0, 2*Math.PI);
-        m_pidController.setTolerance(2.5);
-=======
 
 
         m_pidController = new PIDController((getMaxSpeed()/180) * 5, 0, 0);
 
         m_pidController.enableContinuousInput(0, 360);
         m_pidController.setTolerance(10);
->>>>>>> origin/master
 
         m_gyro = new AHRS(SPI.Port.kMXP);
         m_gyro.reset();
@@ -186,16 +180,6 @@ public class SwerveDrivetrain extends TraceableSubsystem implements IDrivetrainS
         } else if (theta == 0.0 && this.m_isTurning) {
             this.m_pidController.setSetpoint(gyroRadians);
             this.m_isTurning = false;
-<<<<<<< HEAD
-            theta = this.m_pidController.calculate(gyroRadians);
-        } else {
-            theta = this.m_pidController.calculate(gyroRadians);
-        }
-
-        SmartDashboard.putNumber("gyro angle ", (gyroRadians));
-        SmartDashboard.putNumber("heading pid calc ",
-                this.m_pidController.calculate(gyroRadians));
-=======
             theta = this.m_pidController.calculate((((this.m_gyro.getAngle() % 360) + 360) % 360));
 
         }
@@ -207,7 +191,6 @@ public class SwerveDrivetrain extends TraceableSubsystem implements IDrivetrainS
         SmartDashboard.putNumber("gyro angle ", (360 - (this.m_gyro.getAngle() % (360)) + (360)) % (360));
         SmartDashboard.putNumber("heading pid calc ", this.m_pidController.calculate((((this.m_gyro.getAngle() % (360)) + (360)) % (360))));
 
->>>>>>> origin/master
         SmartDashboard.putNumber("heading pid error ", this.m_pidController.getPositionError());
         SmartDashboard.putBoolean("is turning ", this.m_isTurning);
 
