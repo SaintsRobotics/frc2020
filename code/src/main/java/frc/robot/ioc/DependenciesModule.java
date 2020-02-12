@@ -15,6 +15,8 @@ import edu.wpi.first.wpilibj.XboxController;
 import frc.robot.common.*;
 import frc.robot.subsystems.*;
 import frc.robot.subsystems.mocks.MockDrivetrain;
+import frc.robot.subsystems.mocks.MockIntake;
+import frc.robot.subsystems.mocks.MockShooter;
 
 /**
  * Add your docs here.
