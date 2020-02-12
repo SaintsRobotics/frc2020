@@ -41,16 +41,28 @@ public class MockIntake extends TraceableMockSubsystem implements IIntakeSubsyst
     }
 
     @Override
-    public void spinIntake(boolean direction) {
+
+    public void spinIntake() {
+        _isSpinning = true;
+    }
+
+    public void reverseIntake() {
         _isSpinning = true;
     }
 
     public void stopIntake() {
+        _isSpinning = false;
 
     }
 
     @Override
     public boolean isSpinning() {
         return _isSpinning;
+    }
+
+    @Override
+    public void controlledSpinIntake(double amount) {
+        // TODO Auto-generated method stub
+
     }
 }

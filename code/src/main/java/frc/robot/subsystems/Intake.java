@@ -1,13 +1,21 @@
 
 package frc.robot.subsystems;
 
+
+
+
 import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 import com.google.inject.Inject;
+
+import edu.wpi.first.wpilibj.DutyCycleEncoder;
 
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.PWMVictorSPX;
 import edu.wpi.first.wpilibj.SpeedController;
 import edu.wpi.first.wpilibj.controller.PIDController;
+
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+
 import frc.robot.RobotConfig;
 
 import frc.robot.common.IIntakeSubsystem;
@@ -18,7 +26,9 @@ public class Intake extends TraceableSubsystem implements IIntakeSubsystem {
 
     public SpeedController intakeController;
     public SpeedController armController;
-    public Encoder armEncoder;
+
+    public DutyCycleEncoder armEncoder = new DutyCycleEncoder(7);
+
     private final PIDController m_armPIDController = new PIDController(0.1, 0, 0);
     private RobotConfig _config;
 
@@ -27,11 +37,11 @@ public class Intake extends TraceableSubsystem implements IIntakeSubsystem {
 
         super(logger);
         _config = config;
-        intakeController = new PWMVictorSPX(config.Intake.intakeControllerChannel);
-        armController = new PWMVictorSPX(config.Intake.armControllerChannel);
-        armEncoder = new Encoder(config.Intake.armEncoderChannelA, config.Intake.armEncoderChannelB);
 
-        intakeController.setInverted(true);
+        intakeController = new PWMVictorSPX(config.Intake.intakeControllerPort);
+        armController = new PWMVictorSPX(config.Intake.armControllerPort);
+        
+
         armController.setInverted(true);
         armEncoder.reset();
 
@@ -40,8 +50,12 @@ public class Intake extends TraceableSubsystem implements IIntakeSubsystem {
         // Motor is inverted
     }
 
+
+    // Raises the intake arm
     public void raiseArm() {
-        int count = armEncoder.get();
+      //TODO FINISH ARM METHODS
+        double count = armEncoder.getDistance();
+
 
         // Based on the gear ratio of the motor
         int pulsesPerRevolution = 0;
@@ -50,42 +64,58 @@ public class Intake extends TraceableSubsystem implements IIntakeSubsystem {
         // needed to move a quarter of the distance (90deg) needed for the arm
         int pulsesPerQuarter = pulsesPerRevolution / 4;
 
-        double distancePerPulse = armEncoder.getDistancePerPulse();
+
         // Arm is pwmVictorspx on port 2
     }
+
+    // Lowers the arm
 
     public void lowerArm() {
 
     }
 
+
+    // Checks if arm is currently lowered
     public boolean isLowered() {
 
-        boolean isArmStopped = armEncoder.getStopped();
-        // NOT Finished
+      
+
+        // TODO NOT Finished
         // DEFAULT RETURN FALSE
         return false;
 
     }
 
-    public void spinIntake(boolean direction) {
 
-        double scaledVelocity = 0;
-        if (direction) {
-            scaledVelocity = 1;
-        }
-        if (!direction) {
-            scaledVelocity = -1;
-        }
-
-        intakeController.set(scaledVelocity);
-
+    // Spin the intake to accept balls into robot
+    public void spinIntake() {
+        intakeController.set(.4);
     }
 
+    // Reverse the intake to push balls away from intake
+    public void reverseIntake() {
+        intakeController.set(-.4);
+
+    }
+    
+
+
+    // Stops the intake
     public void stopIntake() {
         intakeController.set(0);
     }
 
+    // Checks if intake is spinning
     public boolean isSpinning() {
         return Math.abs(intakeController.get()) > 0;
     }
+    public void periodic(){
+        SmartDashboard.putNumber("Arm Encoder", armEncoder.get());
+    }
+
+    
+  public void controlledSpinIntake(double amount){
+      intakeController.set(amount);
+  }
+
 }

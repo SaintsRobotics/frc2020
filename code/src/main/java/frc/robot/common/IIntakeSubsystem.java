@@ -19,14 +19,16 @@ public interface IIntakeSubsystem extends Subsystem {
      */
     boolean isLowered();
 
-    /*
-     * @param specified speed of the intake (negative velocity used for reversing
-     * intake)
-     */
 
-    void spinIntake(boolean direction);
+    // Spin the intake to accept balls into robot
+    void spinIntake();
 
+    // Reverse the intake to push balls away from robot
+    void reverseIntake();
+
+    // Stop intake
     void stopIntake();
+    void controlledSpinIntake(double amount);
 
 
     /**
@@ -34,5 +36,5 @@ public interface IIntakeSubsystem extends Subsystem {
      * @return whether or not the intake is currently spinning
      */
     boolean isSpinning();
-    
+
 }
