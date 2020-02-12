@@ -28,8 +28,11 @@ public class DependenciesModule extends AbstractModule {
         // Due to some subsystems not being compatible with the HAL Sims we need to use
         // mocks instead
         if (RobotBase.isReal()) {
+            this.bind(IShooterSubsystem.class).to(ShooterSubsystem.class).in(Singleton.class);
             this.bind(IDrivetrainSubsystem.class).to(SwerveDrivetrain.class).in(Singleton.class);
+
         } else {
+            this.bind(IShooterSubsystem.class).to(MockShooter.class).in(Singleton.class);
             this.bind(IDrivetrainSubsystem.class).to(MockDrivetrain.class).in(Singleton.class);
         }
     }
