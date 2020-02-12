@@ -27,9 +27,9 @@ public class Intake extends TraceableSubsystem implements IIntakeSubsystem {
 
         super(logger);
         _config = config;
-        intakeController = new PWMVictorSPX(config.Intake.intakeControllerChannel);
-        armController = new PWMVictorSPX(config.Intake.armControllerChannel);
-        armEncoder = new Encoder(config.Intake.armEncoderChannelA, config.Intake.armEncoderChannelB);
+        intakeController = new PWMVictorSPX(config.Intake.intakeControllerPort);
+        armController = new PWMVictorSPX(config.Intake.armControllerPort);
+        armEncoder = new Encoder(config.Intake.armEncoderPortA, config.Intake.armEncoderPortB);
 
         intakeController.setInverted(true);
         armController.setInverted(true);
