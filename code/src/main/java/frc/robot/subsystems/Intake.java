@@ -5,6 +5,7 @@ package frc.robot.subsystems;
 
 
 import com.ctre.phoenix.motorcontrol.can.VictorSPX;
+import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
 import com.google.inject.Inject;
 
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
@@ -38,8 +39,10 @@ public class Intake extends TraceableSubsystem implements IIntakeSubsystem {
         super(logger);
         _config = config;
 
-        intakeController = new PWMVictorSPX(config.Intake.intakeControllerPort);
-        armController = new PWMVictorSPX(config.Intake.armControllerPort);
+        intakeController = new WPI_VictorSPX(config.Intake.intakeControllerPort);
+        armController = new WPI_VictorSPX(config.Intake.armControllerPort);
+        
+
         
 
         armController.setInverted(true);
