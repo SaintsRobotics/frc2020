@@ -7,6 +7,7 @@
 
 package frc.robot.subsystems;
 
+import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
 import com.google.inject.Inject;
 import com.revrobotics.CANEncoder;
 import com.revrobotics.CANSparkMax;
@@ -17,6 +18,7 @@ import edu.wpi.first.wpilibj.SpeedController;
 import edu.wpi.first.wpilibj.SpeedControllerGroup;
 import edu.wpi.first.wpilibj.controller.PIDController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import frc.robot.RobotConfig;
 import frc.robot.common.ILogger;
 import frc.robot.common.IShooterSubsystem;
 import frc.robot.common.TraceableMockSubsystem;
@@ -34,17 +36,17 @@ public class ShooterSubsystem extends TraceableMockSubsystem implements IShooter
     private CANEncoder m_leftEncoder;
     private CANEncoder m_rightEncoder;
     private PIDController m_shooterPID;
-
+    private RobotConfig _config;
     private boolean isUpToSpeed = false;
 
     private SpeedController m_kicker;
 
     @Inject
-    public ShooterSubsystem(ILogger logger) {
+    public ShooterSubsystem(ILogger logger,  final RobotConfig config) {
         super(logger);
-
-        m_leftShooter = new CANSparkMax(16, MotorType.kBrushless);
-        m_rightShooter = new CANSparkMax(17, MotorType.kBrushless);
+        _config = config;
+        m_leftShooter = new CANSparkMax(_config.Shooter.leftShooterPort, MotorType.kBrushless);
+        m_rightShooter = new CANSparkMax(_config.Shooter.rightShooterPort, MotorType.kBrushless);
         m_leftShooter.setInverted(true);
         m_rightShooter.setSmartCurrentLimit(35, 60, 150);
         m_leftShooter.setSmartCurrentLimit(35, 60, 150);
@@ -52,7 +54,7 @@ public class ShooterSubsystem extends TraceableMockSubsystem implements IShooter
         m_rightEncoder = m_rightShooter.getEncoder();
         m_shooter = new SpeedControllerGroup(m_leftShooter, m_rightShooter);
         m_shooterPID = new PIDController(0.0003, 0.0004, 0);
-        m_kicker = new PWMVictorSPX(0);
+        m_kicker = new WPI_VictorSPX(_config.Shooter.kickerPort);
         m_shooterPID.setTolerance(10);
         m_shooterPID.reset();       
         
