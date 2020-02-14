@@ -56,7 +56,6 @@ public final class RobotConfig {
         public final boolean rearRightDriveMotorInverted = true;
         public final boolean rearRightEncoderInverted = true;
 
-
         public final double minSpeed = 0; //in m/s
         public final double maxSpeed = 1; //in m/s
 
@@ -73,8 +72,9 @@ public final class RobotConfig {
         public final int turnCurrentFreeLimit = 30; //in Amps
         public final int turnCurrentRPMLimit = 75; //in Amps
 
-   
-
+        public final int STATIC_DRIVE_COEFFICIENT = 1;
+        public final int STATIC_TURN_COEFFICIENT = 1;
+        
         public final double swerveX = .335;
         public final double swerveY = .25;
     }
