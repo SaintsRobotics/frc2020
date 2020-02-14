@@ -94,4 +94,5 @@ public final class RobotConfig {
         public final int armEncoderPortB = 1;
 
     }
+
 }

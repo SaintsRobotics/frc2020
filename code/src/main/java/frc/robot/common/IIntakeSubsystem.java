@@ -14,12 +14,16 @@ public interface IIntakeSubsystem extends Subsystem {
     void lowerArm();
 
     /**
-     * 
      * @return whether or not the intake arm is currently lowered
      */
     boolean isLowered();
 
-    // Spin the intake to accept balls into robot
+    /**
+     * @return whether or not the intake is currently spinning
+     */
+
+    boolean isSpinning();
+
     void spinIntake();
 
     // Reverse the intake to push balls away from robot
@@ -27,11 +31,5 @@ public interface IIntakeSubsystem extends Subsystem {
 
     // Stop intake
     void stopIntake();
-
-    /**
-     * 
-     * @return whether or not the intake is currently spinning
-     */
-    boolean isSpinning();
-
 }
+
