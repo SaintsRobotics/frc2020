@@ -30,15 +30,18 @@ public class IntakeControllerCommand extends TraceableCommand {
 
     public void execute() {
 
-        
         if (_controller.getBumper(Hand.kLeft)) {
             _intake.spinIntake();
-        }else if (_controller.getBumper(Hand.kRight)) {
+        } else if (_controller.getBumper(Hand.kRight)) {
             _intake.reverseIntake();
-        } else{
-          _intake.stopIntake();}
-
-
+        } else {
+            _intake.stopIntake();
+        }
+        if (_controller.getBackButton()) {
+            _intake.raiseArm();
+        } else if (_controller.getStartButton()) {
+            _intake.lowerArm();
+        }
     }
 
     public boolean isFinished() {

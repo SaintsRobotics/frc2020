@@ -1,13 +1,11 @@
 
 package frc.robot.subsystems;
 
-
-
-
 import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
 import com.google.inject.Inject;
 
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
 
 import edu.wpi.first.wpilibj.Encoder;
@@ -30,7 +28,7 @@ public class Intake extends TraceableSubsystem implements IIntakeSubsystem {
 
     public DutyCycleEncoder armEncoder = new DutyCycleEncoder(7);
 
-    private final PIDController m_armPIDController = new PIDController(0.1, 0, 0);
+    private final PIDController m_armPIDController = new PIDController(5, 0, 0);
     private RobotConfig _config;
 
     @Inject
@@ -41,54 +39,32 @@ public class Intake extends TraceableSubsystem implements IIntakeSubsystem {
 
         intakeController = new WPI_VictorSPX(config.Intake.intakeControllerPort);
         armController = new WPI_VictorSPX(config.Intake.armControllerPort);
-        
-
-        
-
+        m_armPIDController.setTolerance(0.005);
+        m_armPIDController.setSetpoint(0.115);
         armController.setInverted(true);
-        armEncoder.reset();
 
         // m_armPIDController.setS
 
         // Motor is inverted
     }
 
-
     // Raises the intake arm
     public void raiseArm() {
-      //TODO FINISH ARM METHODS
-        double count = armEncoder.getDistance();
-
-
-        // Based on the gear ratio of the motor
-        int pulsesPerRevolution = 0;
-
-        // Finding the pulses per revolution will then help find the number of pulses
-        // needed to move a quarter of the distance (90deg) needed for the arm
-        int pulsesPerQuarter = pulsesPerRevolution / 4;
-
-
-        // Arm is pwmVictorspx on port 2
+        m_armPIDController.setSetpoint(_config.Intake.armInnerSetpoint);
     }
 
     // Lowers the arm
 
     public void lowerArm() {
-
+        m_armPIDController.setSetpoint(_config.Intake.armLowerSetpoint);
+        DriverStation.reportError("Lower Arm", false);
     }
-
 
     // Checks if arm is currently lowered
     public boolean isLowered() {
-
-      
-
-        // TODO NOT Finished
-        // DEFAULT RETURN FALSE
-        return false;
+        return armEncoder.get() > .3 && armEncoder.get() < .32;
 
     }
-
 
     // Spin the intake to accept balls into robot
     public void spinIntake() {
@@ -100,8 +76,6 @@ public class Intake extends TraceableSubsystem implements IIntakeSubsystem {
         intakeController.set(-.4);
 
     }
-    
-
 
     // Stops the intake
     public void stopIntake() {
@@ -112,13 +86,16 @@ public class Intake extends TraceableSubsystem implements IIntakeSubsystem {
     public boolean isSpinning() {
         return Math.abs(intakeController.get()) > 0;
     }
-    public void periodic(){
+
+    public void periodic() {
         SmartDashboard.putNumber("Arm Encoder", armEncoder.get());
+        double armOutput = m_armPIDController.calculate(armEncoder.get());
+        armController.set(armOutput);
+        SmartDashboard.putNumber("Arm Output", armOutput);
     }
 
-    
-  public void controlledSpinIntake(double amount){
-      intakeController.set(amount);
-  }
+    public void controlledSpinIntake(double amount) {
+        intakeController.set(amount);
+    }
 
 }
