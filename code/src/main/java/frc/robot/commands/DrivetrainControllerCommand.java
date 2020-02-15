@@ -32,7 +32,7 @@ public class DrivetrainControllerCommand extends TraceableCommand {
     @Override
     public void initialize() {
         super.initialize();
-        _drivetrain.resetGyro();
+        
     }
 
     @Override
