@@ -56,6 +56,7 @@ public final class RobotConfig {
         public final boolean rearRightDriveMotorInverted = true;
         public final boolean rearRightEncoderInverted = true;
 
+
         public final double minSpeed = 0; //in m/s
         public final double maxSpeed = 1; //in m/s
 
