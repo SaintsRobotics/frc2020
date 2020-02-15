@@ -110,6 +110,7 @@ public class ShooterSubsystem extends TraceableMockSubsystem implements IShooter
         SmartDashboard.putNumber("Shooter left Temp", m_leftShooter.getMotorTemperature());
         double shooterSpeed = m_shooterPID.calculate(m_leftEncoder.getVelocity());
         SmartDashboard.putNumber("Shooter Pid Output", shooterSpeed);
+        SmartDashboard.putBoolean("Is up to speed", isUpToSpeed);
         if (shooterSpeed > -0.2)
             m_shooter.set(shooterSpeed);
         else {

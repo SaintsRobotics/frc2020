@@ -47,6 +47,12 @@ public class DrivetrainControllerCommand extends TraceableCommand {
         if (_controller.getStartButton())
             _drivetrain.resetGyro();
 
+        if (_controller.getBumper(Hand.kLeft)) {
+            _drivetrain.setToBrake(false);
+        } else {
+            _drivetrain.setToBrake(true);
+        }
+
     }
 
     /**
