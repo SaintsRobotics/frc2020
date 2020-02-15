@@ -36,16 +36,16 @@ public class RobotContainer extends CompetitionRobot {
    */
   @Inject
 
-  private RobotContainer(final ILogger logger, IDrivetrainSubsystem drivetrain, DrivetrainControllerCommand driveCommand, IIntakeSubsystem intake, IntakeControllerCommand intakeCommand, IShooterSubsystem shooterSubsystem, ShooterCommand shooterCommand) {
+  private RobotContainer(final ILogger logger, IDrivetrainSubsystem drivetrain,
+      DrivetrainControllerCommand driveCommand, IIntakeSubsystem intake, IntakeControllerCommand intakeCommand,
+      IShooterSubsystem shooterSubsystem, ShooterCommand shooterCommand) {
     super(logger);
-   
+
     intake.setDefaultCommand(intakeCommand);
 
-    
     shooterSubsystem.setDefaultCommand(shooterCommand);
 
     drivetrain.setDefaultCommand(driveCommand);
-    
 
   }
 

@@ -42,7 +42,9 @@ public class ShooterSubsystem extends TraceableMockSubsystem implements IShooter
     private SpeedController m_kicker;
 
     @Inject
-    public ShooterSubsystem(ILogger logger,  final RobotConfig config) {
+    public ShooterSubsystem(ILogger logger, final RobotConfig config) {
+
+
         super(logger);
         _config = config;
         m_leftShooter = new CANSparkMax(_config.Shooter.leftShooterPort, MotorType.kBrushless);
@@ -56,8 +58,8 @@ public class ShooterSubsystem extends TraceableMockSubsystem implements IShooter
         m_shooterPID = new PIDController(0.0003, 0.0004, 0);
         m_kicker = new WPI_VictorSPX(_config.Shooter.kickerPort);
         m_shooterPID.setTolerance(10);
-        m_shooterPID.reset();       
-        
+        m_shooterPID.reset();
+
         // TODO Auto-generated constructor stub
     }
 
@@ -68,6 +70,7 @@ public class ShooterSubsystem extends TraceableMockSubsystem implements IShooter
     public void setSpeed(double targetVelocity) {
         m_shooterPID.setSetpoint(targetVelocity);
         m_targetVelocity = targetVelocity;
+        m_shooterPID.reset();
     }
 
     @Override
@@ -100,21 +103,22 @@ public class ShooterSubsystem extends TraceableMockSubsystem implements IShooter
     public void stopShooter() {
 
         setSpeed(0);
-        
 
     }
 
     public void periodic() {
-        isUpToSpeed = Math.abs(m_leftEncoder.getVelocity() - m_targetVelocity) < 50;
+        isUpToSpeed = (Math.abs(m_leftEncoder.getVelocity() - m_targetVelocity) < 50 ) && (m_targetVelocity != 0);
         SmartDashboard.putNumber("Shooter Current RPM", m_leftEncoder.getVelocity());
         SmartDashboard.putNumber("Shooter Current RPM not graph", m_leftEncoder.getVelocity());
-        
+        SmartDashboard.putNumber("Shooter left Temp", m_leftShooter.getMotorTemperature());
         double shooterSpeed = m_shooterPID.calculate(m_leftEncoder.getVelocity());
         SmartDashboard.putNumber("Shooter Pid Output", shooterSpeed);
+        SmartDashboard.putBoolean("Is up to speed", isUpToSpeed);
         if (shooterSpeed > -0.2)
             m_shooter.set(shooterSpeed);
-            //m_shooter.set(shooterSpeed);
-        else {m_shooter.set(-0.2);}
+        else {
+            m_shooter.set(-0.2);
+        }
         if (kickerEnabled && isUpToSpeed)
             m_kicker.set(1);
         else

@@ -18,6 +18,9 @@ public final class RobotConfig {
     public final RobotConfig.Physical Physical = new RobotConfig.Physical();
     public final RobotConfig.Intake Intake = new RobotConfig.Intake();
     public final RobotConfig.Shooter Shooter = new RobotConfig.Shooter();
+
+
+
     public final class Controller {
         public final int controllerPort = 0;
 
@@ -50,14 +53,18 @@ public final class RobotConfig {
     public final class Intake {
         public final int intakeControllerPort = 25;
         public final int armControllerPort = 24;
-        public final int armEncoderPortA = 1;
-        public final int armEncoderPortB = 1;
+
+        public final double armLowerSetpoint = .305;
+        public final double armInnerSetpoint = .115;
 
     }
-    public final class Climber{
+
+    public final class Climber {
         public final int motorPort = 19;
     }
-    public final class Shooter{
+
+    public final class Shooter {
+
         public final int kickerPort = 26;
         public final int leftShooterPort = 16;
         public final int rightShooterPort = 17;
