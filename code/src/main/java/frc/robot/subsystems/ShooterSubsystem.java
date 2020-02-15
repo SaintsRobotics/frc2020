@@ -112,7 +112,6 @@ public class ShooterSubsystem extends TraceableMockSubsystem implements IShooter
         SmartDashboard.putNumber("Shooter Pid Output", shooterSpeed);
         if (shooterSpeed > -0.2)
             m_shooter.set(shooterSpeed);
-        // m_shooter.set(shooterSpeed);
         else {
             m_shooter.set(-0.2);
         }

@@ -68,12 +68,12 @@ public class Intake extends TraceableSubsystem implements IIntakeSubsystem {
 
     // Spin the intake to accept balls into robot
     public void spinIntake() {
-        intakeController.set(.4);
+        intakeController.set(.6);
     }
 
     // Reverse the intake to push balls away from intake
     public void reverseIntake() {
-        intakeController.set(-.4);
+        intakeController.set(-.6);
 
     }
 
@@ -90,7 +90,7 @@ public class Intake extends TraceableSubsystem implements IIntakeSubsystem {
     public void periodic() {
         SmartDashboard.putNumber("Arm Encoder", armEncoder.get());
         double armOutput = m_armPIDController.calculate(armEncoder.get());
-        armController.set(armOutput);
+        // armController.set(armOutput);
         SmartDashboard.putNumber("Arm Output", armOutput);
     }
 
