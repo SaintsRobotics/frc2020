@@ -10,6 +10,7 @@ package frc.robot.subsystems;
 import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
 import com.google.inject.Inject;
+import com.revrobotics.CANEncoder;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import com.kauailabs.navx.frc.AHRS;
@@ -53,6 +54,8 @@ public class SwerveDrivetrain extends TraceableSubsystem implements IDrivetrainS
     public AbsoluteEncoder m_frontRightEncoder;
     public AbsoluteEncoder m_backRightEncoder;
     public AbsoluteEncoder m_backLeftEncoder;
+    public CANEncoder m_leftdrive;
+    public CANEncoder m_leftturn;
     private SwerveDriveKinematics m_kinematics;
     private AHRS m_gyro;
     private PIDController m_pidController;
@@ -67,7 +70,7 @@ public class SwerveDrivetrain extends TraceableSubsystem implements IDrivetrainS
         m_frontLeftDrive = new CANSparkMax(config.Drivetrain.frontLeftDriveMotorPort, MotorType.kBrushless);
         m_frontLeftDrive.setInverted(true);
         m_frontLeftTurn = new CANSparkMax(config.Drivetrain.frontLeftTurnMotorPort, MotorType.kBrushless);
-        m_frontLeftEncoder = new AbsoluteEncoder(config.Drivetrain.frontLeftAbsoluteEncoder, 5.73, true);
+        m_frontLeftEncoder = new AbsoluteEncoder(config.Drivetrain.frontLeftAbsoluteEncoder, 5.664991, true);
 
         m_frontLeft = new SwerveWheel(m_frontLeftDrive, m_frontLeftTurn, config.Drivetrain.swerveX,
                 config.Drivetrain.swerveY, m_frontLeftEncoder, "Left front");
@@ -75,7 +78,7 @@ public class SwerveDrivetrain extends TraceableSubsystem implements IDrivetrainS
         m_frontRightDrive = new CANSparkMax(config.Drivetrain.frontRightDriveMotorPort, MotorType.kBrushless);
         m_frontRightDrive.setInverted(false);
         m_frontRightTurn = new CANSparkMax(config.Drivetrain.frontRightTurnMotorPort, MotorType.kBrushless);
-        m_frontRightEncoder = new AbsoluteEncoder(config.Drivetrain.frontRightAbsoluteEncoder, 1.09, true);
+        m_frontRightEncoder = new AbsoluteEncoder(config.Drivetrain.frontRightAbsoluteEncoder, 2.466641, true);
         m_frontRight = new SwerveWheel(m_frontRightDrive, m_frontRightTurn, config.Drivetrain.swerveX,
                 -config.Drivetrain.swerveY, m_frontRightEncoder, "Right front");
 
@@ -101,15 +104,15 @@ public class SwerveDrivetrain extends TraceableSubsystem implements IDrivetrainS
         m_pidController.setTolerance(10);
 
         m_gyro = new AHRS(SPI.Port.kMXP);
-        m_gyro.reset();
 
-        m_pidController.setSetpoint(m_gyro.getAngle());
-
+        m_leftdrive = m_frontLeftDrive.getEncoder();
+        m_leftturn = m_frontLeftTurn.getEncoder();
     }
 
     public void resetGyro() {
         this.m_gyro.reset();
         this.m_pidController.setSetpoint(0);
+        DriverStation.reportError("gyro reset ", false);
     }
 
     @Override
@@ -180,12 +183,9 @@ public class SwerveDrivetrain extends TraceableSubsystem implements IDrivetrainS
             theta = this.m_pidController.calculate((((this.m_gyro.getAngle() % 360) + 360) % 360));
         }
 
-        SmartDashboard.putNumber("gyro angle ", (360 - (this.m_gyro.getAngle() % (360)) + (360)) % (360));
-        SmartDashboard.putNumber("heading pid calc ",
-                this.m_pidController.calculate((((this.m_gyro.getAngle() % (360)) + (360)) % (360))));
-
-        SmartDashboard.putNumber("heading pid error ", this.m_pidController.getPositionError());
-        SmartDashboard.putBoolean("is turning ", this.m_isTurning);
+        SmartDashboard.putNumber("x", x);
+        SmartDashboard.putNumber("y", y);
+        SmartDashboard.putNumber("theta", theta);
 
         SwerveModuleState[] swerveModuleStates;
 
@@ -335,12 +335,17 @@ public class SwerveDrivetrain extends TraceableSubsystem implements IDrivetrainS
     }
 
     public void periodic() {
-        SmartDashboard.putNumber("back left ", m_backLeftEncoder.getRadians());
-        SmartDashboard.putNumber("back right ", m_backRightEncoder.getRadians());
+        // SmartDashboard.putNumber("back left ", m_backLeftEncoder.getRadians());
+        // SmartDashboard.putNumber("back right ", m_backRightEncoder.getRadians());
         SmartDashboard.putNumber("front left ", m_frontLeftEncoder.getRadians());
         SmartDashboard.putNumber("front right ", m_frontRightEncoder.getRadians());
         SmartDashboard.putNumber("Gyro VAlue", ((m_gyro.getAngle() % 360) + 360) % 360);
-        SmartDashboard.putNumber("front left PID", m_frontRight.getPID());
+        SmartDashboard.putNumber("gyro angle fed to field relative ",
+                (360 - (this.m_gyro.getAngle() % (360)) + (360)) % (360));
 
+        SmartDashboard.putNumber("heading pid error ", this.m_pidController.getPositionError());
+        SmartDashboard.putBoolean("is turning ", this.m_isTurning);
+        SmartDashboard.putNumber("CAN LEFT DRIVE ENCODER", m_leftdrive.getPosition());
+        SmartDashboard.putNumber("CAN LEFT TURN ENCODER", m_leftturn.getPosition());
     }
 }
