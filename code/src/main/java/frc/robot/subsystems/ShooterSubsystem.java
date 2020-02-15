@@ -43,6 +43,8 @@ public class ShooterSubsystem extends TraceableMockSubsystem implements IShooter
 
     @Inject
     public ShooterSubsystem(ILogger logger, final RobotConfig config) {
+
+
         super(logger);
         _config = config;
         m_leftShooter = new CANSparkMax(_config.Shooter.leftShooterPort, MotorType.kBrushless);
@@ -68,6 +70,7 @@ public class ShooterSubsystem extends TraceableMockSubsystem implements IShooter
     public void setSpeed(double targetVelocity) {
         m_shooterPID.setSetpoint(targetVelocity);
         m_targetVelocity = targetVelocity;
+        m_shooterPID.reset();
     }
 
     @Override

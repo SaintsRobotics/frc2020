@@ -39,8 +39,10 @@ public class Intake extends TraceableSubsystem implements IIntakeSubsystem {
 
         intakeController = new WPI_VictorSPX(config.Intake.intakeControllerPort);
         armController = new WPI_VictorSPX(config.Intake.armControllerPort);
+
         m_armPIDController.setTolerance(0.005);
         m_armPIDController.setSetpoint(0.115);
+
         armController.setInverted(true);
 
         // m_armPIDController.setS
