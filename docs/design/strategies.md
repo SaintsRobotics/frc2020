@@ -54,6 +54,16 @@ pickupTrenchBalls: pickup balls from trench
 moveToTrenchBalls-->pickupTrenchBalls
 pickupTrenchBalls-->[*]
 ```
+## Pickup enemy trench balls
+```mermaid
+stateDiagram
+moveToEnemyTrench: Move to Location of Enemy Trench Balls
+pickupEnemyTrenchBalls: Pick up Balls From Enemy Trench
+
+[*]-->moveToEnemyTrench
+moveToEnemyTrench-->pickupEnemyTrenchBalls
+pickupEnemyTrenchBalls-->[*]
+```
 ## Near to far rendezvous transition
 ```mermaid
 stateDiagram
