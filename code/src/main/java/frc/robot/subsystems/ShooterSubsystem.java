@@ -107,7 +107,7 @@ public class ShooterSubsystem extends TraceableMockSubsystem implements IShooter
     }
 
     public void periodic() {
-        isUpToSpeed = Math.abs(m_leftEncoder.getVelocity() - m_targetVelocity) < 50;
+        isUpToSpeed = (Math.abs(m_leftEncoder.getVelocity() - m_targetVelocity) < 50 ) && (m_targetVelocity != 0);
         SmartDashboard.putNumber("Shooter Current RPM", m_leftEncoder.getVelocity());
         SmartDashboard.putNumber("Shooter Current RPM not graph", m_leftEncoder.getVelocity());
         SmartDashboard.putNumber("Shooter left Temp", m_leftShooter.getMotorTemperature());
