@@ -42,9 +42,10 @@ public class ShooterCommand extends TraceableCommand {
             _shooter.setSpeed(4900);
         }
         if (_controller.getBButton()) {
-            _shooter.enableFeeding();
-        }
-        if (_controller.getXButton()) {
+            _shooter.feederBackward();;
+        }else if(_controller.getXButton()){
+            _shooter.feederForward();
+        }else {
             _shooter.disableFeeding();
         }
         if (_controller.getYButton()) {

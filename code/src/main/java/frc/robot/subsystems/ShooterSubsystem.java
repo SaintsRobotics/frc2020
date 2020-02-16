@@ -27,7 +27,7 @@ import frc.robot.common.TraceableMockSubsystem;
  * Add your docs here.
  */
 public class ShooterSubsystem extends TraceableMockSubsystem implements IShooterSubsystem {
-    private boolean kickerEnabled;
+    private boolean m_kickerEnabled;
     private boolean _isReady = false;
     private CANSparkMax m_leftShooter;
     private CANSparkMax m_rightShooter;
@@ -80,17 +80,36 @@ public class ShooterSubsystem extends TraceableMockSubsystem implements IShooter
         return isUpToSpeed;
     }
 
-    @Override
-    public void enableFeeding() {
-        // TODO Auto-generated method stub
-        kickerEnabled = true;
+    // @Override
+    // public void enableFeeding(int direction) {
+    //     // TODO Auto-generated method stub
+    //     kickerEnabled = true;
+    //     if (direction == 0){
+    //         m_kicker.set(1);
+    //     }
+    //     else if (direction == 1){
+    //         m_kicker.set(-1);
+    //     }
 
+    // }
+
+    @Override
+    public void feederForward() {
+        m_kickerEnabled = true;
+        m_kicker.set(1);
+    }
+
+    @Override
+    public void feederBackward() {
+        m_kickerEnabled = true;
+        m_kicker.set(-1);
     }
 
     @Override
     public void disableFeeding() {
         // TODO Auto-generated method stub
-        kickerEnabled = false;
+        m_kickerEnabled = false;
+        m_kicker.set(0);
 
     }
 
@@ -105,12 +124,13 @@ public class ShooterSubsystem extends TraceableMockSubsystem implements IShooter
         setSpeed(0);
 
     }
+    
 
     public void periodic() {
         isUpToSpeed = (Math.abs(m_leftEncoder.getVelocity() - m_targetVelocity) < 50 ) && (m_targetVelocity != 0);
         SmartDashboard.putNumber("Shooter Current RPM", m_leftEncoder.getVelocity());
         SmartDashboard.putNumber("Shooter Current RPM not graph", m_leftEncoder.getVelocity());
-        SmartDashboard.putNumber("Shooter left Temp", m_leftShooter.getMotorTemperature());
+        SmartDashboard.putNumber("Shooter left Current", m_leftShooter.getBusVoltage());
         double shooterSpeed = m_shooterPID.calculate(m_leftEncoder.getVelocity());
         SmartDashboard.putNumber("Shooter Pid Output", shooterSpeed);
         SmartDashboard.putBoolean("Is up to speed", isUpToSpeed);
@@ -119,11 +139,7 @@ public class ShooterSubsystem extends TraceableMockSubsystem implements IShooter
         else {
             m_shooter.set(-0.2);
         }
-        if (kickerEnabled && isUpToSpeed)
-            m_kicker.set(1);
-        else
-            m_kicker.set(0);
-
+        
         if (m_targetVelocity == 0) {
             m_shooter.set(0);
         }

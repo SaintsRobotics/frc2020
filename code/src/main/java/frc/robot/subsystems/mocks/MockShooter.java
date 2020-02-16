@@ -38,10 +38,10 @@ public class MockShooter extends TraceableMockSubsystem implements IShooterSubsy
     }
 
     @Override
-    public void enableFeeding() {
-        // TODO Auto-generated method stub
-
+    public void feederForward() {
+        
     }
+    
     @Override
     public void disableFeeding() {
         // TODO Auto-generated method stub
@@ -54,6 +54,13 @@ public class MockShooter extends TraceableMockSubsystem implements IShooterSubsy
     @Override
     public void stopShooter(){
        // TODO Auto-generated method stub
+
+    }
+
+
+    @Override
+    public void feederBackward() {
+        // TODO Auto-generated method stub
 
     }
 

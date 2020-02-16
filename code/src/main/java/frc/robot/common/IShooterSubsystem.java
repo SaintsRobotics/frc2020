@@ -30,9 +30,14 @@ public interface IShooterSubsystem extends Subsystem {
     boolean isReady();
 
     /**
-     * feeds the shooter when the shooter is up to speed until told to stop
+     * turns on the feeder, sending balls toward the shooter to be shot out
      */
-    void enableFeeding();
+    void feederForward();
+
+    /**
+     * runs the feeder backward, sending the balls into the robot
+     */
+    void feederBackward();
 
     /**
      * stops feeding the shooter balls
