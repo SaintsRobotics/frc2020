@@ -140,6 +140,10 @@ public final class RobotConfig {
         public final int shooterCurrentThreshold = 254;
         public final int shooterRPM = 4900; // in rpm
         public final double feederTimeout = .5;
+
+        public final double feederForwardSpeed = 1;
+        public final double feederBackwardSpeed = -1;
+
     }
 
 }

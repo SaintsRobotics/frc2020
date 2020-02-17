@@ -50,8 +50,8 @@ public class ShooterSubsystem extends TraceableMockSubsystem implements IShooter
     public ShooterSubsystem(ILogger logger, final RobotConfig config) {
         super(logger);
         _config = config;
-        m_leftShooter = new CANSparkMax(config.Shooter.leftShooterPort, MotorType.kBrushless);
-        m_rightShooter = new CANSparkMax(config.Shooter.rightShooterPort, MotorType.kBrushless);
+        m_leftShooter = new CANSparkMax(_config.Shooter.leftShooterPort, MotorType.kBrushless);
+        m_rightShooter = new CANSparkMax(_config.Shooter.rightShooterPort, MotorType.kBrushless);
         m_leftShooter.setInverted(true);
         m_rightShooter.setSmartCurrentLimit(_config.Shooter.shooterCurrentStallLimit,
                 _config.Shooter.shooterCurrentFreeLimit, _config.Shooter.shooterCurrentRPMLimit);
@@ -64,9 +64,9 @@ public class ShooterSubsystem extends TraceableMockSubsystem implements IShooter
         m_feeder = new WPI_VictorSPX(_config.Shooter.feederPort);
         m_shooterPID.setTolerance(_config.Shooter.PIDTolerance);
         m_shooterPID.reset();
-        pidOnTargetTicks = config.Shooter.pidOnTargetTicks;
-        shooterCurrentThreshold = config.Shooter.shooterCurrentThreshold;
-        shooterRPM = config.Shooter.shooterRPM;
+        pidOnTargetTicks = _config.Shooter.pidOnTargetTicks;
+        shooterCurrentThreshold = _config.Shooter.shooterCurrentThreshold;
+        shooterRPM = _config.Shooter.shooterRPM;
     }
 
     /*
@@ -128,9 +128,9 @@ public class ShooterSubsystem extends TraceableMockSubsystem implements IShooter
         }
 
         if (m_feedBackward) {
-            this.m_feeder.set(-1);
+            this.m_feeder.set(_config.Shooter.feederBackwardSpeed);
         } else if (!this.m_hasShotBall && this.isUpToSpeed()) {
-            this.m_feeder.set(1);
+            this.m_feeder.set(_config.Shooter.feederForwardSpeed);
         }
         if (m_leftShooter.getOutputCurrent() <= shooterCurrentThreshold) {
             this.m_hasShotBall = true;
