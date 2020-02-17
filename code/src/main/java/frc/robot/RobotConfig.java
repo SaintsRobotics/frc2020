@@ -60,6 +60,7 @@ public final class RobotConfig {
 
         public final double minSpeed = 0; // in m/s
         public final double maxSpeed = 0.5; // in m/s
+        public final double maxTurnSpeed = 1;
 
         public final double PID_kProportional = maxSpeed / 18;
         public final double PID_kIntegral = 0;
