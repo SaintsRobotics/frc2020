@@ -17,6 +17,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.commands.DrivetrainControllerCommand;
+import frc.robot.common.IDrivetrainSubsystem;
 import frc.robot.ioc.DependenciesModule;
 
 /**
@@ -42,7 +43,7 @@ public class Robot extends TimedRobot {
 
   public Robot(AbstractModule dependencies) {
     _container = Guice.createInjector(dependencies);
-    
+
     _config = _container.getInstance(RobotConfig.class);
     m_driverController = _container.getInstance(XboxController.class);
 
@@ -70,6 +71,7 @@ public class Robot extends TimedRobot {
     // Configure the button bindings
     // these have to be done here as they are not unit testable
     configureButtonBindings();
+    _container.getInstance(IDrivetrainSubsystem.class).resetGyro();
   }
 
   /**

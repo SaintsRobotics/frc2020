@@ -31,5 +31,8 @@ public interface IIntakeSubsystem extends Subsystem {
 
     // Stop intake
     void stopIntake();
+    void controlledSpinIntake(double amount);
+
 }
 
+   

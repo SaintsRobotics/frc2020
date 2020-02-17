@@ -41,6 +41,11 @@ public class MockDrivetrain extends TraceableMockSubsystem implements IDrivetrai
     }
 
     @Override
+    public void resetGyro() {
+
+    }
+
+    @Override
     public double getMaxSpeed() {
         // TODO Auto-generated method stub
         return 0;
@@ -233,5 +238,9 @@ public class MockDrivetrain extends TraceableMockSubsystem implements IDrivetrai
             return false;
         }
         return true;
+    }
+
+    public void setToBrake(boolean brake) {
+
     }
 }

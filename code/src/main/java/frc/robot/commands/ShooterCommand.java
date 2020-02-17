@@ -9,6 +9,7 @@ package frc.robot.commands;
 
 import com.google.inject.Inject;
 
+import edu.wpi.first.wpilibj.Controller;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.GenericHID.*;
 import frc.robot.RobotConfig;
@@ -17,45 +18,43 @@ import frc.robot.common.*;
 /**
  * Add your docs here.
  */
-public class DrivetrainControllerCommand extends TraceableCommand {
-    private final IDrivetrainSubsystem _drivetrain;
+public class ShooterCommand extends TraceableCommand {
+    private final IShooterSubsystem _shooter;
     private final XboxController _controller;
-    private final RobotConfig _Config;
+    private final RobotConfig _config;
 
     @Inject
-    public DrivetrainControllerCommand(final ILogger logger, IDrivetrainSubsystem drivetrain, final RobotConfig config) {
+    public ShooterCommand(final ILogger logger, IShooterSubsystem shooter, RobotConfig config) {
         super(logger);
-        _Config = config;
-        _drivetrain = drivetrain;
-        _controller = new XboxController(_Config.Controller.driverPort);
+        _config = config;
+        _shooter = shooter;
+        _controller = new XboxController(_config.Controller.operatorPort);
 
-        addRequirements(_drivetrain);
+        addRequirements(_shooter);
     }
 
     @Override
     public void initialize() {
         super.initialize();
-        
     }
 
     @Override
     public void execute() {
         super.execute();
-        _drivetrain.move(deadZones(_controller.getY(Hand.kLeft) * _drivetrain.getMaxSpeed(), _Config.Controller.leftXdeadzone),
-                deadZones(_controller.getX(Hand.kLeft) * _drivetrain.getMaxSpeed(), _Config.Controller.leftYdeadzone),
-                deadZones(_controller.getX(Hand.kRight) * _drivetrain.getMaxSpeed(), _Config.Controller.rightXdeadzone),
-                _controller.getBumper(Hand.kRight)); // theta
+        if (_controller.getAButton()) {
+            _shooter.setSpeed(_config.Shooter.speed);
+        }
+        if (_controller.getBButton()) {
+            _shooter.enableFeeding();
+        }
+        if (_controller.getXButton()) {
+            _shooter.disableFeeding();
+        }
+        if (_controller.getYButton()) {
+            _shooter.stopShooter();
+        }
         // ==
         // axis??
-
-        if (_controller.getStartButton())
-            _drivetrain.resetGyro();
-
-        if (_controller.getBumper(Hand.kLeft)) {
-            _drivetrain.setToBrake(false);
-        } else {
-            _drivetrain.setToBrake(true);
-        }
 
     }
 

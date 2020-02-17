@@ -57,4 +57,10 @@ public class MockIntake extends TraceableMockSubsystem implements IIntakeSubsyst
     public boolean isSpinning() {
         return _isSpinning;
     }
+
+    @Override
+    public void controlledSpinIntake(double amount) {
+        // TODO Auto-generated method stub
+
+    }
 }

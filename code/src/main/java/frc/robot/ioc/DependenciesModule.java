@@ -15,6 +15,8 @@ import edu.wpi.first.wpilibj.XboxController;
 import frc.robot.common.*;
 import frc.robot.subsystems.*;
 import frc.robot.subsystems.mocks.MockDrivetrain;
+import frc.robot.subsystems.mocks.MockIntake;
+import frc.robot.subsystems.mocks.MockShooter;
 
 /**
  * Add your docs here.
@@ -28,9 +30,15 @@ public class DependenciesModule extends AbstractModule {
         // Due to some subsystems not being compatible with the HAL Sims we need to use
         // mocks instead
         if (RobotBase.isReal()) {
+            this.bind(IShooterSubsystem.class).to(ShooterSubsystem.class).in(Singleton.class);
             this.bind(IDrivetrainSubsystem.class).to(SwerveDrivetrain.class).in(Singleton.class);
+
+            this.bind(IIntakeSubsystem.class).to(Intake.class).in(Singleton.class);
+
         } else {
+            this.bind(IShooterSubsystem.class).to(MockShooter.class).in(Singleton.class);
             this.bind(IDrivetrainSubsystem.class).to(MockDrivetrain.class).in(Singleton.class);
+          this.bind(IIntakeSubsystem.class).to(MockIntake.class).in(Singleton.class);
         }
     }
 }
