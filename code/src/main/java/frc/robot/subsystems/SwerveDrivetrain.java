@@ -71,7 +71,7 @@ public class SwerveDrivetrain extends TraceableSubsystem implements IDrivetrainS
         m_frontLeftDrive = new CANSparkMax(config.Drivetrain.frontLeftDriveMotorPort, MotorType.kBrushless);
         m_frontLeftDrive.setInverted(true);
         m_frontLeftTurn = new CANSparkMax(config.Drivetrain.frontLeftTurnMotorPort, MotorType.kBrushless);
-        m_frontLeftEncoder = new AbsoluteEncoder(config.Drivetrain.frontLeftAbsoluteEncoder, 5.664991, true);
+        m_frontLeftEncoder = new AbsoluteEncoder(config.Drivetrain.frontLeftAbsoluteEncoder, 2.254991, true);
 
         m_frontLeft = new SwerveWheel(m_frontLeftDrive, m_frontLeftTurn, config.Drivetrain.swerveX,
                 config.Drivetrain.swerveY, m_frontLeftEncoder, "Left front");
@@ -355,7 +355,7 @@ public class SwerveDrivetrain extends TraceableSubsystem implements IDrivetrainS
     public void periodic() {
         // SmartDashboard.putNumber("back left ", m_backLeftEncoder.getRadians());
         // SmartDashboard.putNumber("back right ", m_backRightEncoder.getRadians());
-        // SmartDashboard.putNumber("front left ", m_frontLeftEncoder.getRadians());
+        SmartDashboard.putNumber("front left ", m_frontLeftEncoder.getRadians());
         // SmartDashboard.putNumber("front right ", m_frontRightEncoder.getRadians());
         SmartDashboard.putNumber("Gyro VAlue", ((m_gyro.getAngle() % 360) + 360) % 360);
         SmartDashboard.putNumber("gyro angle fed to field relative ",
