@@ -127,7 +127,7 @@ public class ShooterSubsystem extends TraceableMockSubsystem implements IShooter
         } else if (!this.m_hasShotBall && this.isUpToSpeed()) {
             this.m_feeder.set(1);
         }
-        if (m_leftShooter.getOutputCurrent() <= shooterCurrentThreshold) {
+        if (m_leftShooter.getOutputCurrent() >= shooterCurrentThreshold && !this.m_hasShotBall) {
             this.m_hasShotBall = true;
             this.m_onTargetFor = 0;
         }
