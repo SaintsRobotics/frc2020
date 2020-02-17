@@ -126,10 +126,14 @@ public class ShooterSubsystem extends TraceableMockSubsystem implements IShooter
             this.m_feeder.set(-1);
         } else if (!this.m_hasShotBall && this.isUpToSpeed()) {
             this.m_feeder.set(1);
+            if (m_leftShooter.getOutputCurrent() <= shooterCurrentThreshold) {
+                this.m_hasShotBall = true;
+                this.m_onTargetFor = 0;
+            }
         }
-        if (m_leftShooter.getOutputCurrent() >= shooterCurrentThreshold && !this.m_hasShotBall) {
-            this.m_hasShotBall = true;
-            this.m_onTargetFor = 0;
+
+        if (this.m_hasShotBall) {
+            this.m_feeder.set(0);
         }
 
         SmartDashboard.putNumber("Shooter Pid Output", shooterSpeed);
