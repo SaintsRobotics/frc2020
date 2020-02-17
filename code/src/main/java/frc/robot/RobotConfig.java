@@ -20,8 +20,6 @@ public final class RobotConfig {
     public final RobotConfig.Shooter Shooter = new RobotConfig.Shooter();
     public final RobotConfig.SwerveWheel Wheel = new RobotConfig.SwerveWheel();
 
-
-
     public final class Controller {
         public final int driverPort = 0;
         public final int operatorPort = 1;
@@ -45,7 +43,7 @@ public final class RobotConfig {
         public final int frontRightAbsoluteEncoder = 1;
         public final int rearLeftAbsoluteEncoder = 3;
         public final int rearRightAbsoluteEncoder = 2;
-        
+
         public final double frontLeftOffset = 5.664991;
         public final double frontRightOffset = 2.466641;
         public final double rearLeftOffset = .279;
@@ -60,31 +58,30 @@ public final class RobotConfig {
         public final boolean rearRightDriveMotorInverted = false;
         public final boolean rearRightEncoderInverted = true;
 
+        public final double minSpeed = 0; // in m/s
+        public final double maxSpeed = 0.5; // in m/s
 
-        public final double minSpeed = 0; //in m/s
-        public final double maxSpeed = 0.5; //in m/s
-
-        public final double PID_kProportional = maxSpeed/18;
+        public final double PID_kProportional = maxSpeed / 18;
         public final double PID_kIntegral = 0;
         public final double PID_kDerivative = 0;
         public final double PIDTolerance = 10;
-                
-        public final int driveCurrentStallLimit = 35; //in Amps
-        public final int driveCurrentFreeLimit = 60; //in Amps
-        public final int driveCurrentRPMLimit = 150; //in Amps
 
-        public final int turnCurrentStallLimit = 17; //in Amps
-        public final int turnCurrentFreeLimit = 30; //in Amps
-        public final int turnCurrentRPMLimit = 75; //in Amps
+        public final int driveCurrentStallLimit = 35; // in Amps
+        public final int driveCurrentFreeLimit = 60; // in Amps
+        public final int driveCurrentRPMLimit = 150; // in Amps
+
+        public final int turnCurrentStallLimit = 17; // in Amps
+        public final int turnCurrentFreeLimit = 30; // in Amps
+        public final int turnCurrentRPMLimit = 75; // in Amps
 
         public final int STATIC_DRIVE_COEFFICIENT = 1;
         public final int STATIC_TURN_COEFFICIENT = 1;
-        
+
         public final double swerveX = .335;
         public final double swerveY = .25;
     }
 
-    public final class SwerveWheel{
+    public final class SwerveWheel {
         public final double turning_kP = 0.1;
         public final double turning_kI = 0;
         public final double turning_kD = 0;
@@ -123,23 +120,25 @@ public final class RobotConfig {
 
     public final class Shooter {
 
-        public final int kickerPort = 26;
+        public final int feederPort = 26;
         public final int leftShooterPort = 16;
         public final int rightShooterPort = 17;
 
-        public final int speed = 4900; //in rpm
-
-        public final int shooterCurrentStallLimit = 35; //in Amps
-        public final int shooterCurrentFreeLimit = 60; //in Amps
-        public final int shooterCurrentRPMLimit = 150;  //in Amps
+        public final int shooterCurrentStallLimit = 35; // in Amps
+        public final int shooterCurrentFreeLimit = 60; // in Amps
+        public final int shooterCurrentRPMLimit = 150; // in Amps
 
         public final double PID_kProportional = 0.0003;
         public final double PID_kIntegral = 0.0004;
         public final double PID_kDerivative = 0;
-        public final double PIDTolerance = 10;
+        public final double PIDTolerance = 50;
 
         public final int speedTolerance = 50;
         public final double bangbangTolerance = -0.2;
+        public final int pidOnTargetTicks = 500;
+        public final int shooterCurrentThreshold = 254;
+        public final int shooterRPM = 4900; // in rpm
+        public final double feederTimeout = .5;
     }
 
 }

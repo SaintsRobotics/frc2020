@@ -16,38 +16,31 @@ public interface IShooterSubsystem extends Subsystem {
 
     /**
      * starts the shooter
-     * 
-     * @param targetVelocity the target velocity in rpm
+     *
      */
 
-    void setSpeed(double targetVelocity);
-
-    /**
-     * 
-     * @return returns true if the shooter is at target velocity and is ready to
-     *         shoot
-     */
-    boolean isReady();
+    void turnOnShooter();
 
     /**
-     * feeds the shooter when the shooter is up to speed until told to stop
+     * basically, this makes sure one ball is yeeted, if feedbackward is false if
+     * feedbackward is true, it just drives the feeder in the opposite direction,
+     * probably becasue mech didn't fix their problems, and the balls got jammed
      */
-    void enableFeeding();
+    void feed(boolean feedBackward);
 
     /**
      * stops feeding the shooter balls
      */
-    void disableFeeding();
-
-    /**
-     *
-     * @param balls number of balls shot
-     */
-    void shootBalls(int balls);
+    void stopFeeding();
 
     /**
      * turns off the shooter motors
      */
-    void stopShooter();
+    void turnOffShooter();
+
+    /**
+     * for the shoot one ball command to know when to be finished
+     */
+    boolean getHasShotBall();
 
 }

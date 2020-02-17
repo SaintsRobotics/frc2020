@@ -27,104 +27,122 @@ import frc.robot.common.TraceableMockSubsystem;
  * Add your docs here.
  */
 public class ShooterSubsystem extends TraceableMockSubsystem implements IShooterSubsystem {
-    private boolean kickerEnabled;
-    private boolean _isReady = false;
     private CANSparkMax m_leftShooter;
     private CANSparkMax m_rightShooter;
     private SpeedControllerGroup m_shooter;
-    private double m_targetVelocity;
     private CANEncoder m_leftEncoder;
-    private CANEncoder m_rightEncoder;
     private PIDController m_shooterPID;
-    private RobotConfig _config;
-    private boolean isUpToSpeed = false;
 
-    private SpeedController m_kicker;
+    private boolean m_hasShotBall = true; // ONE ball, singular!
+
+    private final int pidOnTargetTicks; // the number of ticks the pid must be on target for to be considered ready to
+                                        // shoot
+    private final int shooterCurrentThreshold; // if the current is less than this, that means we've shot a ball
+    private int m_onTargetFor = 0; // the amount of ticks the pid has been on target
+
+    private final int shooterRPM; //
+
+    private SpeedController m_feeder;
+    private boolean m_feedBackward = false;
+    private RobotConfig _config;
 
     @Inject
     public ShooterSubsystem(ILogger logger, final RobotConfig config) {
-
-
         super(logger);
         _config = config;
-        m_leftShooter = new CANSparkMax(_config.Shooter.leftShooterPort, MotorType.kBrushless);
-        m_rightShooter = new CANSparkMax(_config.Shooter.rightShooterPort, MotorType.kBrushless);
+        m_leftShooter = new CANSparkMax(config.Shooter.leftShooterPort, MotorType.kBrushless);
+        m_rightShooter = new CANSparkMax(config.Shooter.rightShooterPort, MotorType.kBrushless);
         m_leftShooter.setInverted(true);
-        m_rightShooter.setSmartCurrentLimit(_config.Shooter.shooterCurrentStallLimit, _config.Shooter.shooterCurrentFreeLimit, _config.Shooter.shooterCurrentRPMLimit);
-        m_leftShooter.setSmartCurrentLimit(_config.Shooter.shooterCurrentStallLimit, _config.Shooter.shooterCurrentFreeLimit, _config.Shooter.shooterCurrentRPMLimit);
+        m_rightShooter.setSmartCurrentLimit(_config.Shooter.shooterCurrentStallLimit,
+                _config.Shooter.shooterCurrentFreeLimit, _config.Shooter.shooterCurrentRPMLimit);
+        m_leftShooter.setSmartCurrentLimit(_config.Shooter.shooterCurrentStallLimit,
+                _config.Shooter.shooterCurrentFreeLimit, _config.Shooter.shooterCurrentRPMLimit);
         m_leftEncoder = m_leftShooter.getEncoder();
-        m_rightEncoder = m_rightShooter.getEncoder();
         m_shooter = new SpeedControllerGroup(m_leftShooter, m_rightShooter);
-        m_shooterPID = new PIDController(_config.Shooter.PID_kDerivative, _config.Shooter.PID_kIntegral, _config.Shooter.PID_kDerivative);
-        m_kicker = new WPI_VictorSPX(_config.Shooter.kickerPort);
+        m_shooterPID = new PIDController(_config.Shooter.PID_kDerivative, _config.Shooter.PID_kIntegral,
+                _config.Shooter.PID_kDerivative);
+        m_feeder = new WPI_VictorSPX(_config.Shooter.feederPort);
         m_shooterPID.setTolerance(_config.Shooter.PIDTolerance);
         m_shooterPID.reset();
-
-        // TODO Auto-generated constructor stub
+        pidOnTargetTicks = config.Shooter.pidOnTargetTicks;
+        shooterCurrentThreshold = config.Shooter.shooterCurrentThreshold;
+        shooterRPM = config.Shooter.shooterRPM;
     }
 
     /*
-     * @param targetVelocity the rpm of shooter
      */
     @Override
-    public void setSpeed(double targetVelocity) {
-        m_shooterPID.setSetpoint(targetVelocity);
-        m_targetVelocity = targetVelocity;
+    public void turnOnShooter() {
         m_shooterPID.reset();
+        m_shooterPID.setSetpoint(shooterRPM);
+    }
+
+    /**
+     * basically, this makes sure one ball is yeeted, if feedbackward is false. if
+     * feedbackward is true, it just drives the feeder in the opposite direction,
+     * probably becasue mech didn't fix their problems, and the balls got jammed
+     */
+    @Override
+    public void feed(boolean feedBackward) {
+        this.m_hasShotBall = false;
+        this.m_feedBackward = feedBackward;
     }
 
     @Override
-    public boolean isReady() {
-        // TODO Auto-generated method stub
-
-        return isUpToSpeed;
-    }
-
-    @Override
-    public void enableFeeding() {
-        // TODO Auto-generated method stub
-        kickerEnabled = true;
+    public void stopFeeding() {
+        this.m_hasShotBall = true;
 
     }
 
     @Override
-    public void disableFeeding() {
-        // TODO Auto-generated method stub
-        kickerEnabled = false;
-
+    public void turnOffShooter() {
+        m_shooterPID.setSetpoint(0);
+        this.m_hasShotBall = true;
     }
 
-    @Override
-    public void shootBalls(int balls) {
-        // TODO Auto-generated method stub
+    public boolean getHasShotBall() {
+        return m_hasShotBall;
     }
 
-    @Override
-    public void stopShooter() {
-        setSpeed(0);
+    private boolean isUpToSpeed() {
+        if (m_shooterPID.atSetpoint() && m_shooterPID.getSetpoint() != 0) {
+            m_onTargetFor++;
+        } else {
+            m_onTargetFor = 0;
+        }
+
+        return m_onTargetFor >= pidOnTargetTicks;
+        // TODO whne should count be rest??
+
     }
 
     public void periodic() {
-        isUpToSpeed = (Math.abs(m_leftEncoder.getVelocity() - m_targetVelocity) < _config.Shooter.speedTolerance ) && (m_targetVelocity != 0);
-        SmartDashboard.putNumber("Shooter Current RPM", m_leftEncoder.getVelocity());
-        SmartDashboard.putNumber("Shooter Current RPM not graph", m_leftEncoder.getVelocity());
-        SmartDashboard.putNumber("Shooter left Temp", m_leftShooter.getMotorTemperature());
         double shooterSpeed = m_shooterPID.calculate(m_leftEncoder.getVelocity());
-        SmartDashboard.putNumber("Shooter Pid Output", shooterSpeed);
-        SmartDashboard.putBoolean("Is up to speed", isUpToSpeed);
         if (shooterSpeed > _config.Shooter.bangbangTolerance)
             m_shooter.set(shooterSpeed);
         else {
             m_shooter.set(_config.Shooter.bangbangTolerance);
         }
-        if (kickerEnabled && isUpToSpeed)
-            m_kicker.set(1);
-        else
-            m_kicker.set(0);
-
-        if (m_targetVelocity == 0) {
+        if (m_shooterPID.getSetpoint() == 0) {
             m_shooter.set(0);
         }
+
+        if (m_feedBackward) {
+            this.m_feeder.set(-1);
+        } else if (!this.m_hasShotBall && this.isUpToSpeed()) {
+            this.m_feeder.set(1);
+        }
+        if (m_leftShooter.getOutputCurrent() <= shooterCurrentThreshold) {
+            this.m_hasShotBall = true;
+            this.m_onTargetFor = 0;
+        }
+
+        SmartDashboard.putNumber("Shooter Pid Output", shooterSpeed);
+        SmartDashboard.putNumber("Shooter RPM", m_leftEncoder.getVelocity());
+        SmartDashboard.putNumber("Shooter left Current", m_leftShooter.getBusVoltage());
+        SmartDashboard.putBoolean("has shot ball ", this.m_hasShotBall);
+        SmartDashboard.putBoolean("m_feedBackward ", m_feedBackward);
+
     }
 
 }
