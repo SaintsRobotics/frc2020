@@ -22,6 +22,7 @@ import frc.robot.common.IIntakeSubsystem;
 import frc.robot.common.ILogger;
 import frc.robot.common.IShooterSubsystem;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.CommandScheduler;
 
 /**
  * This has the core logic for the Robot. This class must not include any
@@ -43,7 +44,7 @@ public class RobotContainer extends CompetitionRobot {
 
     intake.setDefaultCommand(intakeCommand);
 
-    shooterSubsystem.setDefaultCommand(shooterCommand);
+    CommandScheduler.getInstance().schedule(false, shooterCommand);
 
     drivetrain.setDefaultCommand(driveCommand);
 
