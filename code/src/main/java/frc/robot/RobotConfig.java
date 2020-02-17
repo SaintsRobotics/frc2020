@@ -19,8 +19,6 @@ public final class RobotConfig {
     public final RobotConfig.Intake Intake = new RobotConfig.Intake();
     public final RobotConfig.Shooter Shooter = new RobotConfig.Shooter();
 
-
-
     public final class Controller {
         public final int controllerPort = 0;
 
@@ -65,8 +63,12 @@ public final class RobotConfig {
 
     public final class Shooter {
 
-        public final int kickerPort = 26;
+        public final int feederPort = 26;
         public final int leftShooterPort = 16;
         public final int rightShooterPort = 17;
+        public final int pidOnTargetTicks = 500;
+        public final int shooterCurrentThreshold = 254;
+        public final int shooterRPM = 4900;
+        public final double feederTimeout = .5;
     }
 }

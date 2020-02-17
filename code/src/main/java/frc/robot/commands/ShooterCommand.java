@@ -12,22 +12,30 @@ import com.google.inject.Inject;
 import edu.wpi.first.wpilibj.Controller;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.GenericHID.*;
+import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.Robot;
+import frc.robot.RobotConfig;
 import frc.robot.common.*;
+import frc.robot.subsystems.ShootOneBallCommand;
+import frc.robot.subsystems.ShooterFeedBackwardCommand;
+import frc.robot.subsystems.ShooterShutdownCommand;
+import frc.robot.subsystems.ShooterStartupCommand;
 
 /**
  * Add your docs here.
  */
 public class ShooterCommand extends TraceableCommand {
-    private final IShooterSubsystem _shooter;
+    private IShooterSubsystem _subsystem;
     private final XboxController _controller;
+    private RobotConfig _config;
 
     @Inject
-    public ShooterCommand(final ILogger logger, IShooterSubsystem shooter) {
+    public ShooterCommand(final ILogger logger, IShooterSubsystem subsysem, RobotConfig config) {
         super(logger);
-        _shooter = shooter;
+        _subsystem = subsysem;
         _controller = new XboxController(1);
+        _config = config;
 
-        addRequirements(_shooter);
     }
 
     @Override
@@ -39,20 +47,25 @@ public class ShooterCommand extends TraceableCommand {
     public void execute() {
         super.execute();
         if (_controller.getAButton()) {
-            _shooter.setSpeed(4900);
+            CommandScheduler.getInstance().schedule(new ShooterStartupCommand(_subsystem));
         }
+
         if (_controller.getBButton()) {
-            _shooter.feederBackward();;
-        }else if(_controller.getXButton()){
-            _shooter.feederForward();
-        }else {
-            _shooter.disableFeeding();
+            CommandScheduler.getInstance().schedule(new ShooterFeedBackwardCommand(_subsystem));
         }
+
+        if (_controller.getXButton()) {
+            CommandScheduler.getInstance().schedule(false,
+                    new ShootOneBallCommand(_subsystem, _config.Shooter.feederTimeout));
+        }
+
+        if (_controller.getXButtonReleased()) {
+            CommandScheduler.getInstance().cancel(new ShootOneBallCommand(_subsystem, _config.Shooter.feederTimeout));
+        }
+
         if (_controller.getYButton()) {
-            _shooter.stopShooter();
+            CommandScheduler.getInstance().schedule(new ShooterShutdownCommand(_subsystem));
         }
-        // ==
-        // axis??
 
     }
 
