@@ -18,6 +18,7 @@ public final class RobotConfig {
     public final RobotConfig.Physical Physical = new RobotConfig.Physical();
     public final RobotConfig.Intake Intake = new RobotConfig.Intake();
     public final RobotConfig.Shooter Shooter = new RobotConfig.Shooter();
+    public final RobotConfig.Odometry Odometry = new RobotConfig.Odometry();
 
 
 
@@ -68,5 +69,18 @@ public final class RobotConfig {
         public final int kickerPort = 26;
         public final int leftShooterPort = 16;
         public final int rightShooterPort = 17;
+    }
+
+    public final class Odometry {
+
+        public final int pX = 33;
+        public final int iX = 15;
+        public final int dX = 8;
+        public final int toleranceX = 6;
+
+        public final int pY = 33;
+        public final int iY = 15;
+        public final int dY = 8;
+        public final int toleranceY = 6;
     }
 }

@@ -9,6 +9,7 @@ package frc.robot.common;
 
 import com.google.inject.AbstractModule;
 
+import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj2.command.Subsystem;
 import frc.robot.RobotConfig.SwerveDrivetrain;
 
@@ -29,6 +30,8 @@ public interface IDrivetrainSubsystem extends Subsystem {
      * @return the maximum speed the robot can travel in meters per second
      */
     double getMaxSpeed();
+
+    Pose2d getCurrentPosition();
 
     void moveForward(double distance);
 
