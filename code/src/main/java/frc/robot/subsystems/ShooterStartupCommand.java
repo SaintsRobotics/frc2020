@@ -23,7 +23,6 @@ public class ShooterStartupCommand extends CommandBase {
     }
 
     public boolean isFinished() {
-
         return true;
     }
 

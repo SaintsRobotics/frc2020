@@ -30,24 +30,28 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
  * unit test.
  */
 public class RobotContainer extends CompetitionRobot {
+
+  private Command m_teleopCommand;
   // private final Provider<DrivetrainControllerCommand> _autonomousCommand;
 
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
    */
   @Inject
-
   private RobotContainer(final ILogger logger, IDrivetrainSubsystem drivetrain,
       DrivetrainControllerCommand driveCommand, IIntakeSubsystem intake, IntakeControllerCommand intakeCommand,
       IShooterSubsystem shooterSubsystem, ShooterCommand shooterCommand) {
     super(logger);
 
+    m_teleopCommand = shooterCommand;
     intake.setDefaultCommand(intakeCommand);
-
-    CommandScheduler.getInstance().schedule(false, shooterCommand);
 
     drivetrain.setDefaultCommand(driveCommand);
 
+  }
+
+  public Command getTeleopCommand() {
+    return m_teleopCommand;
   }
 
   /**

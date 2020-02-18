@@ -13,7 +13,9 @@ import com.revrobotics.CANEncoder;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.PWMVictorSPX;
+import edu.wpi.first.wpilibj.Preferences;
 import edu.wpi.first.wpilibj.SpeedController;
 import edu.wpi.first.wpilibj.SpeedControllerGroup;
 import edu.wpi.first.wpilibj.controller.PIDController;
@@ -22,11 +24,12 @@ import frc.robot.RobotConfig;
 import frc.robot.common.ILogger;
 import frc.robot.common.IShooterSubsystem;
 import frc.robot.common.TraceableMockSubsystem;
+import frc.robot.common.TraceableSubsystem;
 
 /**
  * Add your docs here.
  */
-public class ShooterSubsystem extends TraceableMockSubsystem implements IShooterSubsystem {
+public class ShooterSubsystem extends TraceableSubsystem implements IShooterSubsystem {
     private CANSparkMax m_leftShooter;
     private CANSparkMax m_rightShooter;
     private SpeedControllerGroup m_shooter;
@@ -34,6 +37,7 @@ public class ShooterSubsystem extends TraceableMockSubsystem implements IShooter
     private PIDController m_shooterPID;
 
     private boolean m_hasShotBall = true; // ONE ball, singular!
+    private boolean m_isShooting = false;
 
     private final int pidOnTargetTicks; // the number of ticks the pid must be on target for to be considered ready to
                                         // shoot
@@ -57,7 +61,7 @@ public class ShooterSubsystem extends TraceableMockSubsystem implements IShooter
         m_shooter = new SpeedControllerGroup(m_leftShooter, m_rightShooter);
         m_shooterPID = new PIDController(0.0003, 0.0004, 0);
         m_feeder = new WPI_VictorSPX(config.Shooter.feederPort);
-        m_shooterPID.setTolerance(50);
+        m_shooterPID.setTolerance(200);
         m_shooterPID.reset();
         pidOnTargetTicks = config.Shooter.pidOnTargetTicks;
         shooterCurrentThreshold = config.Shooter.shooterCurrentThreshold;
@@ -68,8 +72,13 @@ public class ShooterSubsystem extends TraceableMockSubsystem implements IShooter
      */
     @Override
     public void turnOnShooter() {
+        if (m_shooterPID.getSetpoint() != 0) {
+            return;
+        }
         m_shooterPID.reset();
-        m_shooterPID.setSetpoint(shooterRPM);
+        int setpoint = Preferences.getInstance().getInt("shooterTargetRPM", shooterRPM);
+        m_shooterPID.setSetpoint(setpoint);
+        SmartDashboard.putNumber("ShooterTargetRPM", setpoint);
     }
 
     /**
@@ -122,25 +131,44 @@ public class ShooterSubsystem extends TraceableMockSubsystem implements IShooter
             m_shooter.set(0);
         }
 
-        if (m_feedBackward) {
-            this.m_feeder.set(-1);
-        } else if (!this.m_hasShotBall && this.isUpToSpeed()) {
-            this.m_feeder.set(1);
-            if (m_leftShooter.getOutputCurrent() <= shooterCurrentThreshold) {
-                this.m_hasShotBall = true;
-                this.m_onTargetFor = 0;
+        // not having shot a ball implies that a button is being pressed, and we want
+        // the feeder to be driven
+        if (!this.m_hasShotBall) {
+            if (this.m_feedBackward) {
+                this.m_feeder.set(-1);
+                System.out.println("feeding backward");
+
+            } else if (this.isUpToSpeed()) {
+                this.m_feeder.set(1);
+                System.out.println("feeding forward");
+                this.m_isShooting = true;
             }
         }
 
+        // if we are shooting and the pid isn't at the setpoint, that means we've shot a
+        // ball
+        if (this.m_isShooting && !m_shooterPID.atSetpoint()) {
+            this.m_hasShotBall = true;
+            this.m_onTargetFor = 0;
+            this.m_isShooting = false;
+        }
+
+        // m_hasShotBall is used to abort the feeder, spinning forward or backward
         if (this.m_hasShotBall) {
+            System.out.println("turning off feeder");
             this.m_feeder.set(0);
         }
 
-        SmartDashboard.putNumber("Shooter Pid Output", shooterSpeed);
+        // SmartDashboard.putNumber("feeder speed", this.m_feeder.get());
+        // SmartDashboard.putNumber("Shooter Pid Output", shooterSpeed);
+        // SmartDashboard.putNumber("shooter pid setpoint ",
+        // this.m_shooterPID.getSetpoint());
         SmartDashboard.putNumber("Shooter RPM", m_leftEncoder.getVelocity());
-        SmartDashboard.putNumber("Shooter left Current", m_leftShooter.getBusVoltage());
+        SmartDashboard.putNumber("Shooter Current", m_leftShooter.getBusVoltage());
         SmartDashboard.putBoolean("has shot ball ", this.m_hasShotBall);
         SmartDashboard.putBoolean("m_feedBackward ", m_feedBackward);
+        SmartDashboard.putBoolean("is up to speed", this.isUpToSpeed());
+        SmartDashboard.putNumber("Shooter Speed", shooterSpeed);
 
     }
 

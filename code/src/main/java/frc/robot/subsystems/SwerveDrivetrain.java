@@ -185,9 +185,9 @@ public class SwerveDrivetrain extends TraceableSubsystem implements IDrivetrainS
             theta = this.m_pidController.calculate((((this.m_gyro.getAngle() % 360) + 360) % 360));
         }
 
-        SmartDashboard.putNumber("x", x);
-        SmartDashboard.putNumber("y", y);
-        SmartDashboard.putNumber("theta", theta);
+        // SmartDashboard.putNumber("x", x);
+        // SmartDashboard.putNumber("y", y);
+        // SmartDashboard.putNumber("theta", theta);
 
         SwerveModuleState[] swerveModuleStates;
 
@@ -355,14 +355,16 @@ public class SwerveDrivetrain extends TraceableSubsystem implements IDrivetrainS
     public void periodic() {
         // SmartDashboard.putNumber("back left ", m_backLeftEncoder.getRadians());
         // SmartDashboard.putNumber("back right ", m_backRightEncoder.getRadians());
-        SmartDashboard.putNumber("front left ", m_frontLeftEncoder.getRadians());
+        // SmartDashboard.putNumber("front left ", m_frontLeftEncoder.getRadians());
         // SmartDashboard.putNumber("front right ", m_frontRightEncoder.getRadians());
-        SmartDashboard.putNumber("Gyro VAlue", ((m_gyro.getAngle() % 360) + 360) % 360);
-        SmartDashboard.putNumber("gyro angle fed to field relative ",
-                (360 - (this.m_gyro.getAngle() % (360)) + (360)) % (360));
+        // SmartDashboard.putNumber("Gyro VAlue", ((m_gyro.getAngle() % 360) + 360) %
+        // 360);
+        // SmartDashboard.putNumber("gyro angle fed to field relative ",
+        // (360 - (this.m_gyro.getAngle() % (360)) + (360)) % (360));
 
-        SmartDashboard.putNumber("heading pid error ", this.m_pidController.getPositionError());
-        SmartDashboard.putBoolean("is turning ", this.m_isTurning);
-        SmartDashboard.putNumber("CAN LEFT DRIVE power", m_leftdrive.getVelocity());
+        // SmartDashboard.putNumber("heading pid error ",
+        // this.m_pidController.getPositionError());
+        // SmartDashboard.putBoolean("is turning ", this.m_isTurning);
+        // SmartDashboard.putNumber("CAN LEFT DRIVE power", m_leftdrive.getVelocity());
     }
 }

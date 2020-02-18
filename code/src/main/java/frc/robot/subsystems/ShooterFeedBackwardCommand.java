@@ -22,8 +22,14 @@ public class ShooterFeedBackwardCommand extends CommandBase {
         m_subsystem.feed(true);
     }
 
+    @Override
     public boolean isFinished() {
-        return true;
+        return false;
+    }
+
+    @Override
+    public void end(boolean interruped) {
+        m_subsystem.stopFeeding();
     }
 
 }

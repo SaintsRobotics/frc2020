@@ -40,13 +40,10 @@ public class ShootOneBallCommand extends CommandBase {
         return m_subsystem.getHasShotBall() || m_timer.get() >= m_timeout;
     }
 
-    public void end() {
+    @Override
+    public void end(boolean interrupted) {
         m_subsystem.stopFeeding();
         m_timer.stop();
-    }
-
-    public void interrupted() {
-        end();
     }
 
 }
