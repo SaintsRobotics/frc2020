@@ -69,7 +69,7 @@ public class SwerveDrivetrain extends TraceableSubsystem implements IDrivetrainS
     private Location m_location;
 
     @Inject
-    public SwerveDrivetrain(final ILogger logger, final RobotConfig config, final  Location  location) {
+    public SwerveDrivetrain(final ILogger logger, final RobotConfig config, final Location location) {
 
         super(logger);
         _config = config;
@@ -102,8 +102,7 @@ public class SwerveDrivetrain extends TraceableSubsystem implements IDrivetrainS
         m_backRightEncoder = new AbsoluteEncoder(config.Drivetrain.rearRightAbsoluteEncoder, 3.925, true);
         m_backRight = new SwerveWheel(m_backRightDrive, m_backRightTurn, -config.Drivetrain.swerveX,
                 -config.Drivetrain.swerveY, m_backRightEncoder, "Right back");
-        m_kinematics = new SwerveDriveKinematics(m_frontLeft.getlocation(), m_frontRight.getlocation(),
-                m_backLeft.getlocation(), m_backRight.getlocation());
+        m_kinematics = config.Drivetrain.kinematics;
 
         m_pidController = new PIDController((getMaxSpeed() / 180) * 5, 0, 0);
 
@@ -116,7 +115,9 @@ public class SwerveDrivetrain extends TraceableSubsystem implements IDrivetrainS
         m_leftturn = m_frontLeftTurn.getEncoder();
 
         m_location = location;
-        m_odometry = new SwerveDriveOdometry(m_kinematics, new Rotation2d(Math.toRadians(location.getHeading())), new Pose2d(location.getPosition().getX(), location.getPosition().getY(), new Rotation2d(Math.toRadians(location.getHeading()))));
+        m_odometry = new SwerveDriveOdometry(m_kinematics, new Rotation2d(Math.toRadians(location.getHeading())),
+                new Pose2d(location.getPosition().getX(), location.getPosition().getY(),
+                        new Rotation2d(Math.toRadians(location.getHeading()))));
     }
 
     public void resetGyro() {
@@ -135,30 +136,6 @@ public class SwerveDrivetrain extends TraceableSubsystem implements IDrivetrainS
     public double getMaxSpeed() {
         // TODO Auto-generated method stub
         return 1;
-    }
-
-    @Override
-    public void moveForward(final double distance) {
-        // TODO Auto-generated method stub
-
-    }
-
-    @Override
-    public void moveForward(final double maxSpeed, final double distance) {
-        // TODO Auto-generated method stub
-
-    }
-
-    @Override
-    public void moveBackward(final double distance) {
-        // TODO Auto-generated method stub
-
-    }
-
-    @Override
-    public void moveBackward(final double maxSpeed, final double distance) {
-        // TODO Auto-generated method stub
-
     }
 
     /**
@@ -216,137 +193,13 @@ public class SwerveDrivetrain extends TraceableSubsystem implements IDrivetrainS
         m_backRight.setDesiredState(swerveModuleStates[3], this.getMaxSpeed());
         // this.getLogger("frontLeft: ", m)
 
-        m_odometry.update(new Rotation2d(Math.toRadians(m_gyro.getAngle())), m_frontLeft.getState(), m_frontRight.getState(), m_backLeft.getState(), m_backRight.getState());
+        m_odometry.update(new Rotation2d(Math.toRadians(m_gyro.getAngle())), m_frontLeft.getState(),
+                m_frontRight.getState(), m_backLeft.getState(), m_backRight.getState());
         SmartDashboard.putString("Current pose", m_odometry.getPoseMeters().toString());
         m_location.updateHeading(m_gyro.getAngle());
-        m_location.updatePosition(new Position(m_odometry.getPoseMeters().getTranslation().getX(),m_odometry.getPoseMeters().getTranslation().getY()));
+        m_location.updatePosition(new Position(m_odometry.getPoseMeters().getTranslation().getX(),
+                m_odometry.getPoseMeters().getTranslation().getY()));
         SmartDashboard.putString("Current location", m_location.toString());
-
-    }
-
-    @Override
-    public void moveLeft(final double distance) {
-        // TODO Auto-generated method stub
-
-    }
-
-    @Override
-    public void moveLeft(final double maxSpeed, final double distance) {
-        // TODO Auto-generated method stub
-
-    }
-
-    @Override
-    public void moveRight(final double distance) {
-        // TODO Auto-generated method stub
-
-    }
-
-    @Override
-    public void moveRight(final double maxSpeed, final double distance) {
-        // TODO Auto-generated method stub
-
-    }
-
-    @Override
-    public void moveNorth(final double distance) {
-        // TODO Auto-generated method stub
-
-    }
-
-    @Override
-    public void moveNorth(final double maxSpeed, final double distance) {
-        // TODO Auto-generated method stub
-
-    }
-
-    @Override
-    public void moveSouth(final double distance) {
-        // TODO Auto-generated method stub
-
-    }
-
-    @Override
-    public void moveSouth(final double maxSpeed, final double distance) {
-        // TODO Auto-generated method stub
-
-    }
-
-    @Override
-    public void moveEast(final double distance) {
-        // TODO Auto-generated method stub
-
-    }
-
-    @Override
-    public void moveEast(final double maxSpeed, final double distance) {
-        // TODO Auto-generated method stub
-
-    }
-
-    @Override
-    public void moveWest(final double distance) {
-        // TODO Auto-generated method stub
-
-    }
-
-    @Override
-    public void moveWest(final double maxSpeed, final double distance) {
-        // TODO Auto-generated method stub
-
-    }
-
-    @Override
-    public void rotate(final double degrees) {
-        // TODO Auto-generated method stub
-
-    }
-
-    @Override
-    public void turnLeft() {
-        // TODO Auto-generated method stub
-
-    }
-
-    @Override
-    public void turnRight() {
-        // TODO Auto-generated method stub
-
-    }
-
-    @Override
-    public void faceNorth() {
-        // TODO Auto-generated method stub
-
-    }
-
-    @Override
-    public void faceSouth() {
-        // TODO Auto-generated method stub
-
-    }
-
-    @Override
-    public void faceEast() {
-        // TODO Auto-generated method stub
-
-    }
-
-    @Override
-    public void faceWest() {
-        // TODO Auto-generated method stub
-
-    }
-
-    @Override
-    public void followPath(final double finalHeading, final Position... waypoint) {
-        // TODO Auto-generated method stub
-
-    }
-
-    @Override
-    public void followPath(final double maxSpeed, final double finalHeading, final Position... waypoint) {
-        // TODO Auto-generated method stub
 
     }
 
@@ -384,5 +237,20 @@ public class SwerveDrivetrain extends TraceableSubsystem implements IDrivetrainS
     public Pose2d getCurrentPosition() {
         // TODO Auto-generated method stub
         return m_odometry.getPoseMeters();
+    }
+
+    @Override
+    public double getXAcceleration() {
+        return (m_gyro.getRawAccelX() / 9.8);
+    }
+
+    @Override
+    public double getYAcceleration() {
+        return (m_gyro.getRawAccelY() / 9.8);
+    }
+
+    @Override
+    public double getThetaAcceleration() { // Gets Theta Acc(what did you expect)
+        return Math.toRadians(m_gyro.getAngle());
     }
 }

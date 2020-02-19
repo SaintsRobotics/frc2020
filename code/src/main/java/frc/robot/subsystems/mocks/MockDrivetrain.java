@@ -54,158 +54,9 @@ public class MockDrivetrain extends TraceableMockSubsystem implements IDrivetrai
     }
 
     @Override
-    public void moveForward(double distance) {
-        // check for invalid values
-        if (this.isPositiveNumber(distance))
-            this.updateRelativeLocation(distance);
-    }
-
-    @Override
-    public void moveForward(double maxSpeed, double distance) {
-        // dont care about the speed for mock purposes
-        this.moveForward(distance);
-    }
-
-    @Override
-    public void moveBackward(double distance) {
-        // check for invalid values
-        if (this.isPositiveNumber(distance))
-            this.updateRelativeLocation(-distance);
-
-    }
-
-    @Override
-    public void moveBackward(double maxSpeed, double distance) {
-        this.moveBackward(-distance);
-    }
-
-    @Override
     public void move(double x, double y, double theta, boolean fieldRelative) {
         // TODO Auto-generated method stub
 
-    }
-
-    @Override
-    public void moveLeft(double distance) {
-        this.turnLeft();
-        // TODO: Calculate the correct path
-        this.moveForward(distance);
-    }
-
-    @Override
-    public void moveLeft(double maxSpeed, double distance) {
-        this.moveLeft(distance);
-    }
-
-    @Override
-    public void moveRight(double distance) {
-        this.turnRight();
-        // TODO: Calculate the correct path
-        this.moveForward(distance);
-    }
-
-    @Override
-    public void moveRight(double maxSpeed, double distance) {
-        this.moveRight(distance);
-    }
-
-    @Override
-    public void moveNorth(double distance) {
-        this.faceNorth();
-        this.moveForward(distance);
-    }
-
-    @Override
-    public void moveNorth(double maxSpeed, double distance) {
-        this.moveNorth(distance);
-    }
-
-    @Override
-    public void moveSouth(double distance) {
-        this.faceSouth();
-        this.moveForward(distance);
-
-    }
-
-    @Override
-    public void moveSouth(double maxSpeed, double distance) {
-        this.moveSouth(distance);
-    }
-
-    @Override
-    public void moveEast(double distance) {
-        this.faceEast();
-        this.moveForward(distance);
-    }
-
-    @Override
-    public void moveEast(double maxSpeed, double distance) {
-        this.moveEast(distance);
-    }
-
-    @Override
-    public void moveWest(double distance) {
-        this.faceWest();
-        this.moveForward(distance);
-    }
-
-    @Override
-    public void moveWest(double maxSpeed, double distance) {
-        this.moveWest(distance);
-    }
-
-    @Override
-    public void rotate(double degrees) {
-        // TODO Auto-generated method stub
-
-        double heading = _location.getHeading();
-        heading += degrees;
-        _location.updateHeading(heading >= 360 ? heading - 360 : heading < 0 ? heading + 360 : heading);
-    }
-
-    @Override
-    public void turnLeft() {
-        this.rotate(-90);
-    }
-
-    @Override
-    public void turnRight() {
-        this.rotate(90);
-    }
-
-    @Override
-    public void faceNorth() {
-        _location.updateHeading(0);
-    }
-
-    @Override
-    public void faceSouth() {
-        _location.updateHeading(180);
-    }
-
-    @Override
-    public void faceEast() {
-        _location.updateHeading(90);
-    }
-
-    @Override
-    public void faceWest() {
-        _location.updateHeading(270);
-    }
-
-    @Override
-    public void followPath(double finalHeading, Position... waypoint) {
-        // TODO Auto-generated method stub
-
-    }
-
-    @Override
-    public void followPath(double maxSpeed, double finalHeading, Position... waypoints) {
-
-        for (int i = 0; i < waypoints.length; i++) {
-            _location.updatePosition(waypoints[i]);
-        }
-        _location.updateHeading(finalHeading);
     }
 
     private void updateRelativeLocation(double distance) {
@@ -249,6 +100,25 @@ public class MockDrivetrain extends TraceableMockSubsystem implements IDrivetrai
     @Override
     public Pose2d getCurrentPosition() {
         // TODO Auto-generated method stub
-        return new Pose2d(_location.getPosition().getX(), _location.getPosition().getY(), new Rotation2d(Math.toRadians(_location.getHeading())));
+        return new Pose2d(_location.getPosition().getX(), _location.getPosition().getY(),
+                new Rotation2d(Math.toRadians(_location.getHeading())));
+    }
+
+    @Override
+    public double getXAcceleration() {
+        // TODO Auto-generated method stub
+        return 0;
+    }
+
+    @Override
+    public double getYAcceleration() {
+        // TODO Auto-generated method stub
+        return 0;
+    }
+
+    @Override
+    public double getThetaAcceleration() {
+        // TODO Auto-generated method stub
+        return 0;
     }
 }
