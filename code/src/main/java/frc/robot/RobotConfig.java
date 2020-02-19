@@ -23,8 +23,6 @@ public final class RobotConfig {
     public final RobotConfig.Shooter Shooter = new RobotConfig.Shooter();
     public final RobotConfig.Odometry Odometry = new RobotConfig.Odometry();
 
-
-
     public final class Controller {
         public final int controllerPort = 0;
 
@@ -78,14 +76,20 @@ public final class RobotConfig {
 
     public final class Odometry {
 
-        public final int pX = 33;
-        public final int iX = 15;
-        public final int dX = 8;
-        public final int toleranceX = 6;
+        public final double pX = 1;
+        public final double iX = 1;
+        public final double dX = 1;
+        public final double toleranceX = .02;
 
-        public final int pY = 33;
-        public final int iY = 15;
-        public final int dY = 8;
-        public final int toleranceY = 6;
+        public final double pY = 1;
+        public final double iY = 1;
+        public final double dY = 1;
+        public final double toleranceY = .02;
+
+        public final double pTheta = 1;
+        public final double iTheta = 1;
+        public final double dTheta = 1;
+        public final double toleranceTheta = .02;
+
     }
 }
