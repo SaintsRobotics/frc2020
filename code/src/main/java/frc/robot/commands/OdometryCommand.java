@@ -67,14 +67,18 @@ public class OdometryCommand extends TraceableCommand {
     // Called every time the scheduler runs while the command is scheduled.
     @Override
     public void execute() {
-        m_subsystem.move(m_xPIDController.calculate(m_subsystem.getCurrentPosition().getTranslation().getX()),
-                m_yPIDController.calculate(m_subsystem.getCurrentPosition().getTranslation().getY()), 0, true);
+
         if (m_xPIDController.atSetpoint() && m_yPIDController.atSetpoint() && m_thetaController.atGoal()) {
             currentPosIndex++;
-            m_xPIDController.setSetpoint(m_path[currentPosIndex].getTranslation().getX());
-            m_yPIDController.setSetpoint(m_path[currentPosIndex].getTranslation().getY());
+            if (currentPosIndex < m_path.length) {
+                m_xPIDController.setSetpoint(m_path[currentPosIndex].getTranslation().getX());
+                m_yPIDController.setSetpoint(m_path[currentPosIndex].getTranslation().getY());
+            }
 
         }
+        m_subsystem.move(m_xPIDController.calculate(m_subsystem.getCurrentPosition().getTranslation().getX()),
+                m_yPIDController.calculate(m_subsystem.getCurrentPosition().getTranslation().getY()),
+                m_thetaController.calculate(m_subsystem.getCurrentPosition().getRotation().getRadians()), false);
     }
 
     // Called once the command ends or is interrupted.
@@ -87,6 +91,6 @@ public class OdometryCommand extends TraceableCommand {
     // Returns true when the command should end.
     @Override
     public boolean isFinished() {
-        return m_xPIDController.atSetpoint() && m_yPIDController.atSetpoint();
+        return currentPosIndex >= m_path.length;
     }
 }
