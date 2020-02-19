@@ -54,7 +54,7 @@ public class Feature_move_robot_using_high_level_commands {
             final double finalHeading) {
 
         _location.updateHeading(initialHeading);
-        _drivetrain.rotate(rotation);
+        // _drivetrain.rotate(rotation);
         assertEquals(finalHeading, _location.getHeading(), 0);
     }
     /// ---------------------------------------------------------------------------------------
@@ -79,7 +79,7 @@ public class Feature_move_robot_using_high_level_commands {
 
         _location.updatePosition(initialPosition);
         _location.updateHeading(heading);
-        _drivetrain.moveForward(distance);
+        // _drivetrain.moveForward(distance);
         final Position pos = _location.getPosition();
 
         assertEquals(finalPosition.getX(), pos.getX(), 0.001);
@@ -107,7 +107,7 @@ public class Feature_move_robot_using_high_level_commands {
 
         _location.updatePosition(initialPosition);
         _location.updateHeading(heading);
-        _drivetrain.moveBackward(distance);
+        // _drivetrain.moveBackward(distance);
         final Position pos = _location.getPosition();
 
         assertEquals(finalPosition.getX(), pos.getX(), 0.001);
@@ -134,7 +134,7 @@ public class Feature_move_robot_using_high_level_commands {
 
         _location.updatePosition(initialPosition);
         _location.updateHeading(heading);
-        _drivetrain.moveLeft(distance);
+        // _drivetrain.moveLeft(distance);
 
         final Position pos = _location.getPosition();
 
@@ -162,7 +162,7 @@ public class Feature_move_robot_using_high_level_commands {
 
         _location.updatePosition(initialPosition);
         _location.updateHeading(heading);
-        _drivetrain.moveRight(distance);
+        // _drivetrain.moveRight(distance);
 
         final Position pos = _location.getPosition();
 
@@ -190,7 +190,7 @@ public class Feature_move_robot_using_high_level_commands {
 
         _location.updatePosition(initialPosition);
         _location.updateHeading(heading);
-        _drivetrain.moveNorth(distance);
+        // _drivetrain.moveNorth(distance);
 
         final Position pos = _location.getPosition();
 
@@ -219,7 +219,7 @@ public class Feature_move_robot_using_high_level_commands {
 
         _location.updatePosition(initialPosition);
         _location.updateHeading(heading);
-        _drivetrain.moveEast(distance);
+        // _drivetrain.moveEast(distance);
 
         final Position pos = _location.getPosition();
 
@@ -247,7 +247,7 @@ public class Feature_move_robot_using_high_level_commands {
 
         _location.updatePosition(initialPosition);
         _location.updateHeading(heading);
-        _drivetrain.moveWest(distance);
+        // _drivetrain.moveWest(distance);
 
         final Position pos = _location.getPosition();
 
@@ -276,7 +276,7 @@ public class Feature_move_robot_using_high_level_commands {
 
         _location.updatePosition(initialPosition);
         _location.updateHeading(heading);
-        _drivetrain.moveSouth(distance);
+        // _drivetrain.moveSouth(distance);
 
         final Position pos = _location.getPosition();
 
@@ -300,7 +300,7 @@ public class Feature_move_robot_using_high_level_commands {
     public void Scenario_follow_Path(final double maxSpeed, final double initialHeading, final double finalHeading,
             final Position[] waypoints) {
 
-        _drivetrain.followPath(maxSpeed, initialHeading, waypoints);
+        // _drivetrain.followPath(maxSpeed, initialHeading, waypoints);
 
         Position pos = _location.getPosition();
 
