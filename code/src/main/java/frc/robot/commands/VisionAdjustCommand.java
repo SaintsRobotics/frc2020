@@ -16,11 +16,11 @@ import edu.wpi.first.networktables.*;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
 
-public class VisionAdjustCommand extends TraceableCommand{
+public class VisionAdjustCommand extends TraceableCommand {
     private NetworkTable m_table;
     private int m_theta;
 
-    public VisionAdjustCommand(final ILogger logger){
+    public VisionAdjustCommand(final ILogger logger) {
         super(logger);
         m_table = NetworkTableInstance.getDefault().getTable("limelight");
         m_table.getEntry("pipeline").setNumber(0);
@@ -31,13 +31,13 @@ public class VisionAdjustCommand extends TraceableCommand{
 
     }
 
-    public void execute(){
+    public void execute() {
 
         // network table values
-        NetworkTableEntry tx = table.getEntry("tx");
-        NetworkTableEntry ty = table.getEntry("ty");
-        NetworkTableEntry ta = table.getEntry("ta");
-        NetworkTableEntry tv = table.getEntry("tv");
+        NetworkTableEntry tx = m_table.getEntry("tx");
+        NetworkTableEntry ty = m_table.getEntry("ty");
+        NetworkTableEntry ta = m_table.getEntry("ta");
+        NetworkTableEntry tv = m_table.getEntry("tv");
 
         // update network table values periodically
         double x = tx.getDouble(0.0);
@@ -46,13 +46,12 @@ public class VisionAdjustCommand extends TraceableCommand{
         double targetSeen = tv.getDouble(0.0);
     }
 
-    public void end(boolean interrupted){
+    public void end(boolean interrupted) {
 
     }
 
-    public boolean isFinished(){
+    public boolean isFinished() {
         return false;
     }
 
 }
-
