@@ -9,6 +9,8 @@ package frc.robot.subsystems.mocks;
 
 import com.google.inject.Inject;
 
+import edu.wpi.first.wpilibj.geometry.Pose2d;
+import edu.wpi.first.wpilibj.geometry.Rotation2d;
 import frc.robot.common.IDrivetrainSubsystem;
 import frc.robot.common.ILogger;
 import frc.robot.common.Location;
@@ -242,5 +244,11 @@ public class MockDrivetrain extends TraceableMockSubsystem implements IDrivetrai
 
     public void setToBrake(boolean brake) {
 
+    }
+
+    @Override
+    public Pose2d getCurrentPosition() {
+        // TODO Auto-generated method stub
+        return new Pose2d(_location.getPosition().getX(), _location.getPosition().getY(), new Rotation2d(Math.toRadians(_location.getHeading())));
     }
 }

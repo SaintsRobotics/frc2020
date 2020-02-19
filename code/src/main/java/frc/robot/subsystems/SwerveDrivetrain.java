@@ -20,15 +20,18 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.SpeedController;
 import edu.wpi.first.wpilibj.VictorSP;
 import edu.wpi.first.wpilibj.controller.PIDController;
+import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.kinematics.SwerveDriveKinematics;
+import edu.wpi.first.wpilibj.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.wpilibj.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.RobotConfig;
 import frc.robot.common.AbsoluteEncoder;
 import frc.robot.common.IDrivetrainSubsystem;
 import frc.robot.common.ILogger;
+import frc.robot.common.Location;
 import frc.robot.common.Position;
 import frc.robot.common.TraceableSubsystem;
 import edu.wpi.first.wpilibj.SPI;
@@ -60,18 +63,20 @@ public class SwerveDrivetrain extends TraceableSubsystem implements IDrivetrainS
     private SwerveDriveKinematics m_kinematics;
     private AHRS m_gyro;
     private PIDController m_pidController;
+    private SwerveDriveOdometry m_odometry;
 
     private boolean m_isTurning;
+    private Location m_location;
 
     @Inject
-    public SwerveDrivetrain(final ILogger logger, final RobotConfig config) {
+    public SwerveDrivetrain(final ILogger logger, final RobotConfig config, final  Location  location) {
 
         super(logger);
         _config = config;
         m_frontLeftDrive = new CANSparkMax(config.Drivetrain.frontLeftDriveMotorPort, MotorType.kBrushless);
         m_frontLeftDrive.setInverted(true);
         m_frontLeftTurn = new CANSparkMax(config.Drivetrain.frontLeftTurnMotorPort, MotorType.kBrushless);
-        m_frontLeftEncoder = new AbsoluteEncoder(config.Drivetrain.frontLeftAbsoluteEncoder, 5.664991, true);
+        m_frontLeftEncoder = new AbsoluteEncoder(config.Drivetrain.frontLeftAbsoluteEncoder, 2.254991, true);
 
         m_frontLeft = new SwerveWheel(m_frontLeftDrive, m_frontLeftTurn, config.Drivetrain.swerveX,
                 config.Drivetrain.swerveY, m_frontLeftEncoder, "Left front");
@@ -109,6 +114,9 @@ public class SwerveDrivetrain extends TraceableSubsystem implements IDrivetrainS
 
         m_leftdrive = m_frontLeftDrive.getEncoder();
         m_leftturn = m_frontLeftTurn.getEncoder();
+
+        m_location = location;
+        m_odometry = new SwerveDriveOdometry(m_kinematics, new Rotation2d(Math.toRadians(location.getHeading())), new Pose2d(location.getPosition().getX(), location.getPosition().getY(), new Rotation2d(Math.toRadians(location.getHeading()))));
     }
 
     public void resetGyro() {
@@ -207,6 +215,12 @@ public class SwerveDrivetrain extends TraceableSubsystem implements IDrivetrainS
         m_backLeft.setDesiredState(swerveModuleStates[2], this.getMaxSpeed());
         m_backRight.setDesiredState(swerveModuleStates[3], this.getMaxSpeed());
         // this.getLogger("frontLeft: ", m)
+
+        m_odometry.update(new Rotation2d(Math.toRadians(m_gyro.getAngle())), m_frontLeft.getState(), m_frontRight.getState(), m_backLeft.getState(), m_backRight.getState());
+        SmartDashboard.putString("Current pose", m_odometry.getPoseMeters().toString());
+        m_location.updateHeading(m_gyro.getAngle());
+        m_location.updatePosition(new Position(m_odometry.getPoseMeters().getTranslation().getX(),m_odometry.getPoseMeters().getTranslation().getY()));
+        SmartDashboard.putString("Current location", m_location.toString());
 
     }
 
@@ -355,7 +369,7 @@ public class SwerveDrivetrain extends TraceableSubsystem implements IDrivetrainS
     public void periodic() {
         // SmartDashboard.putNumber("back left ", m_backLeftEncoder.getRadians());
         // SmartDashboard.putNumber("back right ", m_backRightEncoder.getRadians());
-        // SmartDashboard.putNumber("front left ", m_frontLeftEncoder.getRadians());
+        SmartDashboard.putNumber("front left ", m_frontLeftEncoder.getRadians());
         // SmartDashboard.putNumber("front right ", m_frontRightEncoder.getRadians());
         SmartDashboard.putNumber("Gyro VAlue", ((m_gyro.getAngle() % 360) + 360) % 360);
         SmartDashboard.putNumber("gyro angle fed to field relative ",
@@ -364,5 +378,11 @@ public class SwerveDrivetrain extends TraceableSubsystem implements IDrivetrainS
         SmartDashboard.putNumber("heading pid error ", this.m_pidController.getPositionError());
         SmartDashboard.putBoolean("is turning ", this.m_isTurning);
         SmartDashboard.putNumber("CAN LEFT DRIVE power", m_leftdrive.getVelocity());
+    }
+
+    @Override
+    public Pose2d getCurrentPosition() {
+        // TODO Auto-generated method stub
+        return m_odometry.getPoseMeters();
     }
 }
