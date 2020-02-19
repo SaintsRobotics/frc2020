@@ -40,11 +40,11 @@ public interface IDrivetrainSubsystem extends Subsystem {
 
     void setToBrake(boolean brake);
 
-    double getXAcceleration();
+    double getMaxXAcceleration();
 
-    double getYAcceleration();
+    double getMaxYAcceleration();
 
-    double getThetaAcceleration();
+    double getMaxThetaAcceleration();
 }
 
 // distance

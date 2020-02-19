@@ -240,17 +240,17 @@ public class SwerveDrivetrain extends TraceableSubsystem implements IDrivetrainS
     }
 
     @Override
-    public double getXAcceleration() {
-        return (m_gyro.getRawAccelX() / 9.8);
+    public double getMaxXAcceleration() {
+        return 1;
     }
 
     @Override
-    public double getYAcceleration() {
-        return (m_gyro.getRawAccelY() / 9.8);
+    public double getMaxYAcceleration() {
+        return 1;
     }
 
     @Override
-    public double getThetaAcceleration() { // Gets Theta Acc(what did you expect)
-        return Math.toRadians(m_gyro.getAngle());
+    public double getMaxThetaAcceleration() { // Gets Theta Acc(what did you expect)
+        return 1;
     }
 }

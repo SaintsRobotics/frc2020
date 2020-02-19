@@ -105,19 +105,19 @@ public class MockDrivetrain extends TraceableMockSubsystem implements IDrivetrai
     }
 
     @Override
-    public double getXAcceleration() {
+    public double getMaxXAcceleration() {
         // TODO Auto-generated method stub
         return 0;
     }
 
     @Override
-    public double getYAcceleration() {
+    public double getMaxYAcceleration() {
         // TODO Auto-generated method stub
         return 0;
     }
 
     @Override
-    public double getThetaAcceleration() {
+    public double getMaxThetaAcceleration() {
         // TODO Auto-generated method stub
         return 0;
     }
