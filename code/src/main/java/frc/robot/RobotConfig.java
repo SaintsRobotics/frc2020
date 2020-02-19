@@ -7,6 +7,9 @@
 
 package frc.robot;
 
+import edu.wpi.first.wpilibj.geometry.Translation2d;
+import edu.wpi.first.wpilibj.kinematics.SwerveDriveKinematics;
+
 /**
  * Defines all the configuration for your Robot. This class is not static to
  * allow it to be injected wherever its needed. Statics reduce the ability to
@@ -43,6 +46,8 @@ public final class RobotConfig {
         public final int rearRightAbsoluteEncoder = 2;
         public final double swerveX = .67 / 2;
         public final double swerveY = .25;
+        public final SwerveDriveKinematics kinematics = new SwerveDriveKinematics(new Translation2d(swerveX, swerveY), new Translation2d(swerveX, -swerveY),
+        new Translation2d(-swerveX, swerveY), new Translation2d(-swerveX, -swerveY));
     }
 
     public final class Physical {
