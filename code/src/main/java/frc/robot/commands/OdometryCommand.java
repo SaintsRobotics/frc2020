@@ -18,7 +18,7 @@ import frc.robot.RobotConfig.SwerveDrivetrain;
 import frc.robot.common.*;
 
 /**
- * An example command that uses an example subsystem.
+ * A odometry class that uses an array of points to follow in a sequential order
  */
 public class OdometryCommand extends TraceableCommand {
     private final IDrivetrainSubsystem m_subsystem;
@@ -29,9 +29,12 @@ public class OdometryCommand extends TraceableCommand {
     private int currentPosIndex = 0;
 
     /**
-     * Creates a new ExampleCommand.
-     *
+     * Creates a new OdometryCommand.
+     * 
+     * @param logger    The logger used to log the data
      * @param subsystem The subsystem used by this command.
+     * @param path      The array of points to get to.
+     * @param config    The RobotConfig file that is used for this command.
      */
     @Inject
     public OdometryCommand(ILogger logger, IDrivetrainSubsystem subsystem, Pose2d[] path, RobotConfig config) {
@@ -65,17 +68,27 @@ public class OdometryCommand extends TraceableCommand {
     }
 
     // Called every time the scheduler runs while the command is scheduled.
+
     @Override
     public void execute() {
-
+        // Determines if the robot is the current target point.
+        // If true it moves the setpoints to the next position
         if (m_xPIDController.atSetpoint() && m_yPIDController.atSetpoint() && m_thetaController.atGoal()) {
             currentPosIndex++;
+
             if (currentPosIndex < m_path.length) {
                 m_xPIDController.setSetpoint(m_path[currentPosIndex].getTranslation().getX());
                 m_yPIDController.setSetpoint(m_path[currentPosIndex].getTranslation().getY());
+                m_thetaController.setGoal(m_path[currentPosIndex].getRotation().getRadians());
+                m_xPIDController.reset();
+                m_yPIDController.reset();
+
             }
 
         }
+        // calls the Move method of the subsystem using the PID calculated values.
+        // Field relative is false as the PIDS are Field relative already
+
         m_subsystem.move(m_xPIDController.calculate(m_subsystem.getCurrentPosition().getTranslation().getX()),
                 m_yPIDController.calculate(m_subsystem.getCurrentPosition().getTranslation().getY()),
                 m_thetaController.calculate(m_subsystem.getCurrentPosition().getRotation().getRadians()), false);
