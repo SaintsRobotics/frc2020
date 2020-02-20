@@ -66,10 +66,9 @@ public class SwerveDrivetrain extends TraceableSubsystem implements IDrivetrainS
     private SwerveDriveOdometry m_odometry;
 
     private boolean m_isTurning;
-    private Location m_location;
 
     @Inject
-    public SwerveDrivetrain(final ILogger logger, final RobotConfig config, final Location location) {
+    public SwerveDrivetrain(final ILogger logger, final RobotConfig config, final Pose2d pose) {
 
         super(logger);
         _config = config;
@@ -114,10 +113,7 @@ public class SwerveDrivetrain extends TraceableSubsystem implements IDrivetrainS
         m_leftdrive = m_frontLeftDrive.getEncoder();
         m_leftturn = m_frontLeftTurn.getEncoder();
 
-        m_location = location;
-        m_odometry = new SwerveDriveOdometry(m_kinematics, new Rotation2d(Math.toRadians(location.getHeading())),
-                new Pose2d(location.getPosition().getX(), location.getPosition().getY(),
-                        new Rotation2d(Math.toRadians(location.getHeading()))));
+        m_odometry = new SwerveDriveOdometry(m_kinematics, new Rotation2d(pose.getRotation().getRadians()), pose);
     }
 
     public void resetGyro() {
@@ -196,11 +192,6 @@ public class SwerveDrivetrain extends TraceableSubsystem implements IDrivetrainS
         m_odometry.update(new Rotation2d(Math.toRadians(m_gyro.getAngle())), m_frontLeft.getState(),
                 m_frontRight.getState(), m_backLeft.getState(), m_backRight.getState());
         SmartDashboard.putString("Current pose", m_odometry.getPoseMeters().toString());
-        m_location.updateHeading(m_gyro.getAngle());
-        m_location.updatePosition(new Position(m_odometry.getPoseMeters().getTranslation().getX(),
-                m_odometry.getPoseMeters().getTranslation().getY()));
-        SmartDashboard.putString("Current location", m_location.toString());
-
     }
 
     @Override
@@ -252,5 +243,11 @@ public class SwerveDrivetrain extends TraceableSubsystem implements IDrivetrainS
     @Override
     public double getMaxThetaAcceleration() { // Gets Theta Acc(what did you expect)
         return 1;
+    }
+
+    @Override
+    public double getGyroAngle() {
+        // TODO Auto-generated method stub
+        return Math.toRadians(((m_gyro.getAngle() % 360) + 360) % 360);
     }
 }

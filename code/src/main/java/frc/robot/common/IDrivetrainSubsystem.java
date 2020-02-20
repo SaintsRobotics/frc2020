@@ -45,6 +45,8 @@ public interface IDrivetrainSubsystem extends Subsystem {
     double getMaxYAcceleration();
 
     double getMaxThetaAcceleration();
+
+    double getGyroAngle();
 }
 
 // distance
