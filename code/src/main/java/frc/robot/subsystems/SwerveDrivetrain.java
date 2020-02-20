@@ -29,6 +29,7 @@ import frc.robot.RobotConfig;
 import frc.robot.common.AbsoluteEncoder;
 import frc.robot.common.IDrivetrainSubsystem;
 import frc.robot.common.ILogger;
+import frc.robot.common.MathUtilities;
 import frc.robot.common.Position;
 import frc.robot.common.TraceableSubsystem;
 import edu.wpi.first.wpilibj.SPI;
@@ -161,9 +162,13 @@ public class SwerveDrivetrain extends TraceableSubsystem implements IDrivetrainS
      * @param theta rotational speed, positive is clockwise in radians per second
      *              (max unknown)
      */
+
+     
+    /** added variable to store gyro value in radians. */
     @Override
     public void move(double x, double y, double theta, final boolean fieldRelative) {
         // TODO Auto-generated method stub
+        double gyroRadians = MathUtilities.getPositiveRadians(Math.toRadians(this.m_gyro.getAngle()));
 
         this.getLogger().debug("x: " + x + ", y: " + y + ", theta: " + theta);
 
@@ -175,7 +180,7 @@ public class SwerveDrivetrain extends TraceableSubsystem implements IDrivetrainS
             // joystick
 
         } else if (theta == 0.0 && this.m_isTurning) {
-            this.m_pidController.setSetpoint((((this.m_gyro.getAngle() % 360) + 360) % 360));
+            this.m_pidController.setSetpoint(gyroRadians);
             this.m_isTurning = false;
             theta = this.m_pidController.calculate((((this.m_gyro.getAngle() % 360) + 360) % 360));
 
@@ -195,7 +200,7 @@ public class SwerveDrivetrain extends TraceableSubsystem implements IDrivetrainS
 
         if (fieldRelative) {
             swerveModuleStates = m_kinematics.toSwerveModuleStates(ChassisSpeeds.fromFieldRelativeSpeeds(x, y, theta,
-                    new Rotation2d(2 * Math.PI - Math.toRadians(((m_gyro.getAngle() % 360) + 360) % 360))));
+                    new Rotation2d(2 * Math.PI - gyroRadians)));
         } else {
             swerveModuleStates = m_kinematics.toSwerveModuleStates(new ChassisSpeeds(x, y, theta));
         }
