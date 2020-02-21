@@ -43,7 +43,7 @@ public class ShooterCommand extends TraceableCommand {
         _subsystem = subsysem;
         _controller = new XboxController(1);
         _config = config;
-        this.m_shootoneballcommand = new ShootOneBallCommand(_subsystem, _config.Shooter.feederTimeout);
+        this.m_shootoneballcommand = new ShootOneBallCommand(_subsystem, _config.Shooter.feederTimeoutSeconds);
         this.m_back = new ShooterFeedBackwardCommand(_subsystem);
         this.m_shutdown = new ShooterShutdownCommand(_subsystem);
         this.m_start = new ShooterStartupCommand(_subsystem);
@@ -88,19 +88,6 @@ public class ShooterCommand extends TraceableCommand {
             CommandScheduler.getInstance().schedule(m_shutdown);
         }
 
-    }
-
-    /**
-     * 
-     * @param input    value to be modified (deadzoned)
-     * @param deadZone the maximum value to be considered zero
-     * @return the modified version of input
-     */
-    public double deadZones(double input, double deadZone) {
-        if (Math.abs(input) < deadZone) {
-            return 0;
-        }
-        return input;
     }
 
     /**

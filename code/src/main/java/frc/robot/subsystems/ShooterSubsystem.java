@@ -41,7 +41,6 @@ public class ShooterSubsystem extends TraceableSubsystem implements IShooterSubs
 
     private final int pidOnTargetTicks; // the number of ticks the pid must be on target for to be considered ready to
                                         // shoot
-    private final int shooterCurrentThreshold; // if the current is less than this, that means we've shot a ball
     private int m_onTargetFor = 0; // the amount of ticks the pid has been on target
 
     private final int shooterRPM; //
@@ -56,20 +55,20 @@ public class ShooterSubsystem extends TraceableSubsystem implements IShooterSubs
         m_leftShooter = new CANSparkMax(config.Shooter.leftShooterPort, MotorType.kBrushless);
         m_rightShooter = new CANSparkMax(config.Shooter.rightShooterPort, MotorType.kBrushless);
         m_leftShooter.setInverted(true);
-        m_rightShooter.setSmartCurrentLimit(35, 60, 150);
-        m_leftShooter.setSmartCurrentLimit(35, 60, 150);
+        m_rightShooter.setSmartCurrentLimit(config.Shooter.stallLimit, config.Shooter.freeLimit,
+                config.Shooter.limitRPM);
+        m_leftShooter.setSmartCurrentLimit(config.Shooter.stallLimit, config.Shooter.freeLimit,
+                config.Shooter.limitRPM);
         m_leftEncoder = m_leftShooter.getEncoder();
         m_shooter = new SpeedControllerGroup(m_leftShooter, m_rightShooter);
-        m_shooterPID = new PIDController(0.000129, 0.0004, 0);
+        m_shooterPID = new PIDController(config.Shooter.pidP, config.Shooter.pidI, config.Shooter.pidD);
         m_kicker = new WPI_VictorSPX(config.Shooter.feederPort);
-        m_wheels = new WPI_VictorSPX(config.Shooter.wheelPort);
         m_wheels.setInverted(true);
         m_feeder = new SpeedControllerGroup(m_kicker, m_wheels);
 
-        m_shooterPID.setTolerance(80);
+        m_shooterPID.setTolerance(config.Shooter.pidTolerance);
         m_shooterPID.reset();
         pidOnTargetTicks = config.Shooter.pidOnTargetTicks;
-        shooterCurrentThreshold = config.Shooter.shooterCurrentThreshold;
         shooterRPM = config.Shooter.shooterRPM;
     }
 
@@ -121,7 +120,6 @@ public class ShooterSubsystem extends TraceableSubsystem implements IShooterSubs
         }
 
         return m_onTargetFor >= pidOnTargetTicks;
-        // TODO whne should count be rest??
 
     }
 
