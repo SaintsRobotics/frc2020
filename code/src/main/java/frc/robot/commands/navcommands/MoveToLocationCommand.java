@@ -1,4 +1,4 @@
-package frc.robot.commands;
+package frc.robot.commands.navcommands;
 
 import com.google.inject.Inject;
 
@@ -10,20 +10,17 @@ import frc.robot.common.IDrivetrainSubsystem;
 import frc.robot.common.ILogger;
 import frc.robot.common.TraceableCommand;
 
-public class MoveDistanceCommand extends TraceableCommand {
+public class MoveToLocationCommand extends TraceableCommand {
     private Pose2d[] path;
     private IDrivetrainSubsystem m_subsystem;
     private OdometryCommand m_command;
 
     @Inject
-    public MoveDistanceCommand(ILogger logger, IDrivetrainSubsystem subsystem, RobotConfig config, double distance,
-            double heading) {
+    public MoveToLocationCommand(ILogger logger, IDrivetrainSubsystem subsystem, RobotConfig config, Pose2d position) {
         super(logger);
         addRequirements(m_subsystem);
         m_subsystem = subsystem;
-        path[0] = new Pose2d(new Translation2d(
-                m_subsystem.getCurrentPosition().getTranslation().getX() + Math.cos(heading) * distance,
-                Math.sin(heading)), new Rotation2d(heading));
+        path[0] = position;
         m_command = new OdometryCommand(logger, subsystem, path, config);
 
     }

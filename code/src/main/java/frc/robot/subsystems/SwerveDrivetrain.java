@@ -18,6 +18,7 @@ import com.kauailabs.navx.frc.AHRS;
 
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.SpeedController;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.VictorSP;
 import edu.wpi.first.wpilibj.controller.PIDController;
 import edu.wpi.first.wpilibj.geometry.Pose2d;
@@ -64,9 +65,17 @@ public class SwerveDrivetrain extends TraceableSubsystem implements IDrivetrainS
     private AHRS m_gyro;
     private PIDController m_pidController;
     private SwerveDriveOdometry m_odometry;
-
+    private double MaxXAcceleration = 0;
+    private double MaxYAcceleration = 0;
+    private double MaxThetaAcceleration = 0;
     private boolean m_isTurning;
     private Location m_location;
+    private double lastTime;
+    private double currentTime;
+    private double lastVelocity;
+    private double currentVelocity;
+    private double currentAccel = 0;
+    private Timer timer;
 
     @Inject
     public SwerveDrivetrain(final ILogger logger, final RobotConfig config, final Location location) {
@@ -116,8 +125,8 @@ public class SwerveDrivetrain extends TraceableSubsystem implements IDrivetrainS
 
         m_location = location;
         m_odometry = new SwerveDriveOdometry(m_kinematics, new Rotation2d(Math.toRadians(location.getHeading())),
-                new Pose2d(location.getPosition().getX(), location.getPosition().getY(),
-                        new Rotation2d(Math.toRadians(location.getHeading()))));
+                new Pose2d());
+        timer = new Timer();
     }
 
     public void resetGyro() {
@@ -185,6 +194,15 @@ public class SwerveDrivetrain extends TraceableSubsystem implements IDrivetrainS
             swerveModuleStates = m_kinematics.toSwerveModuleStates(new ChassisSpeeds(x, y, theta));
         }
         SwerveDriveKinematics.normalizeWheelSpeeds(swerveModuleStates, this.getMaxSpeed());
+
+        SmartDashboard.putNumber("x", x);
+        SmartDashboard.putNumber("y", y);
+        SmartDashboard.putNumber("POSE X", getCurrentPosition().getTranslation().getX());
+        SmartDashboard.putNumber("POSE Y", getCurrentPosition().getTranslation().getY());
+        SmartDashboard.putNumber("POSE Radians", getCurrentPosition().getRotation().getRadians());
+        SmartDashboard.putNumber("speed0", swerveModuleStates[0].speedMetersPerSecond);
+        SmartDashboard.putNumber("angle0", swerveModuleStates[0].angle.getDegrees());
+
         // order of wheels in swerve module states is the same order as the wheels being
         // inputed to Swerve kinematics
         m_frontLeft.setDesiredState(swerveModuleStates[0], this.getMaxSpeed());
@@ -220,6 +238,25 @@ public class SwerveDrivetrain extends TraceableSubsystem implements IDrivetrainS
     }
 
     public void periodic() {
+        if (m_gyro.getRawAccelX() > MaxXAcceleration) {
+            MaxXAcceleration = m_gyro.getRawAccelX();
+        }
+        if (m_gyro.getRawAccelY() > MaxYAcceleration) {
+            MaxYAcceleration = m_gyro.getRawAccelY();
+        }
+        lastVelocity = currentVelocity;
+        currentVelocity = m_gyro.getRate();
+        lastTime = currentTime;
+        currentTime = timer.get();
+        currentAccel = Math.abs((lastVelocity - currentVelocity) / (lastTime - currentTime));
+        if (currentAccel > MaxThetaAcceleration) {
+            MaxThetaAcceleration = currentAccel;
+        }
+
+        SmartDashboard.putNumber("Max THETA Accel", MaxThetaAcceleration);
+        SmartDashboard.putNumber("Max Y Accel", MaxYAcceleration);
+        SmartDashboard.putNumber("Max X Accel", MaxXAcceleration);
+
         // SmartDashboard.putNumber("back left ", m_backLeftEncoder.getRadians());
         // SmartDashboard.putNumber("back right ", m_backRightEncoder.getRadians());
         SmartDashboard.putNumber("front left ", m_frontLeftEncoder.getRadians());
@@ -241,16 +278,16 @@ public class SwerveDrivetrain extends TraceableSubsystem implements IDrivetrainS
 
     @Override
     public double getMaxXAcceleration() {
-        return 1;
+        return 9;
     }
 
     @Override
     public double getMaxYAcceleration() {
-        return 1;
+        return 9;
     }
 
     @Override
     public double getMaxThetaAcceleration() { // Gets Theta Acc(what did you expect)
-        return 1;
+        return 5;
     }
 }

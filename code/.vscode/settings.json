@@ -30,6 +30,7 @@
   "java.test.defaultConfig": "WPIlibUnitTests",
   "cSpell.words": [
     "Guice",
+    "Odometry",
     "Xbox",
     "tankdrive",
     "teleop",

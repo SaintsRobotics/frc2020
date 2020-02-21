@@ -28,8 +28,10 @@ public class Intake extends TraceableSubsystem implements IIntakeSubsystem {
 
     public DutyCycleEncoder armEncoder = new DutyCycleEncoder(7);
 
-    private final PIDController m_armPIDController = new PIDController(5, 0, 0);
+    private final PIDController m_armPIDController = new PIDController(40, 0, 0);
     private RobotConfig _config;
+    private boolean gettingRaised;
+    private boolean lowering;
 
     @Inject
     public Intake(final ILogger logger, final RobotConfig config) {
@@ -41,7 +43,7 @@ public class Intake extends TraceableSubsystem implements IIntakeSubsystem {
         armController = new WPI_VictorSPX(config.Intake.armControllerPort);
 
         m_armPIDController.setTolerance(0.005);
-        m_armPIDController.setSetpoint(0.115);
+        m_armPIDController.setSetpoint(_config.Intake.armInnerSetpoint);
 
         armController.setInverted(true);
 
@@ -53,12 +55,16 @@ public class Intake extends TraceableSubsystem implements IIntakeSubsystem {
     // Raises the intake arm
     public void raiseArm() {
         m_armPIDController.setSetpoint(_config.Intake.armInnerSetpoint);
+        lowering = false;
+        gettingRaised = true;
     }
 
     // Lowers the arm
 
     public void lowerArm() {
         m_armPIDController.setSetpoint(_config.Intake.armLowerSetpoint);
+        lowering = true;
+        gettingRaised = false;
         DriverStation.reportError("Lower Arm", false);
     }
 
@@ -94,6 +100,8 @@ public class Intake extends TraceableSubsystem implements IIntakeSubsystem {
         double armOutput = m_armPIDController.calculate(armEncoder.get());
         // armController.set(armOutput);
         SmartDashboard.putNumber("Arm Output", armOutput);
+        SmartDashboard.putBoolean("raising?", gettingRaised);
+        SmartDashboard.putBoolean("lowering?", lowering);
     }
 
     public void controlledSpinIntake(double amount) {

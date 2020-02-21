@@ -5,7 +5,7 @@
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
 
-package frc.robot.commands;
+package frc.robot.commands.navcommands;
 
 import frc.robot.common.NullLogger;
 import com.google.inject.Inject;

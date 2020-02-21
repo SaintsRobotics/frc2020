@@ -44,8 +44,9 @@ public final class RobotConfig {
         public final int rearRightAbsoluteEncoder = 2;
         public final double swerveX = .67 / 2;
         public final double swerveY = .25;
-        public final SwerveDriveKinematics kinematics = new SwerveDriveKinematics(new Translation2d(swerveX, swerveY), new Translation2d(swerveX, -swerveY),
-        new Translation2d(-swerveX, swerveY), new Translation2d(-swerveX, -swerveY));
+        public final SwerveDriveKinematics kinematics = new SwerveDriveKinematics(new Translation2d(swerveX, swerveY),
+                new Translation2d(swerveX, -swerveY), new Translation2d(-swerveX, swerveY),
+                new Translation2d(-swerveX, -swerveY));
     }
 
     public final class Physical {
@@ -58,8 +59,8 @@ public final class RobotConfig {
         public final int intakeControllerPort = 25;
         public final int armControllerPort = 24;
 
-        public final double armLowerSetpoint = .305;
-        public final double armInnerSetpoint = .115;
+        public final double armLowerSetpoint = .425;
+        public final double armInnerSetpoint = .375;
 
     }
 
