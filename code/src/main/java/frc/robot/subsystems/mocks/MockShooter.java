@@ -16,48 +16,39 @@ import frc.robot.common.TraceableMockSubsystem;
  */
 public class MockShooter extends TraceableMockSubsystem implements IShooterSubsystem {
 
-    private boolean _isReady = false;
-
     public MockShooter(ILogger logger) {
         super(logger);
         // TODO Auto-generated constructor stub
     }
-    /*
-    * @param targetVelocity the rpm of shooter
-    */
-    @Override
-    public void setSpeed(double targetVelocity) {
-        // TODO Auto-generated method stub
-        _isReady = true;
-    }
 
     @Override
-    public boolean isReady() {
-        // TODO Auto-generated method stub
-        return _isReady;
-    }
-
-    @Override
-    public void enableFeeding() {
+    public void turnOnShooter() {
         // TODO Auto-generated method stub
 
     }
+
     @Override
-    public void disableFeeding() {
+    public void feed(boolean feedBackward) {
         // TODO Auto-generated method stub
 
     }
+
     @Override
-    public void shootBalls(int balls){
+    public void stopFeeding() {
         // TODO Auto-generated method stub
+
     }
+
     @Override
-    public void stopShooter(){
-       // TODO Auto-generated method stub
+    public void turnOffShooter() {
+        // TODO Auto-generated method stub
 
     }
 
-
-
+    @Override
+    public boolean getHasShotBall() {
+        // TODO Auto-generated method stub
+        return false;
+    }
 
 }

@@ -18,7 +18,7 @@ public class LoggerProvider implements Provider<ILogger> {
 
     @Override
     public ILogger get() {
-        return new LoggerGroup(new ConsoleLogger(), new ShuffleboardLogger());
+        return new LoggerGroup(new ShuffleboardLogger());
     }
 
 }
