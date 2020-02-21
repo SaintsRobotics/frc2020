@@ -33,7 +33,7 @@ public class IntakeControllerCommand extends TraceableCommand {
         if (_controller.getBumper(Hand.kLeft)) {
             _intake.spinIntake();
         } else if (_controller.getBumper(Hand.kRight)) {
-            _intake.reverseIntake();
+            _intake.spinOutake();
         } else {
             _intake.stopIntake();
         }
@@ -42,6 +42,18 @@ public class IntakeControllerCommand extends TraceableCommand {
         } else if (_controller.getStartButton()) {
             _intake.lowerArm();
         }
+    }
+
+    public void raiseArm (){
+
+    }
+
+    public void lowerArm (){
+
+    }
+
+    public void stopArm (){
+        
     }
 
     public boolean isFinished() {

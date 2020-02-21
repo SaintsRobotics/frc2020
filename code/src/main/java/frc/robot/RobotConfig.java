@@ -57,6 +57,12 @@ public final class RobotConfig {
         public final double armLowerSetpoint = .305;
         public final double armInnerSetpoint = .115;
 
+        public final double raiseArmSpeed = 1.0;
+        public final double lowerArmSpeed = -0.6;
+
+        public final double intakeSpeed = 0.6;
+        public final double outakeSpeed = -0.6;
+
     }
 
     public final class Climber {
