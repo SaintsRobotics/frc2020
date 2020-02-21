@@ -59,9 +59,9 @@ public class ShooterSubsystem extends TraceableSubsystem implements IShooterSubs
         m_leftShooter.setSmartCurrentLimit(35, 60, 150);
         m_leftEncoder = m_leftShooter.getEncoder();
         m_shooter = new SpeedControllerGroup(m_leftShooter, m_rightShooter);
-        m_shooterPID = new PIDController(0.0003, 0.0004, 0);
+        m_shooterPID = new PIDController(0.00015, 0.0004, 0);
         m_feeder = new WPI_VictorSPX(config.Shooter.feederPort);
-        m_shooterPID.setTolerance(200);
+        m_shooterPID.setTolerance(90);
         m_shooterPID.reset();
         pidOnTargetTicks = config.Shooter.pidOnTargetTicks;
         shooterCurrentThreshold = config.Shooter.shooterCurrentThreshold;
