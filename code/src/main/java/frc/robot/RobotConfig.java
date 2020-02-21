@@ -7,6 +7,9 @@
 
 package frc.robot;
 
+import edu.wpi.first.wpilibj.geometry.Translation2d;
+import edu.wpi.first.wpilibj.kinematics.SwerveDriveKinematics;
+
 /**
  * Defines all the configuration for your Robot. This class is not static to
  * allow it to be injected wherever its needed. Statics reduce the ability to
@@ -18,8 +21,7 @@ public final class RobotConfig {
     public final RobotConfig.Physical Physical = new RobotConfig.Physical();
     public final RobotConfig.Intake Intake = new RobotConfig.Intake();
     public final RobotConfig.Shooter Shooter = new RobotConfig.Shooter();
-
-
+    public final RobotConfig.Odometry Odometry = new RobotConfig.Odometry();
 
     public final class Controller {
         public final int controllerPort = 0;
@@ -42,6 +44,9 @@ public final class RobotConfig {
         public final int rearRightAbsoluteEncoder = 2;
         public final double swerveX = .67 / 2;
         public final double swerveY = .25;
+        public final SwerveDriveKinematics kinematics = new SwerveDriveKinematics(new Translation2d(swerveX, swerveY),
+                new Translation2d(swerveX, -swerveY), new Translation2d(-swerveX, swerveY),
+                new Translation2d(-swerveX, -swerveY));
     }
 
     public final class Physical {
@@ -54,8 +59,8 @@ public final class RobotConfig {
         public final int intakeControllerPort = 25;
         public final int armControllerPort = 24;
 
-        public final double armLowerSetpoint = .305;
-        public final double armInnerSetpoint = .115;
+        public final double armLowerSetpoint = .425;
+        public final double armInnerSetpoint = .375;
 
     }
 
@@ -68,5 +73,24 @@ public final class RobotConfig {
         public final int kickerPort = 26;
         public final int leftShooterPort = 16;
         public final int rightShooterPort = 17;
+    }
+
+    public final class Odometry {
+
+        public final double pX = 1;
+        public final double iX = 1;
+        public final double dX = 1;
+        public final double toleranceX = .02;
+
+        public final double pY = 1;
+        public final double iY = 1;
+        public final double dY = 1;
+        public final double toleranceY = .02;
+
+        public final double pTheta = 1;
+        public final double iTheta = 1;
+        public final double dTheta = 1;
+        public final double toleranceTheta = .02;
+
     }
 }

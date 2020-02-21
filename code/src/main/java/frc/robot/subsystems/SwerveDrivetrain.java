@@ -18,17 +18,21 @@ import com.kauailabs.navx.frc.AHRS;
 
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.SpeedController;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.VictorSP;
 import edu.wpi.first.wpilibj.controller.PIDController;
+import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.kinematics.SwerveDriveKinematics;
+import edu.wpi.first.wpilibj.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.wpilibj.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.RobotConfig;
 import frc.robot.common.AbsoluteEncoder;
 import frc.robot.common.IDrivetrainSubsystem;
 import frc.robot.common.ILogger;
+import frc.robot.common.Location;
 import frc.robot.common.Position;
 import frc.robot.common.TraceableSubsystem;
 import edu.wpi.first.wpilibj.SPI;
@@ -60,11 +64,21 @@ public class SwerveDrivetrain extends TraceableSubsystem implements IDrivetrainS
     private SwerveDriveKinematics m_kinematics;
     private AHRS m_gyro;
     private PIDController m_pidController;
-
+    private SwerveDriveOdometry m_odometry;
+    private double MaxXAcceleration = 0;
+    private double MaxYAcceleration = 0;
+    private double MaxThetaAcceleration = 0;
     private boolean m_isTurning;
+    private Location m_location;
+    private double lastTime;
+    private double currentTime;
+    private double lastVelocity;
+    private double currentVelocity;
+    private double currentAccel = 0;
+    private Timer timer;
 
     @Inject
-    public SwerveDrivetrain(final ILogger logger, final RobotConfig config) {
+    public SwerveDrivetrain(final ILogger logger, final RobotConfig config, final Location location) {
 
         super(logger);
         _config = config;
@@ -97,8 +111,7 @@ public class SwerveDrivetrain extends TraceableSubsystem implements IDrivetrainS
         m_backRightEncoder = new AbsoluteEncoder(config.Drivetrain.rearRightAbsoluteEncoder, 3.925, true);
         m_backRight = new SwerveWheel(m_backRightDrive, m_backRightTurn, -config.Drivetrain.swerveX,
                 -config.Drivetrain.swerveY, m_backRightEncoder, "Right back");
-        m_kinematics = new SwerveDriveKinematics(m_frontLeft.getlocation(), m_frontRight.getlocation(),
-                m_backLeft.getlocation(), m_backRight.getlocation());
+        m_kinematics = config.Drivetrain.kinematics;
 
         m_pidController = new PIDController((getMaxSpeed() / 180) * 5, 0, 0);
 
@@ -109,6 +122,11 @@ public class SwerveDrivetrain extends TraceableSubsystem implements IDrivetrainS
 
         m_leftdrive = m_frontLeftDrive.getEncoder();
         m_leftturn = m_frontLeftTurn.getEncoder();
+
+        m_location = location;
+        m_odometry = new SwerveDriveOdometry(m_kinematics, new Rotation2d(Math.toRadians(location.getHeading())),
+                new Pose2d());
+        timer = new Timer();
     }
 
     public void resetGyro() {
@@ -127,30 +145,6 @@ public class SwerveDrivetrain extends TraceableSubsystem implements IDrivetrainS
     public double getMaxSpeed() {
         // TODO Auto-generated method stub
         return 1;
-    }
-
-    @Override
-    public void moveForward(final double distance) {
-        // TODO Auto-generated method stub
-
-    }
-
-    @Override
-    public void moveForward(final double maxSpeed, final double distance) {
-        // TODO Auto-generated method stub
-
-    }
-
-    @Override
-    public void moveBackward(final double distance) {
-        // TODO Auto-generated method stub
-
-    }
-
-    @Override
-    public void moveBackward(final double maxSpeed, final double distance) {
-        // TODO Auto-generated method stub
-
     }
 
     /**
@@ -200,6 +194,15 @@ public class SwerveDrivetrain extends TraceableSubsystem implements IDrivetrainS
             swerveModuleStates = m_kinematics.toSwerveModuleStates(new ChassisSpeeds(x, y, theta));
         }
         SwerveDriveKinematics.normalizeWheelSpeeds(swerveModuleStates, this.getMaxSpeed());
+
+        SmartDashboard.putNumber("x", x);
+        SmartDashboard.putNumber("y", y);
+        SmartDashboard.putNumber("POSE X", getCurrentPosition().getTranslation().getX());
+        SmartDashboard.putNumber("POSE Y", getCurrentPosition().getTranslation().getY());
+        SmartDashboard.putNumber("POSE Radians", getCurrentPosition().getRotation().getRadians());
+        SmartDashboard.putNumber("speed0", swerveModuleStates[0].speedMetersPerSecond);
+        SmartDashboard.putNumber("angle0", swerveModuleStates[0].angle.getDegrees());
+
         // order of wheels in swerve module states is the same order as the wheels being
         // inputed to Swerve kinematics
         m_frontLeft.setDesiredState(swerveModuleStates[0], this.getMaxSpeed());
@@ -208,131 +211,13 @@ public class SwerveDrivetrain extends TraceableSubsystem implements IDrivetrainS
         m_backRight.setDesiredState(swerveModuleStates[3], this.getMaxSpeed());
         // this.getLogger("frontLeft: ", m)
 
-    }
-
-    @Override
-    public void moveLeft(final double distance) {
-        // TODO Auto-generated method stub
-
-    }
-
-    @Override
-    public void moveLeft(final double maxSpeed, final double distance) {
-        // TODO Auto-generated method stub
-
-    }
-
-    @Override
-    public void moveRight(final double distance) {
-        // TODO Auto-generated method stub
-
-    }
-
-    @Override
-    public void moveRight(final double maxSpeed, final double distance) {
-        // TODO Auto-generated method stub
-
-    }
-
-    @Override
-    public void moveNorth(final double distance) {
-        // TODO Auto-generated method stub
-
-    }
-
-    @Override
-    public void moveNorth(final double maxSpeed, final double distance) {
-        // TODO Auto-generated method stub
-
-    }
-
-    @Override
-    public void moveSouth(final double distance) {
-        // TODO Auto-generated method stub
-
-    }
-
-    @Override
-    public void moveSouth(final double maxSpeed, final double distance) {
-        // TODO Auto-generated method stub
-
-    }
-
-    @Override
-    public void moveEast(final double distance) {
-        // TODO Auto-generated method stub
-
-    }
-
-    @Override
-    public void moveEast(final double maxSpeed, final double distance) {
-        // TODO Auto-generated method stub
-
-    }
-
-    @Override
-    public void moveWest(final double distance) {
-        // TODO Auto-generated method stub
-
-    }
-
-    @Override
-    public void moveWest(final double maxSpeed, final double distance) {
-        // TODO Auto-generated method stub
-
-    }
-
-    @Override
-    public void rotate(final double degrees) {
-        // TODO Auto-generated method stub
-
-    }
-
-    @Override
-    public void turnLeft() {
-        // TODO Auto-generated method stub
-
-    }
-
-    @Override
-    public void turnRight() {
-        // TODO Auto-generated method stub
-
-    }
-
-    @Override
-    public void faceNorth() {
-        // TODO Auto-generated method stub
-
-    }
-
-    @Override
-    public void faceSouth() {
-        // TODO Auto-generated method stub
-
-    }
-
-    @Override
-    public void faceEast() {
-        // TODO Auto-generated method stub
-
-    }
-
-    @Override
-    public void faceWest() {
-        // TODO Auto-generated method stub
-
-    }
-
-    @Override
-    public void followPath(final double finalHeading, final Position... waypoint) {
-        // TODO Auto-generated method stub
-
-    }
-
-    @Override
-    public void followPath(final double maxSpeed, final double finalHeading, final Position... waypoint) {
-        // TODO Auto-generated method stub
+        m_odometry.update(new Rotation2d(Math.toRadians(m_gyro.getAngle())), m_frontLeft.getState(),
+                m_frontRight.getState(), m_backLeft.getState(), m_backRight.getState());
+        SmartDashboard.putString("Current pose", m_odometry.getPoseMeters().toString());
+        m_location.updateHeading(m_gyro.getAngle());
+        m_location.updatePosition(new Position(m_odometry.getPoseMeters().getTranslation().getX(),
+                m_odometry.getPoseMeters().getTranslation().getY()));
+        SmartDashboard.putString("Current location", m_location.toString());
 
     }
 
@@ -353,6 +238,25 @@ public class SwerveDrivetrain extends TraceableSubsystem implements IDrivetrainS
     }
 
     public void periodic() {
+        if (m_gyro.getRawAccelX() > MaxXAcceleration) {
+            MaxXAcceleration = m_gyro.getRawAccelX();
+        }
+        if (m_gyro.getRawAccelY() > MaxYAcceleration) {
+            MaxYAcceleration = m_gyro.getRawAccelY();
+        }
+        lastVelocity = currentVelocity;
+        currentVelocity = m_gyro.getRate();
+        lastTime = currentTime;
+        currentTime = timer.get();
+        currentAccel = Math.abs((lastVelocity - currentVelocity) / (lastTime - currentTime));
+        if (currentAccel > MaxThetaAcceleration) {
+            MaxThetaAcceleration = currentAccel;
+        }
+
+        SmartDashboard.putNumber("Max THETA Accel", MaxThetaAcceleration);
+        SmartDashboard.putNumber("Max Y Accel", MaxYAcceleration);
+        SmartDashboard.putNumber("Max X Accel", MaxXAcceleration);
+
         // SmartDashboard.putNumber("back left ", m_backLeftEncoder.getRadians());
         // SmartDashboard.putNumber("back right ", m_backRightEncoder.getRadians());
         SmartDashboard.putNumber("front left ", m_frontLeftEncoder.getRadians());
@@ -364,5 +268,26 @@ public class SwerveDrivetrain extends TraceableSubsystem implements IDrivetrainS
         SmartDashboard.putNumber("heading pid error ", this.m_pidController.getPositionError());
         SmartDashboard.putBoolean("is turning ", this.m_isTurning);
         SmartDashboard.putNumber("CAN LEFT DRIVE power", m_leftdrive.getVelocity());
+    }
+
+    @Override
+    public Pose2d getCurrentPosition() {
+        // TODO Auto-generated method stub
+        return m_odometry.getPoseMeters();
+    }
+
+    @Override
+    public double getMaxXAcceleration() {
+        return 9;
+    }
+
+    @Override
+    public double getMaxYAcceleration() {
+        return 9;
+    }
+
+    @Override
+    public double getMaxThetaAcceleration() { // Gets Theta Acc(what did you expect)
+        return 5;
     }
 }

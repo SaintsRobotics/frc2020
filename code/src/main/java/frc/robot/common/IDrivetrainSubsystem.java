@@ -9,6 +9,7 @@ package frc.robot.common;
 
 import com.google.inject.AbstractModule;
 
+import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj2.command.Subsystem;
 import frc.robot.RobotConfig.SwerveDrivetrain;
 
@@ -30,72 +31,20 @@ public interface IDrivetrainSubsystem extends Subsystem {
      */
     double getMaxSpeed();
 
-    void moveForward(double distance);
-
-    void moveForward(double maxSpeed, double distance);
-
-    void moveBackward(double distance);
-
-    void moveBackward(double maxSpeed, double distance);
+    Pose2d getCurrentPosition();
 
     // used for teleop
     void move(double x, double y, double rotation, boolean fieldRelative);
 
-    void moveLeft(double distance);
-
-    void moveLeft(double maxSpeed, double distance);
-
-    // robot relative
-    void moveRight(double distance);
-
-    // robot relative
-    void moveRight(double maxSpeed, double distance);
-
-    // field relative
-    void moveNorth(double distance);
-
-    // field relative
-    void moveNorth(double maxSpeed, double distance);
-
-    // field relative
-    void moveSouth(double distance);
-
-    // field relative
-    void moveSouth(double maxSpeed, double distance);
-
-    // field relative
-    void moveEast(double distance);
-
-    // field relative
-    void moveEast(double maxSpeed, double distance);
-
-    // field relative
-    void moveWest(double distance);
-
-    // field relative
-    void moveWest(double maxSpeed, double distance);
-
-    void rotate(double degrees);
-
-    void turnLeft();
-
-    void turnRight();
-
-    void faceNorth();
-
-    void faceSouth();
-
-    void faceEast();
-
-    void faceWest();
-
-    void followPath(double finalHeading, Position... waypoint);
-
-    void followPath(double maxSpeed, double finalHeading, Position... waypoint);
-
     void resetGyro();
 
     void setToBrake(boolean brake);
+
+    double getMaxXAcceleration();
+
+    double getMaxYAcceleration();
+
+    double getMaxThetaAcceleration();
 }
 
 // distance

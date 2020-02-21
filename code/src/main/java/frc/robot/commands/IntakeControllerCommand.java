@@ -37,9 +37,9 @@ public class IntakeControllerCommand extends TraceableCommand {
         } else {
             _intake.stopIntake();
         }
-        if (_controller.getBackButton()) {
+        if (_controller.getAButtonPressed()) {
             _intake.raiseArm();
-        } else if (_controller.getStartButton()) {
+        } else if (_controller.getBButtonPressed()) {
             _intake.lowerArm();
         }
     }

@@ -5,7 +5,7 @@
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
 
-package frc.robot.commands;
+package frc.robot.commands.navcommands;
 
 import com.google.inject.Inject;
 
@@ -32,16 +32,16 @@ public class DrivetrainControllerCommand extends TraceableCommand {
     @Override
     public void initialize() {
         super.initialize();
-        
+
     }
 
     @Override
     public void execute() {
         super.execute();
 
-        _drivetrain.move(deadZones(_controller.getY(Hand.kLeft) * _drivetrain.getMaxSpeed() * .5, 0.2),
-                deadZones(_controller.getX(Hand.kLeft) * _drivetrain.getMaxSpeed() * .5, 0.2),
-                deadZones(_controller.getX(Hand.kRight) * _drivetrain.getMaxSpeed() * .5, 0.2),
+        _drivetrain.move(deadZones(_controller.getY(Hand.kLeft) * _drivetrain.getMaxSpeed(), 0.2),
+                deadZones(_controller.getX(Hand.kLeft) * _drivetrain.getMaxSpeed(), 0.2),
+                deadZones(_controller.getX(Hand.kRight), 0.2) * _drivetrain.getMaxSpeed(),
                 _controller.getBumper(Hand.kRight));
 
         if (_controller.getStartButton())
