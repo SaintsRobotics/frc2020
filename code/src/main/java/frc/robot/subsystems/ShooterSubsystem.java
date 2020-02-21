@@ -62,14 +62,17 @@ public class ShooterSubsystem extends TraceableSubsystem implements IShooterSubs
         m_leftEncoder = m_leftShooter.getEncoder();
         m_shooter = new SpeedControllerGroup(m_leftShooter, m_rightShooter);
         m_shooterPID = new PIDController(config.Shooter.pidP, config.Shooter.pidI, config.Shooter.pidD);
-        m_kicker = new WPI_VictorSPX(config.Shooter.feederPort);
-        m_wheels.setInverted(true);
-        m_feeder = new SpeedControllerGroup(m_kicker, m_wheels);
-
         m_shooterPID.setTolerance(config.Shooter.pidTolerance);
         m_shooterPID.reset();
         pidOnTargetTicks = config.Shooter.pidOnTargetTicks;
         shooterRPM = config.Shooter.shooterRPM;
+
+        m_kicker = new WPI_VictorSPX(config.Shooter.feederPort);
+        m_wheels = new WPI_VictorSPX(config.Shooter.spinnerPort);
+        m_wheels.setInverted(true);
+
+        m_feeder = new SpeedControllerGroup(m_kicker, m_wheels);
+
     }
 
     /*
