@@ -37,6 +37,8 @@ public class Intake extends TraceableSubsystem implements IIntakeSubsystem {
     public double intakeSpeed;
     public double outakeSpeed;
 
+    public double threshhold;
+
     private RobotConfig _config;
 
     @Inject
@@ -58,14 +60,16 @@ public class Intake extends TraceableSubsystem implements IIntakeSubsystem {
 
         intakeSpeed = _config.Intake.intakeSpeed;
         outakeSpeed = _config.Intake.outakeSpeed;
+
+        threshhold = _config.Intake.threshhold;
     }
 
     public boolean armIsAtTop() {
-        return armEncoder.get() >= upperLimit;
+        return Math.abs(armEncoder.get() - lowerLimit) >= threshhold;
     }
 
     public boolean armIsAtBottom() {
-        return armEncoder.get() <= lowerLimit;
+        return Math.abs(armEncoder.get() - lowerLimit) <= threshhold;
     }
 
     /**

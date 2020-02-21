@@ -63,6 +63,8 @@ public final class RobotConfig {
         public final double intakeSpeed = 0.6;
         public final double outakeSpeed = -0.6;
 
+        public final double threshhold = 0.05;
+
     }
 
     public final class Climber {
