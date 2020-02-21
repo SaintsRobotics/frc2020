@@ -20,10 +20,10 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.Robot;
 import frc.robot.RobotConfig;
 import frc.robot.common.*;
-import frc.robot.subsystems.ShootOneBallCommand;
-import frc.robot.subsystems.ShooterFeedBackwardCommand;
-import frc.robot.subsystems.ShooterShutdownCommand;
-import frc.robot.subsystems.ShooterStartupCommand;
+import frc.robot.commands.navcommands.ShootOneBallCommand;
+import frc.robot.commands.navcommands.ShooterFeedBackwardCommand;
+import frc.robot.commands.navcommands.ShooterStartupCommand;
+import frc.robot.commands.navcommands.ShooterShutdownCommand;
 
 /**
  * Add your docs here.
@@ -43,10 +43,10 @@ public class ShooterCommand extends TraceableCommand {
         _subsystem = subsysem;
         _controller = new XboxController(1);
         _config = config;
-        this.m_shootoneballcommand = new ShootOneBallCommand(_subsystem, _config.Shooter.feederTimeoutSeconds);
-        this.m_back = new ShooterFeedBackwardCommand(_subsystem);
-        this.m_shutdown = new ShooterShutdownCommand(_subsystem);
-        this.m_start = new ShooterStartupCommand(_subsystem);
+        this.m_shootoneballcommand = new ShootOneBallCommand(logger, _subsystem);
+        this.m_back = new ShooterFeedBackwardCommand(logger, _subsystem);
+        this.m_shutdown = new ShooterShutdownCommand(logger, _subsystem);
+        this.m_start = new ShooterStartupCommand(logger, _subsystem);
     }
 
     @Override

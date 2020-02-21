@@ -1,32 +1,36 @@
-package frc.robot.subsystems;
+package frc.robot.commands.navcommands;
 
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import edu.wpi.first.wpilibj2.command.Subsystem;
+import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
 import frc.robot.common.ILogger;
 import frc.robot.common.IShooterSubsystem;
 import frc.robot.common.TraceableCommand;
 
-public class ShootOneBallCommand extends CommandBase {
+public class ShootOneBallCommand extends TraceableCommand {
 
     private IShooterSubsystem m_subsystem;
-    private double m_timeout;
+    private Double m_timeout;
     private Timer m_timer;
 
-    /**
-     * 
-     * @param timeout the ammount of time in seconds until it says it's finished if
-     *                it hasn't actually shot a ball
-     */
-    public ShootOneBallCommand(IShooterSubsystem subsystem, double timeout) {
+    public ShootOneBallCommand(ILogger logger, IShooterSubsystem subsystem) {
+        super(logger);
         m_subsystem = subsystem;
         addRequirements(m_subsystem);
-        m_timeout = timeout;
         m_timer = new Timer();
+    }
+
+    public ShootOneBallCommand withTimeout(Double seconds) {
+        m_timeout = new Double(seconds);
+        return this;
     }
 
     @Override
     public void initialize() {
+        if (m_timeout == null) {
+            DriverStation.reportError("withTimeout() method must be called first!!", true);
+        }
         m_timer.reset();
         m_timer.start();
     }
