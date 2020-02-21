@@ -22,6 +22,7 @@ import frc.robot.common.IIntakeSubsystem;
 import frc.robot.common.ILogger;
 import frc.robot.common.IShooterSubsystem;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.CommandScheduler;
 
 /**
  * This has the core logic for the Robot. This class must not include any
@@ -29,24 +30,28 @@ import edu.wpi.first.wpilibj2.command.Command;
  * unit test.
  */
 public class RobotContainer extends CompetitionRobot {
+
+  private Command m_teleopCommand;
   // private final Provider<DrivetrainControllerCommand> _autonomousCommand;
 
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
    */
   @Inject
-
   private RobotContainer(final ILogger logger, IDrivetrainSubsystem drivetrain,
       DrivetrainControllerCommand driveCommand, IIntakeSubsystem intake, IntakeControllerCommand intakeCommand,
       IShooterSubsystem shooterSubsystem, ShooterCommand shooterCommand) {
     super(logger);
 
+    m_teleopCommand = shooterCommand;
     intake.setDefaultCommand(intakeCommand);
-
-    shooterSubsystem.setDefaultCommand(shooterCommand);
 
     drivetrain.setDefaultCommand(driveCommand);
 
+  }
+
+  public Command getTeleopCommand() {
+    return m_teleopCommand;
   }
 
   /**
