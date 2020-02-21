@@ -45,8 +45,9 @@ public class ShooterSubsystem extends TraceableSubsystem implements IShooterSubs
     private int m_onTargetFor = 0; // the amount of ticks the pid has been on target
 
     private final int shooterRPM; //
-
-    private SpeedController m_feeder;
+    private SpeedController m_wheels;
+    private SpeedController m_kicker;
+    private SpeedControllerGroup m_feeder;
     private boolean m_feedBackward = false;
 
     @Inject
@@ -59,9 +60,13 @@ public class ShooterSubsystem extends TraceableSubsystem implements IShooterSubs
         m_leftShooter.setSmartCurrentLimit(35, 60, 150);
         m_leftEncoder = m_leftShooter.getEncoder();
         m_shooter = new SpeedControllerGroup(m_leftShooter, m_rightShooter);
-        m_shooterPID = new PIDController(0.00015, 0.0004, 0);
-        m_feeder = new WPI_VictorSPX(config.Shooter.feederPort);
-        m_shooterPID.setTolerance(90);
+        m_shooterPID = new PIDController(0.000129, 0.0004, 0);
+        m_kicker = new WPI_VictorSPX(config.Shooter.feederPort);
+        m_wheels = new WPI_VictorSPX(config.Shooter.wheelPort);
+        m_wheels.setInverted(true);
+        m_feeder = new SpeedControllerGroup(m_kicker, m_wheels);
+
+        m_shooterPID.setTolerance(80);
         m_shooterPID.reset();
         pidOnTargetTicks = config.Shooter.pidOnTargetTicks;
         shooterCurrentThreshold = config.Shooter.shooterCurrentThreshold;

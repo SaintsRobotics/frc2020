@@ -64,6 +64,7 @@ public final class RobotConfig {
     public final class Shooter {
 
         public final int feederPort = 26;
+        public final int wheelPort = 27;
         public final int leftShooterPort = 16;
         public final int rightShooterPort = 17;
         public final int pidOnTargetTicks = 10;
