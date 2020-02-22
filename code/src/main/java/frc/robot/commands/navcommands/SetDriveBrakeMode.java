@@ -14,25 +14,20 @@ import frc.robot.common.*;
 /**
  * Add your docs here.
  */
-public class SetDriveBreakMode extends TraceableCommand {
+public class SetDriveBrakeMode extends TraceableCommand {
     private final IDrivetrainSubsystem _drivetrain;
 
     @Inject
-    public SetDriveBreakMode(final ILogger logger, IDrivetrainSubsystem drivetrain) {
+    public SetDriveBrakeMode(final ILogger logger, IDrivetrainSubsystem drivetrain) {
         super(logger);
         _drivetrain = drivetrain;
 
     }
 
     @Override
-    public void initialize() {
-        super.initialize();
-    }
-
-    @Override
     public void execute() {
         super.execute();
-        _drivetrain.setToBreakMode();
+        _drivetrain.setToBrakeMode();
     }
 
     @Override

@@ -25,11 +25,6 @@ public class ResetGyro extends TraceableCommand {
     }
 
     @Override
-    public void initialize() {
-        super.initialize();
-    }
-
-    @Override
     public void execute() {
         super.execute();
         _drivetrain.resetGyro();
