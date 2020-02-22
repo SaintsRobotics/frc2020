@@ -32,6 +32,8 @@ public final class RobotConfig {
         public final int feedBackwardButtonPort = XboxController.Button.kB.value;
         public final int feedOneBallButtonPort = XboxController.Button.kX.value;
         public final int shooterShutdownButtonPort = XboxController.Button.kY.value;
+        public final int intakeInButtonPort = XboxController.Button.kBumperLeft.value;
+        public final int intakeOutButtonPort = XboxController.Button.kBumperRight.value;
     }
 
     public final class SwerveDrivetrain {

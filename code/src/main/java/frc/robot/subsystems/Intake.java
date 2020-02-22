@@ -1,15 +1,12 @@
 
 package frc.robot.subsystems;
 
-import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
 import com.google.inject.Inject;
 
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
 
-import edu.wpi.first.wpilibj.Encoder;
-import edu.wpi.first.wpilibj.PWMVictorSPX;
 import edu.wpi.first.wpilibj.SpeedController;
 import edu.wpi.first.wpilibj.controller.PIDController;
 
@@ -60,6 +57,10 @@ public class Intake extends TraceableSubsystem implements IIntakeSubsystem {
     public void lowerArm() {
         m_armPIDController.setSetpoint(_config.Intake.armLowerSetpoint);
         DriverStation.reportError("Lower Arm", false);
+    }
+
+    public void setArmMotor(double speed) {
+        armController.set(speed);
     }
 
     // Checks if arm is currently lowered

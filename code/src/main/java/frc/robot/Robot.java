@@ -16,6 +16,8 @@ import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import frc.robot.commands.navcommands.IntakeIn;
+import frc.robot.commands.navcommands.IntakeOut;
 import frc.robot.commands.navcommands.ResetGyro;
 import frc.robot.commands.navcommands.SetDriveCoastMode;
 import frc.robot.commands.navcommands.ShootOneBallCommand;
@@ -101,6 +103,12 @@ public class Robot extends TimedRobot {
 
     JoystickButton feed = new JoystickButton(_operatorController, _config.Controller.feedOneBallButtonPort);
     feed.whileHeld(_container.getInstance(ShootOneBallCommand.class));
+
+    JoystickButton intakeIn = new JoystickButton(_operatorController, _config.Controller.intakeInButtonPort);
+    intakeIn.whileHeld(_container.getInstance(IntakeIn.class));
+
+    JoystickButton intakeOut = new JoystickButton(_operatorController, _config.Controller.intakeOutButtonPort);
+    intakeOut.whileHeld(_container.getInstance(IntakeOut.class));
 
     // TODO can we cleanup the constructing button, then binding it?
   }
