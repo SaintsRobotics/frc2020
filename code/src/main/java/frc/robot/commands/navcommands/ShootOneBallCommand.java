@@ -1,5 +1,7 @@
 package frc.robot.commands.navcommands;
 
+import com.google.inject.Inject;
+
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.CommandBase;
@@ -11,8 +13,8 @@ import frc.robot.common.TraceableCommand;
 public class ShootOneBallCommand extends TraceableCommand {
 
     private IShooterSubsystem m_subsystem;
-    private Double m_timeout;
 
+    @Inject
     public ShootOneBallCommand(ILogger logger, IShooterSubsystem subsystem) {
         super(logger);
         m_subsystem = subsystem;
