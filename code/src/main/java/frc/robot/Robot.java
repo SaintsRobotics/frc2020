@@ -11,6 +11,8 @@ import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 
+import edu.wpi.first.networktables.NetworkTable;
+import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -18,6 +20,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.commands.DrivetrainControllerCommand;
 import frc.robot.common.IDrivetrainSubsystem;
+import frc.robot.common.Limelight;
 import frc.robot.ioc.DependenciesModule;
 
 /**
@@ -70,6 +73,7 @@ public class Robot extends TimedRobot {
     // these have to be done here as they are not unit testable
     configureButtonBindings();
     _container.getInstance(IDrivetrainSubsystem.class).resetGyro();
+
   }
 
   /**
@@ -104,8 +108,10 @@ public class Robot extends TimedRobot {
     // robot's periodic
     // block in order for anything in the Command-based framework to work.
     CommandScheduler.getInstance().run();
-
+    SmartDashboard.putNumber("TX!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!",
+        NetworkTableInstance.getDefault().getTable("limelight").getEntry("tx").getDouble(0.0));
     _robot.robotPeriodic();
+    NetworkTableInstance.getDefault().getTable("limelight").getEntry("ledMode").setNumber(3);
 
   }
 

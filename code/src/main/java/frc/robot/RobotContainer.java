@@ -15,7 +15,7 @@ import frc.robot.commands.DrivetrainControllerCommand;
 import frc.robot.commands.IntakeControllerCommand;
 
 import frc.robot.commands.ShooterCommand;
-
+import frc.robot.commands.VisionTrackingCommand;
 import frc.robot.common.CompetitionRobot;
 import frc.robot.common.IDrivetrainSubsystem;
 import frc.robot.common.IIntakeSubsystem;
@@ -32,6 +32,7 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
 public class RobotContainer extends CompetitionRobot {
 
   private Command m_teleopCommand;
+  private Command m_autonCommand;
   // private final Provider<DrivetrainControllerCommand> _autonomousCommand;
 
   /**
@@ -40,12 +41,12 @@ public class RobotContainer extends CompetitionRobot {
   @Inject
   private RobotContainer(final ILogger logger, IDrivetrainSubsystem drivetrain,
       DrivetrainControllerCommand driveCommand, IIntakeSubsystem intake, IntakeControllerCommand intakeCommand,
-      IShooterSubsystem shooterSubsystem, ShooterCommand shooterCommand) {
+      IShooterSubsystem shooterSubsystem, ShooterCommand shooterCommand, RobotConfig config) {
     super(logger);
 
     m_teleopCommand = shooterCommand;
     intake.setDefaultCommand(intakeCommand);
-
+    m_autonCommand = new VisionTrackingCommand(logger, drivetrain, config);
     drivetrain.setDefaultCommand(driveCommand);
 
   }
@@ -59,10 +60,10 @@ public class RobotContainer extends CompetitionRobot {
    *
    * @return the command to run in autonomous
    */
-  // public Command getAutonomousCommand() {
-  // // An ExampleCommand will run in autonomous
-  // return _autonomousCommand.get();
-  // }
+  public Command getAutonomousCommand() {
+    // An ExampleCommand will run in autonomous
+    return m_autonCommand;
+  }
 
   public Command whenButtonAPressed() {
     // add a command that should be run when the controller A button is pressed

@@ -32,10 +32,10 @@ public class ShooterCommand extends TraceableCommand {
     private IShooterSubsystem _subsystem;
     private final XboxController _controller;
     private RobotConfig _config;
-    private ShootOneBallCommand m_shootoneballcommand;
-    private ShooterFeedBackwardCommand m_back;
-    private ShooterShutdownCommand m_shutdown;
-    private ShooterStartupCommand m_start;
+    private Command m_shootoneballcommand;
+    private Command m_back;
+    private Command m_shutdown;
+    private Command m_start;
 
     @Inject
     public ShooterCommand(final ILogger logger, IShooterSubsystem subsysem, RobotConfig config) {
@@ -43,7 +43,8 @@ public class ShooterCommand extends TraceableCommand {
         _subsystem = subsysem;
         _controller = new XboxController(1);
         _config = config;
-        this.m_shootoneballcommand = new ShootOneBallCommand(logger, _subsystem);
+        this.m_shootoneballcommand = new ShootOneBallCommand(logger, _subsystem)
+                .withTimeout(config.Shooter.feederTimeoutSeconds);
         this.m_back = new ShooterFeedBackwardCommand(logger, _subsystem);
         this.m_shutdown = new ShooterShutdownCommand(logger, _subsystem);
         this.m_start = new ShooterStartupCommand(logger, _subsystem);
@@ -52,6 +53,7 @@ public class ShooterCommand extends TraceableCommand {
     @Override
     public void initialize() {
         super.initialize();
+
         DriverStation.reportError("shooter command initialized ", false);
     }
 

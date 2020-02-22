@@ -96,7 +96,7 @@ public class ShooterSubsystem extends TraceableSubsystem implements IShooterSubs
     @Override
     public void feed(boolean feedBackward) {
         this.m_hasShotBall = false;
-        this.m_feedBackward = feedBackward;
+        this.m_feedBackward = !feedBackward;
     }
 
     @Override
@@ -142,11 +142,9 @@ public class ShooterSubsystem extends TraceableSubsystem implements IShooterSubs
         if (!this.m_hasShotBall) {
             if (this.m_feedBackward) {
                 this.m_feeder.set(-1);
-                System.out.println("feeding backward");
 
             } else if (this.isUpToSpeed()) {
                 this.m_feeder.set(1);
-                System.out.println("feeding forward");
                 this.m_isShooting = true;
             }
         }
@@ -161,7 +159,6 @@ public class ShooterSubsystem extends TraceableSubsystem implements IShooterSubs
 
         // m_hasShotBall is used to abort the feeder, spinning forward or backward
         if (this.m_hasShotBall) {
-            System.out.println("turning off feeder");
             this.m_feeder.set(0);
         }
 

@@ -11,7 +11,7 @@ import frc.robot.common.TraceableCommand;
 public class ShootOneBallCommand extends TraceableCommand {
 
     private IShooterSubsystem m_subsystem;
-    private Double m_timeout;
+    private double m_timeout;
     private Timer m_timer;
 
     public ShootOneBallCommand(ILogger logger, IShooterSubsystem subsystem) {
@@ -22,15 +22,13 @@ public class ShootOneBallCommand extends TraceableCommand {
     }
 
     public ShootOneBallCommand withTimeout(Double seconds) {
-        m_timeout = new Double(seconds);
+        m_timeout = seconds;
         return this;
     }
 
     @Override
     public void initialize() {
-        if (m_timeout == null) {
-            DriverStation.reportError("withTimeout() method must be called first!!", true);
-        }
+
         m_timer.reset();
         m_timer.start();
     }

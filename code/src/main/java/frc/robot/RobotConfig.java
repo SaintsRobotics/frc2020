@@ -22,10 +22,21 @@ public final class RobotConfig {
     public final RobotConfig.Intake Intake = new RobotConfig.Intake();
     public final RobotConfig.Shooter Shooter = new RobotConfig.Shooter();
     public final RobotConfig.Odometry Odometry = new RobotConfig.Odometry();
+    public final RobotConfig.Limelight Limelight = new RobotConfig.Limelight();
 
     public final class Controller {
         public final int controllerPort = 0;
 
+    }
+
+    public final class Limelight {
+        public final double kP = .05;
+        public final double kI = 0.0;
+        public final double kD = 0.0;
+        public final double tolerance = 1;
+        public final double setpoint = 0.0;
+        public final double mountingAngle = 45.0;
+        public final double mountingHeight = 0.508;
     }
 
     public final class SwerveDrivetrain {
