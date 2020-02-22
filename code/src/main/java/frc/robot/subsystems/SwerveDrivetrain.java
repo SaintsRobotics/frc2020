@@ -59,38 +59,40 @@ public class SwerveDrivetrain extends TraceableSubsystem implements IDrivetrainS
 
     @Inject
     public SwerveDrivetrain(final ILogger logger, final RobotConfig config) {
-
         super(logger);
+        double widthOffset = config.Physical.widthInMeters / 2;
+        double lengthOffset = config.Physical.lengthInMeters / 2;
+
         _config = config;
         m_frontLeftDrive = new CANSparkMax(config.Drivetrain.frontLeftDriveMotorPort, MotorType.kBrushless);
         m_frontLeftDrive.setInverted(true);
         m_frontLeftTurn = new CANSparkMax(config.Drivetrain.frontLeftTurnMotorPort, MotorType.kBrushless);
         m_frontLeftEncoder = new AbsoluteEncoder(config.Drivetrain.frontLeftAbsoluteEncoder, 2.254991, true);
 
-        m_frontLeft = new SwerveWheel(m_frontLeftDrive, m_frontLeftTurn, config.Physical.widthInMeters / 2,
-                config.Physical.lengthInMeters / 2, m_frontLeftEncoder, "Left front");
+        m_frontLeft = new SwerveWheel(m_frontLeftDrive, m_frontLeftTurn, widthOffset, lengthOffset, m_frontLeftEncoder,
+                "Left front");
 
         m_frontRightDrive = new CANSparkMax(config.Drivetrain.frontRightDriveMotorPort, MotorType.kBrushless);
         m_frontRightDrive.setInverted(false);
         m_frontRightTurn = new CANSparkMax(config.Drivetrain.frontRightTurnMotorPort, MotorType.kBrushless);
         m_frontRightEncoder = new AbsoluteEncoder(config.Drivetrain.frontRightAbsoluteEncoder, 2.466641, true);
 
-        m_frontRight = new SwerveWheel(m_frontRightDrive, m_frontRightTurn, config.Physical.widthInMeters / 2,
-                -config.Physical.lengthInMeters / 2, m_frontRightEncoder, "Right front");
+        m_frontRight = new SwerveWheel(m_frontRightDrive, m_frontRightTurn, widthOffset, -lengthOffset,
+                m_frontRightEncoder, "Right front");
 
         m_backLeftDrive = new CANSparkMax(config.Drivetrain.rearLeftDriveMotorPort, MotorType.kBrushless);
         m_backLeftDrive.setInverted(true);
         m_backLeftTurn = new CANSparkMax(config.Drivetrain.rearLeftTurnMotorPort, MotorType.kBrushless);
         m_backLeftEncoder = new AbsoluteEncoder(config.Drivetrain.rearLeftAbsoluteEncoder, .279, true);
-        m_backLeft = new SwerveWheel(m_backLeftDrive, m_backLeftTurn, -config.Physical.widthInMeters / 2,
-                config.Physical.lengthInMeters / 2, m_backLeftEncoder, "Left back");
+        m_backLeft = new SwerveWheel(m_backLeftDrive, m_backLeftTurn, -widthOffset, lengthOffset, m_backLeftEncoder,
+                "Left back");
 
         m_backRightDrive = new CANSparkMax(config.Drivetrain.rearRightDriveMotorPort, MotorType.kBrushless);
         m_backRightDrive.setInverted(false);
         m_backRightTurn = new CANSparkMax(config.Drivetrain.rearRightturnMotorPort, MotorType.kBrushless);
         m_backRightEncoder = new AbsoluteEncoder(config.Drivetrain.rearRightAbsoluteEncoder, 3.925, true);
-        m_backRight = new SwerveWheel(m_backRightDrive, m_backRightTurn, -config.Physical.widthInMeters / 2,
-                -config.Physical.lengthInMeters / 2, m_backRightEncoder, "Right back");
+        m_backRight = new SwerveWheel(m_backRightDrive, m_backRightTurn, -widthOffset, -lengthOffset,
+                m_backRightEncoder, "Right back");
         m_kinematics = new SwerveDriveKinematics(m_frontLeft.getlocation(), m_frontRight.getlocation(),
                 m_backLeft.getlocation(), m_backRight.getlocation());
 
