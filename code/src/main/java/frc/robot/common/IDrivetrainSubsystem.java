@@ -56,7 +56,7 @@ public interface IDrivetrainSubsystem extends Subsystem {
      * and will be able to stop "on a dime." the motors won't continue to spin from
      * momentum
      */
-    void setToBreakMode();
+    void setToBrakeMode();
 
     /**
      * calling this will set the idle state of the drive motor controllers to coast,

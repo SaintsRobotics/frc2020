@@ -58,7 +58,7 @@ public class MockDrivetrain extends TraceableMockSubsystem implements IDrivetrai
     }
 
     @Override
-    public void setToBreakMode() {
+    public void setToBrakeMode() {
         // TODO Auto-generated method stub
 
     }

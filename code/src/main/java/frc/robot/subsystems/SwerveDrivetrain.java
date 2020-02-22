@@ -177,7 +177,7 @@ public class SwerveDrivetrain extends TraceableSubsystem implements IDrivetrainS
     }
 
     @Override
-    public void setToBreakMode() {
+    public void setToBrakeMode() {
         m_frontLeftDrive.setIdleMode(IdleMode.kBrake);
         m_frontRightDrive.setIdleMode(IdleMode.kBrake);
         m_backLeftDrive.setIdleMode(IdleMode.kBrake);
