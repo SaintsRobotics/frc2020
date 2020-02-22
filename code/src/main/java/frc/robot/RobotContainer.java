@@ -10,6 +10,7 @@ package frc.robot;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 
+import frc.robot.commands.ClimbControllerCommand;
 import frc.robot.commands.DrivetrainControllerCommand;
 
 import frc.robot.commands.IntakeControllerCommand;
@@ -17,6 +18,7 @@ import frc.robot.commands.IntakeControllerCommand;
 import frc.robot.commands.ShooterCommand;
 
 import frc.robot.common.CompetitionRobot;
+import frc.robot.common.IClimbSubsystem;
 import frc.robot.common.IDrivetrainSubsystem;
 import frc.robot.common.IIntakeSubsystem;
 import frc.robot.common.ILogger;
@@ -38,7 +40,8 @@ public class RobotContainer extends CompetitionRobot {
 
   private RobotContainer(final ILogger logger, IDrivetrainSubsystem drivetrain,
       DrivetrainControllerCommand driveCommand, IIntakeSubsystem intake, IntakeControllerCommand intakeCommand,
-      IShooterSubsystem shooterSubsystem, ShooterCommand shooterCommand) {
+      IShooterSubsystem shooterSubsystem, ShooterCommand shooterCommand, IClimbSubsystem climb,
+      ClimbControllerCommand climbCommand) {
     super(logger);
 
     intake.setDefaultCommand(intakeCommand);
@@ -46,6 +49,8 @@ public class RobotContainer extends CompetitionRobot {
     shooterSubsystem.setDefaultCommand(shooterCommand);
 
     drivetrain.setDefaultCommand(driveCommand);
+
+    climb.setDefaultCommand(climbCommand);
 
   }
 

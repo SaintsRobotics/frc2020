@@ -1,5 +1,7 @@
 package frc.robot.commands;
 
+import com.google.inject.Inject;
+
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.GenericHID.Hand;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -12,7 +14,7 @@ public class ClimbControllerCommand extends TraceableCommand {
     private final IClimbSubsystem _climb;
     private final XboxController _controller;
 
-    // @Inject
+    @Inject
     public ClimbControllerCommand(final ILogger logger, IClimbSubsystem climbSubsystem) {
         super(logger);
         _climb = climbSubsystem;
@@ -24,13 +26,12 @@ public class ClimbControllerCommand extends TraceableCommand {
         super.initialize();
     }
 
-    public void execute(){
-        if(_controller.getAButtonPressed()){
+    public void execute() {
+        if (_controller.getAButtonPressed()) {
             _climb.releaseArm();
 
         }
-        _climb.pullArm(_controller.getY(Hand.kLeft);
-        
+        _climb.pullArm(_controller.getTriggerAxis(Hand.kLeft) - _controller.getTriggerAxis(Hand.kRight));
 
     }
 
