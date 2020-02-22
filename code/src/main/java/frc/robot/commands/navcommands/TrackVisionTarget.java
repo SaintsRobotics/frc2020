@@ -5,26 +5,30 @@
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
 
-package frc.robot.commands;
+package frc.robot.commands.navcommands;
 
 import com.google.inject.Inject;
 
 import edu.wpi.first.wpilibj.XboxController;
-import edu.wpi.first.wpilibj.GenericHID.*;
+import frc.robot.RobotConfig;
 import frc.robot.common.*;
 
 /**
  * Add your docs here.
  */
-public class DrivetrainControllerCommand extends TraceableCommand {
+public class TrackVisionTarget extends TraceableCommand {
     private final IDrivetrainSubsystem _drivetrain;
     private final XboxController _controller;
 
+    // TODO ADD FLUENT API TO SET SETPOINT (remember, it's probably going to be a
+    // magic number passed in from config)
+
     @Inject
-    public DrivetrainControllerCommand(final ILogger logger, IDrivetrainSubsystem drivetrain) {
+    public TrackVisionTarget(final ILogger logger, RobotConfig config, IDrivetrainSubsystem drivetrain,
+            XboxController controller) {
         super(logger);
         _drivetrain = drivetrain;
-        _controller = new XboxController(0);
+        _controller = controller;
 
         addRequirements(_drivetrain);
     }
@@ -32,20 +36,13 @@ public class DrivetrainControllerCommand extends TraceableCommand {
     @Override
     public void initialize() {
         super.initialize();
-
+        // TODO needs implementation
     }
 
     @Override
     public void execute() {
         super.execute();
-
-        _drivetrain.move(deadZones(_controller.getY(Hand.kLeft) * _drivetrain.getMaxSpeed() * .5, 0.2),
-                deadZones(_controller.getX(Hand.kLeft) * _drivetrain.getMaxSpeed() * .5, 0.2),
-                deadZones(_controller.getX(Hand.kRight) * _drivetrain.getMaxAngularSpeed() * .5, 0.2),
-                _controller.getBumper(Hand.kRight));
-
-        // Multiplying the rotating joystick by the max angular speed instead of linear
-        // speed because the rotation input is in radians per second
+        // TODO needs implementation
 
     }
 
@@ -68,5 +65,6 @@ public class DrivetrainControllerCommand extends TraceableCommand {
     @Override
     public boolean isFinished() {
         return false;
+        // TODO needs implementation
     }
 }

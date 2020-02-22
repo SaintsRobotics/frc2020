@@ -7,6 +7,8 @@
 
 package frc.robot;
 
+import edu.wpi.first.wpilibj.XboxController;
+
 /**
  * Defines all the configuration for your Robot. This class is not static to
  * allow it to be injected wherever its needed. Statics reduce the ability to
@@ -20,8 +22,16 @@ public final class RobotConfig {
     public final RobotConfig.Shooter Shooter = new RobotConfig.Shooter();
 
     public final class Controller {
-        public final int controllerPort = 0;
+        public final int driverControllerPort = 0;
+        public final int operatorControllerPort = 1;
 
+        public final int resetGyroButtonPort = XboxController.Button.kStart.value;
+        public final int driveMotorIdleStateButtonPort = XboxController.Button.kBumperLeft.value;
+
+        public final int shooterStartup = XboxController.Button.kA.value;
+        public final int feedBackward = XboxController.Button.kB.value;
+        public final int feedOneBall = XboxController.Button.kX.value;
+        public final int shooterShutdown = XboxController.Button.kY.value;
     }
 
     public final class SwerveDrivetrain {

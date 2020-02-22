@@ -56,16 +56,17 @@ public interface IDrivetrainSubsystem extends Subsystem {
     void resetGyro();
 
     /**
-     * calling this will set the drive motor controllers to break, and will be able
-     * to stop "on a dime." the motors won't continue to spin from momentum
+     * calling this will set the idle state of the drive motor controllers to break,
+     * and will be able to stop "on a dime." the motors won't continue to spin from
+     * momentum
      */
     void setToBreakMode();
 
     /**
-     * calling this will set the drive motor controllers to coast, and will continue
-     * to spin if there is momentum still tyring to spin the motors. The result of
-     * this is the robot will continue to drift in the direction it was going
-     * because nothing is opposing its momentum
+     * calling this will set the idle state of the drive motor controllers to coast,
+     * and will continue to spin if there is momentum still tyring to spin the
+     * motors. The result of this is the robot will continue to drift in the
+     * direction it was going because nothing is opposing its momentum
      */
     void setToCoastMode();
 
