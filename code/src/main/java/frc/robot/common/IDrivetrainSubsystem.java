@@ -60,7 +60,7 @@ public interface IDrivetrainSubsystem extends Subsystem {
 
      /**
       * calling this will set the idle state of the drive motor controllers to coast,
-      * and will continue to spin if there is momentum still tyring to spin the
+      * and will continue to spin if there is momentum still trying to spin the
       * motors. The result of this is the robot will continue to drift in the
       * direction it was going because nothing is opposing its momentum
       */
