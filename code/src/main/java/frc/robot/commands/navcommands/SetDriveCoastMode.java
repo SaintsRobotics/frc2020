@@ -5,27 +5,33 @@
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
 
-package frc.robot.ioc;
+package frc.robot.commands.navcommands;
 
 import com.google.inject.Inject;
-import com.google.inject.Provider;
 
-import edu.wpi.first.wpilibj.XboxController;
-import frc.robot.RobotConfig;
+import frc.robot.common.*;
 
 /**
  * Add your docs here.
  */
-public class ControllerProvider implements Provider<XboxController> {
-    private RobotConfig _config;
+public class SetDriveCoastMode extends TraceableCommand {
+    private final IDrivetrainSubsystem _drivetrain;
 
     @Inject
-    public ControllerProvider(RobotConfig config) {
-        _config = config;
+    public SetDriveCoastMode(final ILogger logger, IDrivetrainSubsystem drivetrain) {
+        super(logger);
+        _drivetrain = drivetrain;
+
     }
 
     @Override
-    public XboxController get() {
-        return new XboxController(_config.Controller.controllerPort);
+    public void execute() {
+        super.execute();
+        _drivetrain.setToCoastMode();
+    }
+
+    @Override
+    public boolean isFinished() {
+        return true;
     }
 }

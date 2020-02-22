@@ -7,8 +7,6 @@
 
 package frc.robot.subsystems;
 
-import com.ctre.phoenix.motorcontrol.can.VictorSPX;
-import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
 import com.google.inject.Inject;
 import com.revrobotics.CANEncoder;
 import com.revrobotics.CANSparkMax;
@@ -17,19 +15,15 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import com.kauailabs.navx.frc.AHRS;
 
 import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.SpeedController;
-import edu.wpi.first.wpilibj.VictorSP;
 import edu.wpi.first.wpilibj.controller.PIDController;
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.wpilibj.kinematics.SwerveModuleState;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.RobotConfig;
 import frc.robot.common.AbsoluteEncoder;
 import frc.robot.common.IDrivetrainSubsystem;
 import frc.robot.common.ILogger;
-import frc.robot.common.Position;
 import frc.robot.common.TraceableSubsystem;
 import edu.wpi.first.wpilibj.SPI;
 
@@ -65,38 +59,40 @@ public class SwerveDrivetrain extends TraceableSubsystem implements IDrivetrainS
 
     @Inject
     public SwerveDrivetrain(final ILogger logger, final RobotConfig config) {
-
         super(logger);
+        double widthOffset = config.Physical.widthInMeters / 2;
+        double lengthOffset = config.Physical.lengthInMeters / 2;
+
         _config = config;
         m_frontLeftDrive = new CANSparkMax(config.Drivetrain.frontLeftDriveMotorPort, MotorType.kBrushless);
         m_frontLeftDrive.setInverted(true);
         m_frontLeftTurn = new CANSparkMax(config.Drivetrain.frontLeftTurnMotorPort, MotorType.kBrushless);
-        m_frontLeftEncoder = new AbsoluteEncoder(config.Drivetrain.frontLeftAbsoluteEncoder, 5.664991, true);
+        m_frontLeftEncoder = new AbsoluteEncoder(config.Drivetrain.frontLeftAbsoluteEncoder, 2.254991, true);
 
-        m_frontLeft = new SwerveWheel(m_frontLeftDrive, m_frontLeftTurn, config.Drivetrain.swerveX,
-                config.Drivetrain.swerveY, m_frontLeftEncoder, "Left front");
+        m_frontLeft = new SwerveWheel(m_frontLeftDrive, m_frontLeftTurn, widthOffset, lengthOffset, m_frontLeftEncoder,
+                "Left front");
 
         m_frontRightDrive = new CANSparkMax(config.Drivetrain.frontRightDriveMotorPort, MotorType.kBrushless);
         m_frontRightDrive.setInverted(false);
         m_frontRightTurn = new CANSparkMax(config.Drivetrain.frontRightTurnMotorPort, MotorType.kBrushless);
         m_frontRightEncoder = new AbsoluteEncoder(config.Drivetrain.frontRightAbsoluteEncoder, 2.466641, true);
 
-        m_frontRight = new SwerveWheel(m_frontRightDrive, m_frontRightTurn, config.Drivetrain.swerveX,
-                -config.Drivetrain.swerveY, m_frontRightEncoder, "Right front");
+        m_frontRight = new SwerveWheel(m_frontRightDrive, m_frontRightTurn, widthOffset, -lengthOffset,
+                m_frontRightEncoder, "Right front");
 
         m_backLeftDrive = new CANSparkMax(config.Drivetrain.rearLeftDriveMotorPort, MotorType.kBrushless);
         m_backLeftDrive.setInverted(true);
         m_backLeftTurn = new CANSparkMax(config.Drivetrain.rearLeftTurnMotorPort, MotorType.kBrushless);
         m_backLeftEncoder = new AbsoluteEncoder(config.Drivetrain.rearLeftAbsoluteEncoder, .279, true);
-        m_backLeft = new SwerveWheel(m_backLeftDrive, m_backLeftTurn, -config.Drivetrain.swerveX,
-                config.Drivetrain.swerveY, m_backLeftEncoder, "Left back");
+        m_backLeft = new SwerveWheel(m_backLeftDrive, m_backLeftTurn, -widthOffset, lengthOffset, m_backLeftEncoder,
+                "Left back");
 
         m_backRightDrive = new CANSparkMax(config.Drivetrain.rearRightDriveMotorPort, MotorType.kBrushless);
         m_backRightDrive.setInverted(false);
         m_backRightTurn = new CANSparkMax(config.Drivetrain.rearRightturnMotorPort, MotorType.kBrushless);
         m_backRightEncoder = new AbsoluteEncoder(config.Drivetrain.rearRightAbsoluteEncoder, 3.925, true);
-        m_backRight = new SwerveWheel(m_backRightDrive, m_backRightTurn, -config.Drivetrain.swerveX,
-                -config.Drivetrain.swerveY, m_backRightEncoder, "Right back");
+        m_backRight = new SwerveWheel(m_backRightDrive, m_backRightTurn, -widthOffset, -lengthOffset,
+                m_backRightEncoder, "Right back");
         m_kinematics = new SwerveDriveKinematics(m_frontLeft.getlocation(), m_frontRight.getlocation(),
                 m_backLeft.getlocation(), m_backRight.getlocation());
 
@@ -125,45 +121,16 @@ public class SwerveDrivetrain extends TraceableSubsystem implements IDrivetrainS
 
     @Override
     public double getMaxSpeed() {
-        // TODO Auto-generated method stub
-        return 1;
+        return _config.Drivetrain.maxMetersPerSecond;
     }
 
     @Override
-    public void moveForward(final double distance) {
-        // TODO Auto-generated method stub
-
+    public double getMaxAngularSpeed() {
+        return _config.Drivetrain.maxRadiansPerSecond;
     }
 
-    @Override
-    public void moveForward(final double maxSpeed, final double distance) {
-        // TODO Auto-generated method stub
-
-    }
-
-    @Override
-    public void moveBackward(final double distance) {
-        // TODO Auto-generated method stub
-
-    }
-
-    @Override
-    public void moveBackward(final double maxSpeed, final double distance) {
-        // TODO Auto-generated method stub
-
-    }
-
-    /**
-     * @param x     vertical speed, positive is forward in meters per second (max is
-     *              3.66 m/s)
-     * @param y     horizontal speed, postive is to the left in meters per second
-     *              (max is 3.66 m/s)
-     * @param theta rotational speed, positive is clockwise in radians per second
-     *              (max unknown)
-     */
     @Override
     public void move(double x, double y, double theta, final boolean fieldRelative) {
-        // TODO Auto-generated method stub
 
         this.getLogger().debug("x: " + x + ", y: " + y + ", theta: " + theta);
 
@@ -185,14 +152,13 @@ public class SwerveDrivetrain extends TraceableSubsystem implements IDrivetrainS
             theta = this.m_pidController.calculate((((this.m_gyro.getAngle() % 360) + 360) % 360));
         }
 
-        SmartDashboard.putNumber("x", x);
-        SmartDashboard.putNumber("y", y);
-        SmartDashboard.putNumber("theta", theta);
+        // SmartDashboard.putNumber("x", x);
+        // SmartDashboard.putNumber("y", y);
+        // SmartDashboard.putNumber("theta", theta);
 
         SwerveModuleState[] swerveModuleStates;
 
         // Field relative conversion
-
         if (fieldRelative) {
             swerveModuleStates = m_kinematics.toSwerveModuleStates(ChassisSpeeds.fromFieldRelativeSpeeds(x, y, theta,
                     new Rotation2d(2 * Math.PI - Math.toRadians(((m_gyro.getAngle() % 360) + 360) % 360))));
@@ -211,159 +177,35 @@ public class SwerveDrivetrain extends TraceableSubsystem implements IDrivetrainS
     }
 
     @Override
-    public void moveLeft(final double distance) {
-        // TODO Auto-generated method stub
-
+    public void setToBrakeMode() {
+        m_frontLeftDrive.setIdleMode(IdleMode.kBrake);
+        m_frontRightDrive.setIdleMode(IdleMode.kBrake);
+        m_backLeftDrive.setIdleMode(IdleMode.kBrake);
+        m_backRightDrive.setIdleMode(IdleMode.kBrake);
     }
 
     @Override
-    public void moveLeft(final double maxSpeed, final double distance) {
-        // TODO Auto-generated method stub
-
+    public void setToCoastMode() {
+        m_frontLeftDrive.setIdleMode(IdleMode.kCoast);
+        m_frontRightDrive.setIdleMode(IdleMode.kCoast);
+        m_backLeftDrive.setIdleMode(IdleMode.kCoast);
+        m_backRightDrive.setIdleMode(IdleMode.kCoast);
     }
 
-    @Override
-    public void moveRight(final double distance) {
-        // TODO Auto-generated method stub
-
-    }
-
-    @Override
-    public void moveRight(final double maxSpeed, final double distance) {
-        // TODO Auto-generated method stub
-
-    }
-
-    @Override
-    public void moveNorth(final double distance) {
-        // TODO Auto-generated method stub
-
-    }
-
-    @Override
-    public void moveNorth(final double maxSpeed, final double distance) {
-        // TODO Auto-generated method stub
-
-    }
-
-    @Override
-    public void moveSouth(final double distance) {
-        // TODO Auto-generated method stub
-
-    }
-
-    @Override
-    public void moveSouth(final double maxSpeed, final double distance) {
-        // TODO Auto-generated method stub
-
-    }
-
-    @Override
-    public void moveEast(final double distance) {
-        // TODO Auto-generated method stub
-
-    }
-
-    @Override
-    public void moveEast(final double maxSpeed, final double distance) {
-        // TODO Auto-generated method stub
-
-    }
-
-    @Override
-    public void moveWest(final double distance) {
-        // TODO Auto-generated method stub
-
-    }
-
-    @Override
-    public void moveWest(final double maxSpeed, final double distance) {
-        // TODO Auto-generated method stub
-
-    }
-
-    @Override
-    public void rotate(final double degrees) {
-        // TODO Auto-generated method stub
-
-    }
-
-    @Override
-    public void turnLeft() {
-        // TODO Auto-generated method stub
-
-    }
-
-    @Override
-    public void turnRight() {
-        // TODO Auto-generated method stub
-
-    }
-
-    @Override
-    public void faceNorth() {
-        // TODO Auto-generated method stub
-
-    }
-
-    @Override
-    public void faceSouth() {
-        // TODO Auto-generated method stub
-
-    }
-
-    @Override
-    public void faceEast() {
-        // TODO Auto-generated method stub
-
-    }
-
-    @Override
-    public void faceWest() {
-        // TODO Auto-generated method stub
-
-    }
-
-    @Override
-    public void followPath(final double finalHeading, final Position... waypoint) {
-        // TODO Auto-generated method stub
-
-    }
-
-    @Override
-    public void followPath(final double maxSpeed, final double finalHeading, final Position... waypoint) {
-        // TODO Auto-generated method stub
-
-    }
-
-    @Override
-    public void setToBrake(boolean brake) {
-        if (brake) {
-            m_frontLeftDrive.setIdleMode(IdleMode.kBrake);
-            m_frontRightDrive.setIdleMode(IdleMode.kBrake);
-            m_backLeftDrive.setIdleMode(IdleMode.kBrake);
-            m_backRightDrive.setIdleMode(IdleMode.kBrake);
-        } else {
-            m_frontLeftDrive.setIdleMode(IdleMode.kCoast);
-            m_frontRightDrive.setIdleMode(IdleMode.kCoast);
-            m_backLeftDrive.setIdleMode(IdleMode.kCoast);
-            m_backRightDrive.setIdleMode(IdleMode.kCoast);
-
-        }
-    }
-
-    public void periodic() {
+    public void periodic() { // Debugging output mostly
         // SmartDashboard.putNumber("back left ", m_backLeftEncoder.getRadians());
         // SmartDashboard.putNumber("back right ", m_backRightEncoder.getRadians());
         // SmartDashboard.putNumber("front left ", m_frontLeftEncoder.getRadians());
         // SmartDashboard.putNumber("front right ", m_frontRightEncoder.getRadians());
-        SmartDashboard.putNumber("Gyro VAlue", ((m_gyro.getAngle() % 360) + 360) % 360);
-        SmartDashboard.putNumber("gyro angle fed to field relative ",
-                (360 - (this.m_gyro.getAngle() % (360)) + (360)) % (360));
+        // SmartDashboard.putNumber("Gyro VAlue", ((m_gyro.getAngle() % 360) + 360) %
+        // 360);
+        // SmartDashboard.putNumber("gyro angle fed to field relative ",
+        // (360 - (this.m_gyro.getAngle() % (360)) + (360)) % (360));
 
-        SmartDashboard.putNumber("heading pid error ", this.m_pidController.getPositionError());
-        SmartDashboard.putBoolean("is turning ", this.m_isTurning);
-        SmartDashboard.putNumber("CAN LEFT DRIVE power", m_leftdrive.getVelocity());
+        // SmartDashboard.putNumber("heading pid error ",
+        // this.m_pidController.getPositionError());
+        // SmartDashboard.putBoolean("is turning ", this.m_isTurning);
+        // SmartDashboard.putNumber("CAN LEFT DRIVE power", m_leftdrive.getVelocity());
     }
 
     @Override

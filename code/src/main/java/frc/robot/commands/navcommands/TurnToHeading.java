@@ -5,53 +5,55 @@
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
 
-package frc.robot.commands;
+package frc.robot.commands.navcommands;
 
 import com.google.inject.Inject;
 
-import edu.wpi.first.wpilibj.Controller;
 import edu.wpi.first.wpilibj.XboxController;
-import edu.wpi.first.wpilibj.GenericHID.*;
+import frc.robot.RobotConfig;
 import frc.robot.common.*;
 
 /**
  * Add your docs here.
  */
-public class ShooterCommand extends TraceableCommand {
-    private final IShooterSubsystem _shooter;
+public class TurnToHeading extends TraceableCommand {
+    private final IDrivetrainSubsystem _drivetrain;
     private final XboxController _controller;
+    private double _heading; // TODO **ADD FLUENT API TO SET HEADING!!
 
     @Inject
-    public ShooterCommand(final ILogger logger, IShooterSubsystem shooter) {
+    public TurnToHeading(final ILogger logger, RobotConfig config, IDrivetrainSubsystem drivetrain,
+            XboxController controller) {
         super(logger);
-        _shooter = shooter;
-        _controller = new XboxController(1);
+        _drivetrain = drivetrain;
+        _controller = controller;
 
-        addRequirements(_shooter);
+        // TODO **YOU WILL NEED TO ADD A GETTER FOR THE GYRO IN THE SUBSYSTEM. FIGURE
+        // OUT IF IT SHOULD BE RADIANS/DEGREES, AND WHICH DIRECTION IS POSITIVE
+        addRequirements(_drivetrain);
+    }
+
+    /**
+     * 
+     * @param heading direction robot should face, in degrees. zero is away from the
+     *                alliance wall
+     * @return returns this for chaining methods
+     */
+    public TurnToHeading withHeadingDegrees(double heading) {
+        // TODO needs implemenation. also, beware of units!!
+        return this;
     }
 
     @Override
     public void initialize() {
         super.initialize();
+        // TODO needs implementation
     }
 
     @Override
     public void execute() {
         super.execute();
-        if (_controller.getAButton()) {
-            _shooter.setSpeed(4900);
-        }
-        if (_controller.getBButton()) {
-            _shooter.enableFeeding();
-        }
-        if (_controller.getXButton()) {
-            _shooter.disableFeeding();
-        }
-        if (_controller.getYButton()) {
-            _shooter.stopShooter();
-        }
-        // ==
-        // axis??
+        // TODO needs implementation
 
     }
 
@@ -74,5 +76,6 @@ public class ShooterCommand extends TraceableCommand {
     @Override
     public boolean isFinished() {
         return false;
+        // TODO needs implementation
     }
 }

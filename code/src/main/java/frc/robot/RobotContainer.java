@@ -8,20 +8,15 @@
 package frc.robot;
 
 import com.google.inject.Inject;
-import com.google.inject.Provider;
 
 import frc.robot.commands.DrivetrainControllerCommand;
 
 import frc.robot.commands.IntakeControllerCommand;
 
-import frc.robot.commands.ShooterCommand;
-
 import frc.robot.common.CompetitionRobot;
 import frc.robot.common.IDrivetrainSubsystem;
 import frc.robot.common.IIntakeSubsystem;
 import frc.robot.common.ILogger;
-import frc.robot.common.IShooterSubsystem;
-import frc.robot.strategies.Easy23StrategyCommand;
 import edu.wpi.first.wpilibj2.command.Command;
 
 /**
@@ -30,23 +25,26 @@ import edu.wpi.first.wpilibj2.command.Command;
  * unit test.
  */
 public class RobotContainer extends CompetitionRobot {
-  private final Provider<Easy23StrategyCommand> _autonomousCommand;
+
+  private Command m_teleopCommand;
+  // private final Provider<DrivetrainControllerCommand> _autonomousCommand;
 
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
    */
   @Inject
-  private RobotContainer(final ILogger logger, Provider<Easy23StrategyCommand> autonomousCommand,
-      IDrivetrainSubsystem drivetrain, DrivetrainControllerCommand driveCommand, IIntakeSubsystem intake,
-      IntakeControllerCommand intakeCommand, IShooterSubsystem shooterSubsystem, ShooterCommand shooterCommand) {
+  private RobotContainer(final ILogger logger, IDrivetrainSubsystem drivetrain,
+      DrivetrainControllerCommand driveCommand, IIntakeSubsystem intake, IntakeControllerCommand intakeCommand) {
     super(logger);
     _autonomousCommand = autonomousCommand;
     intake.setDefaultCommand(intakeCommand);
 
-    shooterSubsystem.setDefaultCommand(shooterCommand);
-
     drivetrain.setDefaultCommand(driveCommand);
 
+  }
+
+  public Command getTeleopCommand() {
+    return m_teleopCommand;
   }
 
   /**
