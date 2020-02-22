@@ -58,11 +58,7 @@ public class MockDrivetrain extends TraceableMockSubsystem implements IDrivetrai
     }
 
     @Override
-<<<<<<< HEAD
     public void setToBrakeMode() {
-=======
-    public void setToBreakMode() {
->>>>>>> changes to swerve subsystem interface and config
         // TODO Auto-generated method stub
 
     }
