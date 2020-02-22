@@ -32,7 +32,7 @@ public class DrivetrainControllerCommand extends TraceableCommand {
     @Override
     public void initialize() {
         super.initialize();
-        
+
     }
 
     @Override
@@ -41,17 +41,14 @@ public class DrivetrainControllerCommand extends TraceableCommand {
 
         _drivetrain.move(deadZones(_controller.getY(Hand.kLeft) * _drivetrain.getMaxSpeed() * .5, 0.2),
                 deadZones(_controller.getX(Hand.kLeft) * _drivetrain.getMaxSpeed() * .5, 0.2),
-                deadZones(_controller.getX(Hand.kRight) * _drivetrain.getMaxSpeed() * .5, 0.2),
+                deadZones(_controller.getX(Hand.kRight) * _drivetrain.getMaxAngularSpeed() * .5, 0.2),
                 _controller.getBumper(Hand.kRight));
+
+        // Multiplying the rotating joystick by the max angular speed instead of linear
+        // speed because the rotation input is in radians per second
 
         if (_controller.getStartButton())
             _drivetrain.resetGyro();
-
-        if (_controller.getBumper(Hand.kLeft)) {
-            _drivetrain.setToBrake(false);
-        } else {
-            _drivetrain.setToBrake(true);
-        }
 
     }
 

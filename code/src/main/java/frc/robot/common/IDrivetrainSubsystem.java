@@ -9,6 +9,7 @@ package frc.robot.common;
 
 import com.google.inject.AbstractModule;
 
+import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj2.command.Subsystem;
 import frc.robot.RobotConfig.SwerveDrivetrain;
 
@@ -26,79 +27,46 @@ public interface IDrivetrainSubsystem extends Subsystem {
     double getMinSpeed();
 
     /**
-     * @return the maximum speed the robot can travel in meters per second
+     * @return the maximum speed the robot can travel in <b>meters per second<b>
      */
     double getMaxSpeed();
 
-    void moveForward(double distance);
-
-    void moveForward(double maxSpeed, double distance);
-
-    void moveBackward(double distance);
-
-    void moveBackward(double maxSpeed, double distance);
+    /**
+     * angular velocity is calculated by dividing the tangential velocity,
+     * getMaxSpeed(), by the radius (half the diagonal of the bot)
+     * 
+     * @return the maximum speed of the robot if it was just spinning in place, in
+     *         <b> radians per second <b>
+     */
+    double getMaxAngularSpeed();
 
     // used for teleop
+    /**
+     * 
+     * @param x             Represents forward velocity w.r.t the robot frame of
+     *                      reference. (Fwd is +)
+     * @param y             Represents sideways velocity w.r.t the robot frame of
+     *                      reference. (Left is +)
+     * @param rotation      Represents the angular velocity of the robot frame. (CCW
+     *                      is +)
+     * @param fieldRelative
+     */
     void move(double x, double y, double rotation, boolean fieldRelative);
-
-    void moveLeft(double distance);
-
-    void moveLeft(double maxSpeed, double distance);
-
-    // robot relative
-    void moveRight(double distance);
-
-    // robot relative
-    void moveRight(double maxSpeed, double distance);
-
-    // field relative
-    void moveNorth(double distance);
-
-    // field relative
-    void moveNorth(double maxSpeed, double distance);
-
-    // field relative
-    void moveSouth(double distance);
-
-    // field relative
-    void moveSouth(double maxSpeed, double distance);
-
-    // field relative
-    void moveEast(double distance);
-
-    // field relative
-    void moveEast(double maxSpeed, double distance);
-
-    // field relative
-    void moveWest(double distance);
-
-    // field relative
-    void moveWest(double maxSpeed, double distance);
-
-    void rotate(double degrees);
-
-    void turnLeft();
-
-    void turnRight();
-
-    void faceNorth();
-
-    void faceSouth();
-
-    void faceEast();
-
-    void faceWest();
-
-    void followPath(double finalHeading, Position... waypoint);
-
-    void followPath(double maxSpeed, double finalHeading, Position... waypoint);
 
     void resetGyro();
 
-    void setToBrake(boolean brake);
-}
+    /**
+     * calling this will set the drive motor controllers to break, and will be able
+     * to stop "on a dime." the motors won't continue to spin from momentum
+     */
+    void setToBreakMode();
 
-// distance
-// position
-// direction
-// constants
+    /**
+     * calling this will set the drive motor controllers to coast, and will continue
+     * to spin if there is momentum still tyring to spin the motors. The result of
+     * this is the robot will continue to drift in the direction it was going
+     * because nothing is opposing its momentum
+     */
+    void setToCoastMode();
+
+}

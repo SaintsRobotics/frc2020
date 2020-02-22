@@ -25,7 +25,8 @@ public final class RobotConfig {
     }
 
     public final class SwerveDrivetrain {
-        // examples to be filled out in detail during drivetrain development
+        public final double maxMetersPerSecond = 3.66;
+        public final double maxRadiansPerSecond = 8.76;
         public final int frontLeftDriveMotorPort = 8;
         public final int frontLeftTurnMotorPort = 1;
         public final int rearLeftDriveMotorPort = 2;
@@ -38,14 +39,24 @@ public final class RobotConfig {
         public final int frontRightAbsoluteEncoder = 1;
         public final int rearLeftAbsoluteEncoder = 3;
         public final int rearRightAbsoluteEncoder = 2;
-        public final double swerveX = .67 / 2;
-        public final double swerveY = .25;
     }
 
     public final class Physical {
-        public final double widthInCms = 0;
-        public final double lengthInCms = 0;
-        public final double weightInKgs = 0;
+        /*
+         * When using these values for the swerve drive, make sure to divide them by two
+         * if the pivot point of the bot is in the center.
+         * 
+         * Note that standard convention is the bot is centered on the origin, facing
+         * right, along the positive x-axis. So the top-left portion of the bot is in
+         * the first quadrant, the back-left is in the second quadrant, the back-right
+         * is in the third quadrant, and the back-right is in the fourth quadrant.
+         */
+
+        // Note: these are the distances of the swerve wheels to each other, not the
+        // size of the bot's frame.
+        public final double widthInMeters = .67;
+        public final double lengthInMeters = .5;
+        public final double weightInKgs = 0; // TODO this isn't the real weight!!!
     }
 
     public final class Intake {
