@@ -7,10 +7,7 @@
 
 package frc.robot.common;
 
-import com.google.inject.AbstractModule;
-
 import edu.wpi.first.wpilibj2.command.Subsystem;
-import frc.robot.RobotConfig.SwerveDrivetrain;
 
 /**
  * The drivetrain subsystem. This forms the basis for any drivetrain such as
@@ -96,6 +93,8 @@ public interface IDrivetrainSubsystem extends Subsystem {
     void resetGyro();
 
     void setToBrake(boolean brake);
+
+    boolean isIdle();
 }
 
 // distance

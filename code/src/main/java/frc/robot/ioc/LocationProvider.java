@@ -7,18 +7,28 @@
 
 package frc.robot.ioc;
 
+import com.google.inject.Inject;
 import com.google.inject.Provider;
+
 import frc.robot.common.ILogger;
-import frc.robot.common.*;
+import frc.robot.common.Location;
+import frc.robot.sim.MatchSimulator;
 
 /**
  * Add your docs here.
  */
-public class LoggerProvider implements Provider<ILogger> {
+public class LocationProvider implements Provider<Location> {
+    ILogger _logger;
+    MatchSimulator _simulator;
 
-    @Override
-    public ILogger get() {
-        return new LoggerGroup(new ShuffleboardLogger());
+    @Inject
+    public void ControllerProvider(ILogger logger, MatchSimulator simulator) {
+        _logger = logger;
+        _simulator = simulator;
     }
 
+    @Override
+    public Location get() {
+        return new Location(_logger, _simulator);
+    }
 }

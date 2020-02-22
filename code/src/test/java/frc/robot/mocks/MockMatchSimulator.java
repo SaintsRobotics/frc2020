@@ -5,20 +5,16 @@
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
 
-package frc.robot.ioc;
+package frc.robot.mocks;
 
-import com.google.inject.Provider;
-import frc.robot.common.ILogger;
-import frc.robot.common.*;
+import frc.robot.sim.MatchSimulator;
 
 /**
  * Add your docs here.
  */
-public class LoggerProvider implements Provider<ILogger> {
-
+public class MockMatchSimulator extends MatchSimulator {
     @Override
-    public ILogger get() {
-        return new LoggerGroup(new ShuffleboardLogger());
+    public void updateLocation(double x, double y, double heading) {
+        // NO OP
     }
-
 }

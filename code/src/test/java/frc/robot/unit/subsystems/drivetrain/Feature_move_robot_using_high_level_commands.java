@@ -23,6 +23,7 @@ import frc.robot.common.IDrivetrainSubsystem;
 import frc.robot.common.ILogger;
 import frc.robot.common.Location;
 import frc.robot.common.Position;
+import frc.robot.mocks.MockMatchSimulator;
 import frc.robot.subsystems.mocks.MockDrivetrain;
 
 /**
@@ -37,8 +38,8 @@ public class Feature_move_robot_using_high_level_commands {
 
     @Before
     public void beforeEachTest() {
-        _location = new Location();
         _logger = new ConsoleLogger();
+        _location = new Location(_logger, new MockMatchSimulator());
         _drivetrain = new MockDrivetrain(_logger, _location);
     }
 
@@ -61,7 +62,7 @@ public class Feature_move_robot_using_high_level_commands {
 
     @DataProvider
     public static Object[][] moveForwardData() {
-        // heading, initalPos(x,y), distance, finalPos(x,y)
+        // heading, initialPos(x,y), distance, finalPos(x,y)
         return new Object[][] { { 0, new Position(0, 0), 1.5, new Position(0, 1.5) },
                 { 0, new Position(2.4, 4.9), 2.5, new Position(2.4, 7.4) },
                 // with rotation
@@ -89,7 +90,7 @@ public class Feature_move_robot_using_high_level_commands {
     /// ---------------------------------------------------------------------------------------
     @DataProvider
     public static Object[][] moveBackwardData() {
-        // initalPos(x,y), distance, finalPos(x,y)
+        // initialPos(x,y), distance, finalPos(x,y)
         return new Object[][] { { 0, new Position(3, 3), 1.5, new Position(3, 1.5) },
                 { 0, new Position(2.4, 4.9), 2.5, new Position(2.4, 2.4) },
                 // with rotation
@@ -117,7 +118,7 @@ public class Feature_move_robot_using_high_level_commands {
     /// ------------------------------------------------------------------------------
     @DataProvider
     public static Object[][] moveLeftData() {
-        // initalPos(x,y), distance, finalPos(x,y)
+        // initialPos(x,y), distance, finalPos(x,y)
         return new Object[][] { { 0, new Position(3, 3), 1.5, new Position(1.5, 3) },
                 { 90, new Position(2.4, 4.9), 2.5, new Position(2.4, 7.4) },
                 { 135, new Position(0, 0), 8.6, new Position(6.08111, 6.08111) },
@@ -145,7 +146,7 @@ public class Feature_move_robot_using_high_level_commands {
     /// ---------------------------------------------------------------------------------------
     @DataProvider
     public static Object[][] moveRightData() {
-        // initalPos(x,y), distance, finalPos(x,y)
+        // initialPos(x,y), distance, finalPos(x,y)
         return new Object[][] { { 0, new Position(2, 2), 2, new Position(4, 2) },
                 { 90, new Position(2, 2), 2, new Position(2, 0) },
                 { 315, new Position(0, 0), 8.6, new Position(6.08111, 6.08111) },
@@ -173,7 +174,7 @@ public class Feature_move_robot_using_high_level_commands {
     /// ---------------------------------------------------------------------------------------
     @DataProvider
     public static Object[][] moveNorthData() {
-        // initalPos(x,y), distance, finalPos(x,y)
+        // initialPos(x,y), distance, finalPos(x,y)
         return new Object[][] { { 0, new Position(2, 2), 2, new Position(2, 4) },
                 { 90, new Position(2, 4), 2, new Position(2, 6) },
                 { 45, new Position(0, 0), 8.6, new Position(0, 8.6) },
@@ -201,7 +202,7 @@ public class Feature_move_robot_using_high_level_commands {
     /// ---------------------------------------------------------------------------------------
     @DataProvider
     public static Object[][] moveEastData() {
-        // initalPos(x,y), distance, finalPos(x,y)
+        // initialPos(x,y), distance, finalPos(x,y)
         return new Object[][] { { 0, new Position(2, 2), 2, new Position(4, 2) },
                 { 90, new Position(2, 2), 3, new Position(5, 2) },
                 { 45, new Position(0, 0), 8.6, new Position(8.6, 0) },
@@ -230,7 +231,7 @@ public class Feature_move_robot_using_high_level_commands {
     /// ---------------------------------------------------------------------------------------
     @DataProvider
     public static Object[][] moveWestData() {
-        // initalPos(x,y), distance, finalPos(x,y)
+        // initialPos(x,y), distance, finalPos(x,y)
         return new Object[][] { { 0, new Position(2, 2), 2, new Position(0, 2) },
                 { 90, new Position(2, 2), 2, new Position(0, 2) },
                 { 45, new Position(10, 0), 8.6, new Position(1.4, 0) },
@@ -258,7 +259,7 @@ public class Feature_move_robot_using_high_level_commands {
     /// ---------------------------------------------------------------------------------------
     @DataProvider
     public static Object[][] moveSouthData() {
-        // initalPos(x,y), distance, finalPos(x,y)
+        // initialPos(x,y), distance, finalPos(x,y)
         return new Object[][] { { 0, new Position(2, 2), 2, new Position(2, 0) },
                 { 90, new Position(2, 4), 2, new Position(2, 2) },
                 { 45, new Position(17.2, 17.2), 8.6, new Position(17.2, 8.6) },
@@ -287,7 +288,7 @@ public class Feature_move_robot_using_high_level_commands {
     /// ---------------------------------------------------------------------------------------
     @DataProvider
     public static Object[][] followPathData() {
-        // initalHeading, finalHeading, waypoints
+        // initialHeading, finalHeading, waypoints
         return new Object[][] {
                 //
                 { 0, 0, 0, new Position[] { new Position(2, 2), new Position(1, 1) } },

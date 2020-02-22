@@ -7,6 +7,8 @@
 
 package frc.robot.subsystems.mocks;
 
+import com.google.inject.Inject;
+
 import frc.robot.common.ILogger;
 import frc.robot.common.IShooterSubsystem;
 import frc.robot.common.TraceableMockSubsystem;
@@ -18,13 +20,15 @@ public class MockShooter extends TraceableMockSubsystem implements IShooterSubsy
 
     private boolean _isReady = false;
 
+    @Inject
     public MockShooter(ILogger logger) {
         super(logger);
         // TODO Auto-generated constructor stub
     }
+
     /*
-    * @param targetVelocity the rpm of shooter
-    */
+     * @param targetVelocity the rpm of shooter
+     */
     @Override
     public void setSpeed(double targetVelocity) {
         // TODO Auto-generated method stub
@@ -42,22 +46,22 @@ public class MockShooter extends TraceableMockSubsystem implements IShooterSubsy
         // TODO Auto-generated method stub
 
     }
+
     @Override
     public void disableFeeding() {
         // TODO Auto-generated method stub
 
     }
+
     @Override
-    public void shootBalls(int balls){
+    public void shootBalls(int balls) {
         // TODO Auto-generated method stub
     }
+
     @Override
-    public void stopShooter(){
-       // TODO Auto-generated method stub
+    public void stopShooter() {
+        // TODO Auto-generated method stub
 
     }
-
-
-
 
 }

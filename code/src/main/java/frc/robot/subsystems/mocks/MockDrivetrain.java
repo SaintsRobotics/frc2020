@@ -14,9 +14,11 @@ import frc.robot.common.ILogger;
 import frc.robot.common.Location;
 import frc.robot.common.Position;
 import frc.robot.common.TraceableMockSubsystem;
+import frc.robot.common.Utils;
 
 public class MockDrivetrain extends TraceableMockSubsystem implements IDrivetrainSubsystem {
     private Location _location;
+    protected boolean _isIdle;
 
     /**
      * Creates a new ExampleSubsystem.
@@ -26,6 +28,17 @@ public class MockDrivetrain extends TraceableMockSubsystem implements IDrivetrai
         super(logger);
 
         _location = location;
+        _isIdle = true;
+
+    }
+
+    protected void setIdle(boolean idle) {
+        _isIdle = idle;
+    }
+
+    @Override
+    public boolean isIdle() {
+        return _isIdle;
     }
 
     @Override
@@ -36,7 +49,6 @@ public class MockDrivetrain extends TraceableMockSubsystem implements IDrivetrai
 
     @Override
     public double getMinSpeed() {
-        // TODO Auto-generated method stub
         return 0;
     }
 
@@ -47,8 +59,7 @@ public class MockDrivetrain extends TraceableMockSubsystem implements IDrivetrai
 
     @Override
     public double getMaxSpeed() {
-        // TODO Auto-generated method stub
-        return 0;
+        return .5;
     }
 
     @Override
@@ -74,7 +85,7 @@ public class MockDrivetrain extends TraceableMockSubsystem implements IDrivetrai
 
     @Override
     public void moveBackward(double maxSpeed, double distance) {
-        this.moveBackward(-distance);
+        this.moveBackward(distance);
     }
 
     @Override
@@ -122,7 +133,6 @@ public class MockDrivetrain extends TraceableMockSubsystem implements IDrivetrai
     public void moveSouth(double distance) {
         this.faceSouth();
         this.moveForward(distance);
-
     }
 
     @Override
@@ -157,8 +167,8 @@ public class MockDrivetrain extends TraceableMockSubsystem implements IDrivetrai
         // TODO Auto-generated method stub
 
         double heading = _location.getHeading();
-        heading += degrees;
-        _location.updateHeading(heading >= 360 ? heading - 360 : heading < 0 ? heading + 360 : heading);
+        heading = Utils.rotate(heading, degrees);
+        _location.updateHeading(heading);
     }
 
     @Override
@@ -206,13 +216,27 @@ public class MockDrivetrain extends TraceableMockSubsystem implements IDrivetrai
         _location.updateHeading(finalHeading);
     }
 
-    private void updateRelativeLocation(double distance) {
+    protected void updateRelativeLocation(double distance) {
+        this.updateRelativeLocation(distance, true);
+    }
+
+    protected void updateRelativeLocation(double distance, boolean enableIdling) {
+        if (enableIdling && !_isIdle) {
+            this.getLogger().warning("Can't initiate a move while a move is in progress.");
+            return;
+        }
+
+        // convert meters to cms as that's what the location is based on
+        distance *= 100;
+
+        if (enableIdling)
+            _isIdle = false;
         double x = 0;
         double y = 0;
         double heading = _location.getHeading();
         Position pos = _location.getPosition();
         if (heading == 0) {
-            y = distance;
+            x = distance;
         } else {
             double radianHeading = Math.toRadians(heading);
             x = Math.sin(radianHeading) * distance;
@@ -230,6 +254,8 @@ public class MockDrivetrain extends TraceableMockSubsystem implements IDrivetrai
             newYPos = 0;
         }
         _location.updatePosition(new Position(newXPos, newYPos));
+        if (enableIdling)
+            _isIdle = true;
     }
 
     private boolean isPositiveNumber(double value) {
@@ -243,4 +269,5 @@ public class MockDrivetrain extends TraceableMockSubsystem implements IDrivetrai
     public void setToBrake(boolean brake) {
 
     }
+
 }
