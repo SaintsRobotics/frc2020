@@ -19,17 +19,18 @@ import frc.robot.common.*;
 public class TrackVisionTarget extends TraceableCommand {
     private final IDrivetrainSubsystem _drivetrain;
     private final XboxController _controller;
+    private final Limelight _limelight;
 
     // TODO ADD FLUENT API TO SET SETPOINT (remember, it's probably going to be a
     // magic number passed in from config)
 
     @Inject
     public TrackVisionTarget(final ILogger logger, RobotConfig config, IDrivetrainSubsystem drivetrain,
-            XboxController controller) {
+            XboxController controller, Limelight limelight) {
         super(logger);
         _drivetrain = drivetrain;
         _controller = controller;
-
+        _limelight = limelight;
         addRequirements(_drivetrain);
     }
 

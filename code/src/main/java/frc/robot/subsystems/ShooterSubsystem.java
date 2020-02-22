@@ -13,8 +13,6 @@ import com.revrobotics.CANEncoder;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
-import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.PWMVictorSPX;
 import edu.wpi.first.wpilibj.Preferences;
 import edu.wpi.first.wpilibj.SpeedController;
 import edu.wpi.first.wpilibj.SpeedControllerGroup;
@@ -23,7 +21,6 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.RobotConfig;
 import frc.robot.common.ILogger;
 import frc.robot.common.IShooterSubsystem;
-import frc.robot.common.TraceableMockSubsystem;
 import frc.robot.common.TraceableSubsystem;
 
 /**
@@ -142,11 +139,9 @@ public class ShooterSubsystem extends TraceableSubsystem implements IShooterSubs
         if (!this.m_hasShotBall) {
             if (this.m_feedBackward) {
                 this.m_feeder.set(-1);
-                System.out.println("feeding backward");
 
             } else if (this.isUpToSpeed()) {
                 this.m_feeder.set(1);
-                System.out.println("feeding forward");
                 this.m_isShooting = true;
             }
         }
@@ -161,7 +156,6 @@ public class ShooterSubsystem extends TraceableSubsystem implements IShooterSubs
 
         // m_hasShotBall is used to abort the feeder, spinning forward or backward
         if (this.m_hasShotBall) {
-            System.out.println("turning off feeder");
             this.m_feeder.set(0);
         }
 

@@ -8,24 +8,14 @@
 
 package frc.robot.subsystems;
 
-import java.sql.Driver;
-
-import com.fasterxml.jackson.core.sym.Name;
 import com.revrobotics.CANEncoder;
 import com.revrobotics.CANSparkMax;
 
-import edu.wpi.first.wpilibj.AnalogEncoder;
-import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.Encoder;
-import edu.wpi.first.wpilibj.PWMVictorSPX;
 import edu.wpi.first.wpilibj.SpeedController;
 import edu.wpi.first.wpilibj.controller.PIDController;
-import edu.wpi.first.wpilibj.controller.ProfiledPIDController;
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.geometry.Translation2d;
 import edu.wpi.first.wpilibj.kinematics.SwerveModuleState;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj.trajectory.TrapezoidProfile;
 import frc.robot.common.AbsoluteEncoder;
 
 public class SwerveWheel {
@@ -64,7 +54,7 @@ public class SwerveWheel {
    */
   public SwerveWheel(CANSparkMax driveMotor, CANSparkMax turningMotor, double X, double Y, AbsoluteEncoder turnEncoder,
       String name) {
-        PIDOutput = 0;
+    PIDOutput = 0;
     m_name = name;
     m_driveMotor = driveMotor;
     m_turningMotor = turningMotor;
@@ -122,7 +112,6 @@ public class SwerveWheel {
     PIDOutput = m_turningPIDController.calculate(m_turningEncoder.getRadians());
     m_turningMotor.set(PIDOutput);
 
-
   }
 
   /**
@@ -152,7 +141,8 @@ public class SwerveWheel {
     this.m_turningPIDController.setSetpoint(((targetHead % kTwoPi) + kTwoPi) % kTwoPi);
     return targetVelocity;
   }
-    public double getPID(){
-      return this.PIDOutput;
-    }
+
+  public double getPID() {
+    return this.PIDOutput;
+  }
 }

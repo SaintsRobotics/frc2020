@@ -33,6 +33,17 @@ public class TurnToHeading extends TraceableCommand {
         addRequirements(_drivetrain);
     }
 
+    /**
+     * 
+     * @param heading direction robot should face, in degrees. zero is away from the
+     *                alliance wall
+     * @return returns this for chaining methods
+     */
+    public TurnToHeading withHeadingDegrees(double heading) {
+        // TODO needs implemenation. also, beware of units!!
+        return this;
+    }
+
     @Override
     public void initialize() {
         super.initialize();

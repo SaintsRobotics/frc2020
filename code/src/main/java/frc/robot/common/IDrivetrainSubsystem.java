@@ -7,11 +7,7 @@
 
 package frc.robot.common;
 
-import com.google.inject.AbstractModule;
-
-import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj2.command.Subsystem;
-import frc.robot.RobotConfig.SwerveDrivetrain;
 
 /**
  * The drivetrain subsystem. This forms the basis for any drivetrain such as

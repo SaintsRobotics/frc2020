@@ -9,7 +9,7 @@ package frc.robot.commands.navcommands;
 
 import com.google.inject.Inject;
 
-import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.geometry.Pose2d;
 import frc.robot.RobotConfig;
 import frc.robot.common.*;
 
@@ -29,7 +29,17 @@ public class GoToPosition extends TraceableCommand {
         addRequirements(_drivetrain);
     }
 
-    // TODO ADD FLUENT API METHOD CHAINING TO SET POSITION
+    /**
+     * 
+     * @param position a pose 2d representing the x and y coordinates, along wiht
+     *                 heading of the robot Represents forward velocity w.r.t the
+     *                 robot frame of reference.
+     * @return an instance of this so the methods can be chained
+     */
+    public GoToPosition withPosition(Pose2d position) {
+        // TODO needs implemenation, also figure out frame of reference
+        return this;
+    }
 
     @Override
     public void initialize() {
