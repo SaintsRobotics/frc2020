@@ -12,27 +12,15 @@ public class ShootOneBallCommand extends TraceableCommand {
 
     private IShooterSubsystem m_subsystem;
     private Double m_timeout;
-    private Timer m_timer;
 
     public ShootOneBallCommand(ILogger logger, IShooterSubsystem subsystem) {
         super(logger);
         m_subsystem = subsystem;
         addRequirements(m_subsystem);
-        m_timer = new Timer();
-    }
-
-    public ShootOneBallCommand withTimeout(Double seconds) {
-        m_timeout = new Double(seconds);
-        return this;
     }
 
     @Override
     public void initialize() {
-        if (m_timeout == null) {
-            DriverStation.reportError("withTimeout() method must be called first!!", true);
-        }
-        m_timer.reset();
-        m_timer.start();
     }
 
     @Override
@@ -41,13 +29,12 @@ public class ShootOneBallCommand extends TraceableCommand {
     }
 
     public boolean isFinished() {
-        return m_subsystem.getHasShotBall() || m_timer.get() >= m_timeout;
+        return m_subsystem.getHasShotBall();
     }
 
     @Override
     public void end(boolean interrupted) {
         m_subsystem.stopFeeding();
-        m_timer.stop();
     }
 
 }
