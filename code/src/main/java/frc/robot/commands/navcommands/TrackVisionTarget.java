@@ -5,51 +5,59 @@
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
 
-package frc.robot.commands;
+package frc.robot.commands.navcommands;
 
 import com.google.inject.Inject;
 
 import edu.wpi.first.wpilibj.XboxController;
-import edu.wpi.first.wpilibj.GenericHID.*;
+import frc.robot.RobotConfig;
 import frc.robot.common.*;
 
 /**
  * Add your docs here.
  */
-public class DrivetrainControllerCommand extends TraceableCommand {
+public class TrackVisionTarget extends TraceableCommand {
     private final IDrivetrainSubsystem _drivetrain;
     private final XboxController _controller;
-    private final double _controllerDeadzone = 0.2;
+    private final Limelight _limelight;
+
+    // TODO ADD FLUENT API TO SET SETPOINT (remember, it's probably going to be a
+    // magic number passed in from config)
 
     @Inject
-    public DrivetrainControllerCommand(final ILogger logger, IDrivetrainSubsystem drivetrain) {
+    public TrackVisionTarget(final ILogger logger, RobotConfig config, IDrivetrainSubsystem drivetrain,
+            XboxController controller, Limelight limelight) {
         super(logger);
         _drivetrain = drivetrain;
-        _controller = new XboxController(0);
-
+        _controller = controller;
+        _limelight = limelight;
         addRequirements(_drivetrain);
     }
 
     @Override
     public void initialize() {
         super.initialize();
-
+        // TODO needs implementation
     }
 
     @Override
     public void execute() {
         super.execute();
+        // TODO needs implementation
 
-        _drivetrain.move(
-                Util.deadZones(_controller.getY(Hand.kLeft) * _drivetrain.getMaxSpeed() * .5, _controllerDeadzone),
-                Util.deadZones(_controller.getX(Hand.kLeft) * _drivetrain.getMaxSpeed() * .5, _controllerDeadzone),
-                Util.deadZones(_controller.getX(Hand.kRight) * _drivetrain.getMaxAngularSpeed() * .5,
-                        _controllerDeadzone),
-                _controller.getBumper(Hand.kRight));
+    }
 
-        // Multiplying the rotating joystick by the max angular speed instead of linear
-        // speed because the rotation input is in radians per second
-
+    /**
+     * 
+     * @param input    value to be modified (deadzoned)
+     * @param deadZone the maximum value to be considered zero
+     * @return the modified version of input
+     */
+    public double deadZones(double input, double deadZone) {
+        if (Math.abs(input) < deadZone) {
+            return 0;
+        }
+        return input;
     }
 
     /**
@@ -58,5 +66,6 @@ public class DrivetrainControllerCommand extends TraceableCommand {
     @Override
     public boolean isFinished() {
         return false;
+        // TODO needs implementation
     }
 }

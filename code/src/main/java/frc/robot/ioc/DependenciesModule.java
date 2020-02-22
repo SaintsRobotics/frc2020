@@ -26,7 +26,6 @@ public class DependenciesModule extends AbstractModule {
         // create logger for injecting
 
         this.bind(ILogger.class).toProvider(LoggerProvider.class);
-        this.bind(XboxController.class).toProvider(ControllerProvider.class);
         // Due to some subsystems not being compatible with the HAL Sims we need to use
         // mocks instead
         if (RobotBase.isReal()) {
@@ -38,7 +37,7 @@ public class DependenciesModule extends AbstractModule {
         } else {
             this.bind(IShooterSubsystem.class).to(MockShooter.class).in(Singleton.class);
             this.bind(IDrivetrainSubsystem.class).to(MockDrivetrain.class).in(Singleton.class);
-          this.bind(IIntakeSubsystem.class).to(MockIntake.class).in(Singleton.class);
+            this.bind(IIntakeSubsystem.class).to(MockIntake.class).in(Singleton.class);
         }
     }
 }
