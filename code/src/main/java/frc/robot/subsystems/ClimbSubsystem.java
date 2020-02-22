@@ -32,7 +32,11 @@ public class ClimbSubsystem extends TraceableSubsystem implements IClimbSubsyste
     }
 
     public void releaseArm() {
-        releaseServo.setAngle(-90);
+        releaseServo.set(0);
+    }
+
+    public void returnServo() {
+        releaseServo.set(.5);
     }
 
     public void pullArm(double speed) {

@@ -37,7 +37,6 @@ public class RobotContainer extends CompetitionRobot {
    * The container for the robot. Contains subsystems, OI devices, and commands.
    */
   @Inject
-
   private RobotContainer(final ILogger logger, IDrivetrainSubsystem drivetrain,
       DrivetrainControllerCommand driveCommand, IIntakeSubsystem intake, IntakeControllerCommand intakeCommand,
       IShooterSubsystem shooterSubsystem, ShooterCommand shooterCommand, IClimbSubsystem climb,

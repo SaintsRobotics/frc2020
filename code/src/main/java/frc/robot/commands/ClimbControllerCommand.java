@@ -18,7 +18,7 @@ public class ClimbControllerCommand extends TraceableCommand {
     public ClimbControllerCommand(final ILogger logger, IClimbSubsystem climbSubsystem) {
         super(logger);
         _climb = climbSubsystem;
-        _controller = new XboxController(0);
+        _controller = new XboxController(1);
         addRequirements(_climb);
     }
 
@@ -27,10 +27,12 @@ public class ClimbControllerCommand extends TraceableCommand {
     }
 
     public void execute() {
-        if (_controller.getAButtonPressed()) {
+        if (_controller.getBackButtonPressed()) {
             _climb.releaseArm();
-
         }
+        // } else {
+        // _climb.returnServo();
+        // }
         _climb.pullArm(_controller.getTriggerAxis(Hand.kLeft) - _controller.getTriggerAxis(Hand.kRight));
 
     }

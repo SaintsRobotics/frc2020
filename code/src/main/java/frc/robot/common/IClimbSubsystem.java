@@ -12,6 +12,8 @@ public interface IClimbSubsystem extends Subsystem {
      */
     public double getAngle();
 
+    public void returnServo();
+
     /**
      * releases arm by turning servo angle
      */
