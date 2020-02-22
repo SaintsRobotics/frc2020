@@ -91,15 +91,15 @@ public class Robot extends TimedRobot {
     idleState.whenPressed(_container.getInstance(SetDriveCoastMode.class));
     idleState.whenReleased(_container.getInstance(SetDriveCoastMode.class));
 
-    JoystickButton start = new JoystickButton(_operatorController, _config.Controller.shooterStartup);
+    JoystickButton start = new JoystickButton(_operatorController, _config.Controller.shooterStartupButtonPort);
     start.whenPressed(_container.getInstance(ShooterStartupCommand.class));
 
-    JoystickButton back = new JoystickButton(_operatorController, _config.Controller.feedBackward);
+    JoystickButton back = new JoystickButton(_operatorController, _config.Controller.feedBackwardButtonPort);
     back.whileHeld(_container.getInstance(ShooterFeedBackwardCommand.class));
     // automatically gets canceled/interrupted when button released.
     // read mouseover on whileHeld method
 
-    JoystickButton feed = new JoystickButton(_operatorController, _config.Controller.feedOneBall);
+    JoystickButton feed = new JoystickButton(_operatorController, _config.Controller.feedOneBallButtonPort);
     feed.whileHeld(_container.getInstance(ShootOneBallCommand.class));
 
     // TODO can we cleanup the constructing button, then binding it?

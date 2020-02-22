@@ -28,10 +28,10 @@ public final class RobotConfig {
         public final int resetGyroButtonPort = XboxController.Button.kStart.value;
         public final int driveMotorIdleStateButtonPort = XboxController.Button.kBumperLeft.value;
 
-        public final int shooterStartup = XboxController.Button.kA.value;
-        public final int feedBackward = XboxController.Button.kB.value;
-        public final int feedOneBall = XboxController.Button.kX.value;
-        public final int shooterShutdown = XboxController.Button.kY.value;
+        public final int shooterStartupButtonPort = XboxController.Button.kA.value;
+        public final int feedBackwardButtonPort = XboxController.Button.kB.value;
+        public final int feedOneBallButtonPort = XboxController.Button.kX.value;
+        public final int shooterShutdownButtonPort = XboxController.Button.kY.value;
     }
 
     public final class SwerveDrivetrain {
