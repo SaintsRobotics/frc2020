@@ -126,7 +126,7 @@ public class SwerveDrivetrain extends TraceableSubsystem implements IDrivetrainS
     @Override
     public double getMaxSpeed() {
         // TODO Auto-generated method stub
-        return 1;
+        return 3.66;
     }
 
     @Override
