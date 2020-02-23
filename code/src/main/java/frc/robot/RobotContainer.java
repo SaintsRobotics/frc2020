@@ -9,9 +9,8 @@ package frc.robot;
 
 import com.google.inject.Inject;
 
+import frc.robot.commands.DriveArmCommand;
 import frc.robot.commands.DrivetrainControllerCommand;
-
-import frc.robot.commands.IntakeControllerCommand;
 
 import frc.robot.common.CompetitionRobot;
 import frc.robot.common.IDrivetrainSubsystem;
@@ -34,10 +33,10 @@ public class RobotContainer extends CompetitionRobot {
    */
   @Inject
   private RobotContainer(final ILogger logger, IDrivetrainSubsystem drivetrain,
-      DrivetrainControllerCommand driveCommand, IIntakeSubsystem intake, IntakeControllerCommand intakeCommand) {
+      DrivetrainControllerCommand driveCommand, IIntakeSubsystem intake, DriveArmCommand armCommand) {
     super(logger);
 
-    intake.setDefaultCommand(intakeCommand);
+    intake.setDefaultCommand(armCommand);
 
     drivetrain.setDefaultCommand(driveCommand);
 
