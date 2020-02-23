@@ -19,6 +19,7 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.commands.navcommands.IntakeIn;
 import frc.robot.commands.navcommands.IntakeOut;
 import frc.robot.commands.navcommands.ResetGyro;
+import frc.robot.commands.navcommands.SetDriveBrakeMode;
 import frc.robot.commands.navcommands.SetDriveCoastMode;
 import frc.robot.commands.navcommands.ShootOneBallCommand;
 import frc.robot.commands.navcommands.ShooterFeedBackwardCommand;
@@ -92,7 +93,7 @@ public class Robot extends TimedRobot {
 
     JoystickButton idleState = new JoystickButton(_driverController, _config.Controller.driveMotorIdleStateButtonPort);
     idleState.whenPressed(_container.getInstance(SetDriveCoastMode.class));
-    idleState.whenReleased(_container.getInstance(SetDriveCoastMode.class));
+    idleState.whenReleased(_container.getInstance(SetDriveBrakeMode.class));
 
     JoystickButton start = new JoystickButton(_operatorController, _config.Controller.shooterStartupButtonPort);
     start.whenPressed(_container.getInstance(ShooterStartupCommand.class));
