@@ -2,6 +2,7 @@ package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj.interfaces.Gyro;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import frc.robot.RobotConfig;
 import frc.robot.common.IClimbSubsystem;
 import frc.robot.common.ILogger;
 import frc.robot.common.TraceableSubsystem;
@@ -13,38 +14,38 @@ import edu.wpi.first.wpilibj.Servo;
 
 public class ClimbSubsystem extends TraceableSubsystem implements IClimbSubsystem {
 
-    private Servo releaseServo;
-    private CANSparkMax pullMotorController;
+    private Servo servoMotor;
+    private CANSparkMax winchMotor;
+    private double releasePosition;
+    private double returnPosition;
 
     @Inject
-    public ClimbSubsystem(final ILogger logger) {
+    public ClimbSubsystem(final ILogger logger, RobotConfig config) {
         super(logger);
 
-        releaseServo = new Servo(1);
-        pullMotorController = new CANSparkMax(19, MotorType.kBrushless);
-        // TODO
-        // Check if motor is inverted
+        servoMotor = new Servo(1);
+        winchMotor = new CANSparkMax(19, MotorType.kBrushless);
 
     }
 
     public double getAngle() {
-        return releaseServo.get();
+        return servoMotor.get();
     }
 
     public void releaseArm() {
-        releaseServo.set(0);
+        servoMotor.set(this.releasePosition);
     }
 
     public void returnServo() {
-        releaseServo.set(.5);
+        servoMotor.set(this.returnPosition);
     }
 
     public void pullArm(double speed) {
-        pullMotorController.set(speed);
+        winchMotor.set(speed);
     }
 
     public double getSpeed() {
-        return pullMotorController.getEncoder().getVelocity();
+        return winchMotor.getEncoder().getVelocity();
     }
 
 }
