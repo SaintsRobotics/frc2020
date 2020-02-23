@@ -19,7 +19,10 @@ import frc.robot.common.*;
 public class DrivetrainControllerCommand extends TraceableCommand {
     private final IDrivetrainSubsystem _drivetrain;
     private final XboxController _controller;
-    private final double _controllerDeadzone = 0.2;
+    private final double kDriveDeadzone = 0.2;
+    private final double kDriveScale = .75;
+    private final double kTurnDeadzone = 0.2;
+    private final double kTurnScale = .35;
 
     @Inject
     public DrivetrainControllerCommand(final ILogger logger, IDrivetrainSubsystem drivetrain) {
@@ -40,12 +43,14 @@ public class DrivetrainControllerCommand extends TraceableCommand {
     public void execute() {
         super.execute();
 
-        _drivetrain.move(
-                Util.deadZones(_controller.getY(Hand.kLeft) * _drivetrain.getMaxSpeed() * .5, _controllerDeadzone),
-                Util.deadZones(_controller.getX(Hand.kLeft) * _drivetrain.getMaxSpeed() * .5, _controllerDeadzone),
-                Util.deadZones(_controller.getX(Hand.kRight) * _drivetrain.getMaxAngularSpeed() * .5,
-                        _controllerDeadzone),
-                _controller.getBumper(Hand.kRight));
+        double x = Util.oddSquare(Util.deadZones(_controller.getY(Hand.kLeft), kDriveDeadzone))
+                * _drivetrain.getMaxSpeed();
+        double y = Util.oddSquare(Util.deadZones(_controller.getX(Hand.kLeft), kDriveDeadzone))
+                * _drivetrain.getMaxSpeed();
+        double r = Util.oddSquare(
+                Util.deadZones(_controller.getX(Hand.kRight), kTurnDeadzone) * _drivetrain.getMaxAngularSpeed());
+
+        _drivetrain.move(x * kDriveScale, y * kDriveScale, r * kTurnScale, !_controller.getBumper(Hand.kRight));
 
         // Multiplying the rotating joystick by the max angular speed instead of linear
         // speed because the rotation input is in radians per second
