@@ -27,7 +27,6 @@ public class IntakeOut extends TraceableCommand {
 
     @Override
     public void end(boolean inerruped) {
-        DriverStation.reportError("command ended ", false);
         _intake.stopIntake();
     }
 
