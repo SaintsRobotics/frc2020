@@ -10,6 +10,7 @@ package frc.robot;
 import com.google.inject.Inject;
 
 import frc.robot.commands.ClimbControllerCommand;
+import frc.robot.commands.DriveArmCommand;
 import frc.robot.commands.DrivetrainControllerCommand;
 
 import frc.robot.common.CompetitionRobot;
@@ -17,7 +18,6 @@ import frc.robot.common.IClimbSubsystem;
 import frc.robot.common.IDrivetrainSubsystem;
 import frc.robot.common.IIntakeSubsystem;
 import frc.robot.common.ILogger;
-import frc.robot.subsystems.ClimbSubsystem;
 import edu.wpi.first.wpilibj2.command.Command;
 
 /**
@@ -35,12 +35,12 @@ public class RobotContainer extends CompetitionRobot {
    */
   @Inject
   private RobotContainer(final ILogger logger, IDrivetrainSubsystem drivetrain,
-      DrivetrainControllerCommand driveCommand, IIntakeSubsystem intake, IClimbSubsystem climb,
-      ClimbControllerCommand climbCommand) {
+      DrivetrainControllerCommand driveCommand, IIntakeSubsystem intake, DriveArmCommand driveArmCommand,
+      IClimbSubsystem climb, ClimbControllerCommand climbCommand) {
     super(logger);
 
     drivetrain.setDefaultCommand(driveCommand);
-
+    intake.setDefaultCommand(driveArmCommand);
     climb.setDefaultCommand(climbCommand);
 
   }
