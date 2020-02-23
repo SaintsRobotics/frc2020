@@ -2,9 +2,6 @@ package frc.robot.common;
 
 import edu.wpi.first.wpilibj.AnalogEncoder;
 import edu.wpi.first.wpilibj.AnalogInput;
-import edu.wpi.first.wpilibj.PIDSource;
-import edu.wpi.first.wpilibj.PIDSourceType;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class AbsoluteEncoder {
 	/**
@@ -23,7 +20,7 @@ public class AbsoluteEncoder {
 	 * Constructor for an absolute encoder
 	 * 
 	 * @param channel    Analog port for the Encoder
-	 * @param offset	 the value subtracted from the raw encoder value
+	 * @param offset     the value subtracted from the raw encoder value
 	 * @param isInverted Changes which direction increases/decreases the encoder
 	 */
 	public AbsoluteEncoder(int channel, double offset, boolean isInverted) {
@@ -40,14 +37,15 @@ public class AbsoluteEncoder {
 	 */
 	public double getDegrees() {
 		if (isInverted) {
-			return ((5 - analogIn.getVoltage()) * this.voltageToDegrees) ;
+			return ((5 - analogIn.getVoltage()) * this.voltageToDegrees);
 		}
 
 		else {
 			return (analogIn.getVoltage() * this.voltageToDegrees);
 		}
 	}
-	public double getRadians(){
+
+	public double getRadians() {
 		return Math.toRadians(getDegrees()) - this.m_offset;
 	}
 

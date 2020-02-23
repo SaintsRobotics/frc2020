@@ -5,20 +5,33 @@
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
 
-package frc.robot.ioc;
+package frc.robot.commands.navcommands;
 
-import com.google.inject.Provider;
-import frc.robot.common.ILogger;
+import com.google.inject.Inject;
+
 import frc.robot.common.*;
 
 /**
  * Add your docs here.
  */
-public class LoggerProvider implements Provider<ILogger> {
+public class SetDriveBrakeMode extends TraceableCommand {
+    private final IDrivetrainSubsystem _drivetrain;
 
-    @Override
-    public ILogger get() {
-        return new LoggerGroup(new ShuffleboardLogger());
+    @Inject
+    public SetDriveBrakeMode(final ILogger logger, IDrivetrainSubsystem drivetrain) {
+        super(logger);
+        _drivetrain = drivetrain;
+
     }
 
+    @Override
+    public void execute() {
+        super.execute();
+        _drivetrain.setToBrakeMode();
+    }
+
+    @Override
+    public boolean isFinished() {
+        return true;
+    }
 }

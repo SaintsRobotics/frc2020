@@ -8,21 +8,16 @@
 package frc.robot;
 
 import com.google.inject.Inject;
-import com.google.inject.Provider;
 
 import frc.robot.commands.ClimbControllerCommand;
 import frc.robot.commands.DrivetrainControllerCommand;
-
-import frc.robot.commands.IntakeControllerCommand;
-
-import frc.robot.commands.ShooterCommand;
 
 import frc.robot.common.CompetitionRobot;
 import frc.robot.common.IClimbSubsystem;
 import frc.robot.common.IDrivetrainSubsystem;
 import frc.robot.common.IIntakeSubsystem;
 import frc.robot.common.ILogger;
-import frc.robot.common.IShooterSubsystem;
+import frc.robot.subsystems.ClimbSubsystem;
 import edu.wpi.first.wpilibj2.command.Command;
 
 /**
@@ -31,6 +26,8 @@ import edu.wpi.first.wpilibj2.command.Command;
  * unit test.
  */
 public class RobotContainer extends CompetitionRobot {
+
+  private Command m_teleopCommand;
   // private final Provider<DrivetrainControllerCommand> _autonomousCommand;
 
   /**
@@ -38,19 +35,18 @@ public class RobotContainer extends CompetitionRobot {
    */
   @Inject
   private RobotContainer(final ILogger logger, IDrivetrainSubsystem drivetrain,
-      DrivetrainControllerCommand driveCommand, IIntakeSubsystem intake, IntakeControllerCommand intakeCommand,
-      IShooterSubsystem shooterSubsystem, ShooterCommand shooterCommand, IClimbSubsystem climb,
+      DrivetrainControllerCommand driveCommand, IIntakeSubsystem intake, IClimbSubsystem climb,
       ClimbControllerCommand climbCommand) {
     super(logger);
-
-    intake.setDefaultCommand(intakeCommand);
-
-    shooterSubsystem.setDefaultCommand(shooterCommand);
 
     drivetrain.setDefaultCommand(driveCommand);
 
     climb.setDefaultCommand(climbCommand);
 
+  }
+
+  public Command getTeleopCommand() {
+    return m_teleopCommand;
   }
 
   /**

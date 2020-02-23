@@ -13,10 +13,17 @@ import com.google.inject.Injector;
 
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.XboxController;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import frc.robot.commands.DrivetrainControllerCommand;
+import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import frc.robot.commands.navcommands.IntakeIn;
+import frc.robot.commands.navcommands.IntakeOut;
+import frc.robot.commands.navcommands.ResetGyro;
+import frc.robot.commands.navcommands.SetDriveCoastMode;
+import frc.robot.commands.navcommands.ShootOneBallCommand;
+import frc.robot.commands.navcommands.ShooterFeedBackwardCommand;
+import frc.robot.commands.navcommands.ShooterShutdownCommand;
+import frc.robot.commands.navcommands.ShooterStartupCommand;
 import frc.robot.common.IDrivetrainSubsystem;
 import frc.robot.ioc.DependenciesModule;
 
@@ -31,10 +38,10 @@ public class Robot extends TimedRobot {
   private Command m_autonomousCommand;
   private RobotContainer _robot;
   private RobotConfig _config;
+  private XboxController _driverController;
+  private XboxController _operatorController;
 
   private final Injector _container;
-  // The driver's controller
-  XboxController m_driverController;
 
   public Robot() {
     this(new DependenciesModule());
@@ -44,7 +51,8 @@ public class Robot extends TimedRobot {
     _container = Guice.createInjector(dependencies);
 
     _config = _container.getInstance(RobotConfig.class);
-    m_driverController = _container.getInstance(XboxController.class);
+    _driverController = new XboxController(_config.Controller.driverControllerPort);
+    _operatorController = new XboxController(_config.Controller.operatorControllerPort);
   }
 
   public RobotContainer getRobot() {
@@ -79,10 +87,34 @@ public class Robot extends TimedRobot {
    * passing it to a {@link edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
   private void configureButtonBindings() {
-    // while we can call the command here directly, its recommended to delegate
-    // the selection of the command to the Robot class ie
-    // exampleButton.whenPressed(_robot.whenButtonXPressed());
-    // this allows the unit testing of the whenButtonXPressed via the FakeRobot
+    JoystickButton gyro = new JoystickButton(_driverController, _config.Controller.resetGyroButtonPort);
+    gyro.whenPressed(_container.getInstance(ResetGyro.class));
+
+    JoystickButton idleState = new JoystickButton(_driverController, _config.Controller.driveMotorIdleStateButtonPort);
+    idleState.whenPressed(_container.getInstance(SetDriveCoastMode.class));
+    idleState.whenReleased(_container.getInstance(SetDriveCoastMode.class));
+
+    JoystickButton start = new JoystickButton(_operatorController, _config.Controller.shooterStartupButtonPort);
+    start.whenPressed(_container.getInstance(ShooterStartupCommand.class));
+
+    JoystickButton back = new JoystickButton(_operatorController, _config.Controller.feedBackwardButtonPort);
+    back.whileHeld(_container.getInstance(ShooterFeedBackwardCommand.class));
+    // automatically gets canceled/interrupted when button released.
+    // read mouseover on whileHeld method
+
+    JoystickButton feed = new JoystickButton(_operatorController, _config.Controller.feedOneBallButtonPort);
+    feed.whileHeld(_container.getInstance(ShootOneBallCommand.class).withTimeout(_config.Shooter.feederTimeoutSeconds));
+
+    JoystickButton shutdown = new JoystickButton(_operatorController, _config.Controller.shooterShutdownButtonPort);
+    shutdown.whenPressed(_container.getInstance(ShooterShutdownCommand.class));
+
+    JoystickButton intakeIn = new JoystickButton(_operatorController, _config.Controller.intakeInButtonPort);
+    intakeIn.whileHeld(_container.getInstance(IntakeIn.class));
+
+    JoystickButton intakeOut = new JoystickButton(_operatorController, _config.Controller.intakeOutButtonPort);
+    intakeOut.whileHeld(_container.getInstance(IntakeOut.class));
+
+    // TODO can we cleanup the constructing button, then binding it?
   }
 
   /**

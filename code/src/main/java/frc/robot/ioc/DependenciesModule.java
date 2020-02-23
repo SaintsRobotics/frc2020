@@ -26,7 +26,6 @@ public class DependenciesModule extends AbstractModule {
         // create logger for injecting
 
         this.bind(ILogger.class).toProvider(LoggerProvider.class);
-        this.bind(XboxController.class).toProvider(ControllerProvider.class);
         // Due to some subsystems not being compatible with the HAL Sims we need to use
         // mocks instead
         if (RobotBase.isReal()) {

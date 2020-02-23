@@ -35,5 +35,6 @@
     "teleop",
     "waypoint",
     "waypoints"
-  ]
+  ],
+  "editor.formatOnSave": true
 }
