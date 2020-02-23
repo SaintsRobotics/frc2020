@@ -95,7 +95,7 @@ public final class RobotConfig {
         public final int limitRPM = 150;
 
         public final double pidTolerance = 80;
-        public final double pidP = 0.000129;
+        public final double pidP = 0.0001;
         public final double pidI = 0.0004;
         public final double pidD = 0;
         public final int pidOnTargetTicks = 10;
