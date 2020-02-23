@@ -35,6 +35,8 @@ public final class RobotConfig {
         public final int shooterShutdownButtonPort = XboxController.Button.kY.value;
         public final int intakeInButtonPort = XboxController.Button.kBumperLeft.value;
         public final int intakeOutButtonPort = XboxController.Button.kBumperRight.value;
+
+        public final int cliberReleaseButtonPort = XboxController.Button.kBack.value;
     }
 
     public final class SwerveDrivetrain {

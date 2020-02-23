@@ -1,4 +1,4 @@
-package frc.robot.commands;
+package frc.robot.commands.navcommands;
 
 import com.google.inject.Inject;
 
@@ -12,26 +12,25 @@ import frc.robot.common.*;
 /**
  * drives the climber manually
  */
-public class ClimbControllerCommand extends TraceableCommand {
+public class ReleaseClimber extends TraceableCommand {
 
     private final IClimbSubsystem _climb;
-    private final XboxController _controller;
 
     @Inject
-    public ClimbControllerCommand(final ILogger logger, IClimbSubsystem climbSubsystem) {
+    public ReleaseClimber(final ILogger logger, IClimbSubsystem climbSubsystem) {
         super(logger);
         _climb = climbSubsystem;
-        _controller = new XboxController(1);
         addRequirements(_climb);
     }
 
+    @Override
     public void execute() {
-        _climb.climb(-_controller.getTriggerAxis(Hand.kRight));
+        _climb.releaseClimber();
 
     }
 
     public boolean isFinished() {
-        return false;
+        return true;
     }
 
 }

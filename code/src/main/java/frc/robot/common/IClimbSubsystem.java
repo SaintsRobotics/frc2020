@@ -12,17 +12,20 @@ public interface IClimbSubsystem extends Subsystem {
      */
     public double getAngle();
 
-    public void returnServo();
+    /**
+     * moves servo to the position where the climber would be secured down
+     */
+    public void lockServo();
 
     /**
      * releases arm by turning servo angle
      */
-    public void releaseArm();
+    public void releaseClimber();
 
     /**
-     * pulls the arm down in case of readjustment
+     * can only input negative values between 0 and -1 pulls the robot up
      */
-    public void pullArm(double speed);
+    public void climb(double speed);
 
     /**
      * 
