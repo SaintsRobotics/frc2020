@@ -79,6 +79,7 @@ public class Robot extends TimedRobot {
     // these have to be done here as they are not unit testable
     configureButtonBindings();
     _container.getInstance(IDrivetrainSubsystem.class).resetGyro();
+    _container.getInstance(frc.robot.common.Limelight.class).setLEDState(1);
   }
 
   /**

@@ -10,7 +10,10 @@ package frc.robot.commands.navcommands;
 import com.google.inject.Inject;
 
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.GenericHID.Hand;
+import edu.wpi.first.wpilibj.controller.PIDController;
 import frc.robot.RobotConfig;
+import frc.robot.commands.Util;
 import frc.robot.common.*;
 
 /**
@@ -18,19 +21,23 @@ import frc.robot.common.*;
  */
 public class TrackVisionTarget extends TraceableCommand {
     private final IDrivetrainSubsystem _drivetrain;
+    private final double _angleSetpoint;
     private final XboxController _controller;
     private final Limelight _limelight;
-
-    // TODO ADD FLUENT API TO SET SETPOINT (remember, it's probably going to be a
-    // magic number passed in from config)
+    private final PIDController _pidController;
+    private double _pidOutput;
+    private RobotConfig _config;
 
     @Inject
     public TrackVisionTarget(final ILogger logger, RobotConfig config, IDrivetrainSubsystem drivetrain,
             XboxController controller, Limelight limelight) {
         super(logger);
         _drivetrain = drivetrain;
+        _angleSetpoint = config.Limelight.angleSetpointDegrees;
         _controller = controller;
         _limelight = limelight;
+        _pidController = new PIDController(config.Limelight.kP, config.Limelight.kI, config.Limelight.kD);
+        _config = config;
         addRequirements(_drivetrain);
     }
 
@@ -43,21 +50,15 @@ public class TrackVisionTarget extends TraceableCommand {
     @Override
     public void execute() {
         super.execute();
+        _pidOutput = _pidController.calculate(_limelight.getRotationalOffset());
+        double x = Util.oddSquare(Util.deadZones(_controller.getY(Hand.kLeft), _config.Controller.kDriveDeadzone))
+                * _drivetrain.getMaxSpeed();
+        double y = Util.oddSquare(Util.deadZones(_controller.getX(Hand.kLeft), _config.Controller.kDriveDeadzone))
+                * _drivetrain.getMaxSpeed();
+        _drivetrain.move(x * _config.Controller.kDriveScale, y * _config.Controller.kDriveScale, _pidOutput,
+                !_controller.getBumper(Hand.kRight));
         // TODO needs implementation
 
-    }
-
-    /**
-     * 
-     * @param input    value to be modified (deadzoned)
-     * @param deadZone the maximum value to be considered zero
-     * @return the modified version of input
-     */
-    public double deadZones(double input, double deadZone) {
-        if (Math.abs(input) < deadZone) {
-            return 0;
-        }
-        return input;
     }
 
     /**

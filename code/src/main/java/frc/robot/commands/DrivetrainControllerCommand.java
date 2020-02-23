@@ -11,6 +11,7 @@ import com.google.inject.Inject;
 
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.GenericHID.*;
+import frc.robot.RobotConfig;
 import frc.robot.common.*;
 
 /**
@@ -19,17 +20,14 @@ import frc.robot.common.*;
 public class DrivetrainControllerCommand extends TraceableCommand {
     private final IDrivetrainSubsystem _drivetrain;
     private final XboxController _controller;
-    private final double kDriveDeadzone = 0.2;
-    private final double kDriveScale = .75;
-    private final double kTurnDeadzone = 0.2;
-    private final double kTurnScale = .35;
+    private final RobotConfig _config;
 
     @Inject
-    public DrivetrainControllerCommand(final ILogger logger, IDrivetrainSubsystem drivetrain) {
+    public DrivetrainControllerCommand(final ILogger logger, IDrivetrainSubsystem drivetrain, RobotConfig config) {
         super(logger);
         _drivetrain = drivetrain;
         _controller = new XboxController(0);
-
+        _config = config;
         addRequirements(_drivetrain);
     }
 
@@ -43,14 +41,15 @@ public class DrivetrainControllerCommand extends TraceableCommand {
     public void execute() {
         super.execute();
 
-        double x = Util.oddSquare(Util.deadZones(_controller.getY(Hand.kLeft), kDriveDeadzone))
+        double x = Util.oddSquare(Util.deadZones(_controller.getY(Hand.kLeft), _config.Controller.kDriveDeadzone))
                 * _drivetrain.getMaxSpeed();
-        double y = Util.oddSquare(Util.deadZones(_controller.getX(Hand.kLeft), kDriveDeadzone))
+        double y = Util.oddSquare(Util.deadZones(_controller.getX(Hand.kLeft), _config.Controller.kDriveDeadzone))
                 * _drivetrain.getMaxSpeed();
-        double r = Util.oddSquare(
-                Util.deadZones(_controller.getX(Hand.kRight), kTurnDeadzone) * _drivetrain.getMaxAngularSpeed());
+        double r = Util.oddSquare(Util.deadZones(_controller.getX(Hand.kRight), _config.Controller.kTurnDeadzone)
+                * _drivetrain.getMaxAngularSpeed());
 
-        _drivetrain.move(x * kDriveScale, y * kDriveScale, r * kTurnScale, !_controller.getBumper(Hand.kRight));
+        _drivetrain.move(x * _config.Controller.kDriveScale, y * _config.Controller.kDriveScale,
+                r * _config.Controller.kTurnScale, !_controller.getBumper(Hand.kRight));
 
         // Multiplying the rotating joystick by the max angular speed instead of linear
         // speed because the rotation input is in radians per second
