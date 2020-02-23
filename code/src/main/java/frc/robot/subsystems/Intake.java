@@ -71,12 +71,12 @@ public class Intake extends TraceableSubsystem implements IIntakeSubsystem {
 
     // Spin the intake to accept balls into robot
     public void spinIntake() {
-        intakeController.set(.6);
+        intakeController.set(.8);
     }
 
     // Reverse the intake to push balls away from intake
     public void reverseIntake() {
-        intakeController.set(-.6);
+        intakeController.set(-.8);
 
     }
 
