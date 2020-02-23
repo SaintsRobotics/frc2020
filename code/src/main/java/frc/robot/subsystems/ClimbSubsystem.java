@@ -25,8 +25,8 @@ public class ClimbSubsystem extends TraceableSubsystem implements IClimbSubsyste
     public ClimbSubsystem(final ILogger logger, RobotConfig config) {
         super(logger);
 
-        servoMotor = new Servo(1);
-        winchMotor = new CANSparkMax(19, MotorType.kBrushless);
+        servoMotor = new Servo(config.Climber.servoPort);
+        winchMotor = new CANSparkMax(config.Climber.winchPort, MotorType.kBrushless);
         this.releasePosition = config.Climber.servoReleasePosition;
         this.returnPosition = config.Climber.servoReturnPosition;
     }
