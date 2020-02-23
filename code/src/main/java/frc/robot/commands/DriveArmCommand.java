@@ -4,7 +4,7 @@ import com.google.inject.Inject;
 
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.GenericHID.*;
-
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.common.*;
 
 public class DriveArmCommand extends TraceableCommand {
@@ -27,7 +27,14 @@ public class DriveArmCommand extends TraceableCommand {
     }
 
     public void execute() {
-        _intake.setArmMotor(Util.deadZones(_controller.getY(Hand.kLeft), .4));
+        double x = _controller.getY(Hand.kLeft);
+        if (x > 0) {
+            x *= .3;
+        } else {
+            x *= .75;
+        }
+        _intake.setArmMotor(x);
+        SmartDashboard.putNumber("arm controller ", x);
     }
 
     public boolean isFinished() {

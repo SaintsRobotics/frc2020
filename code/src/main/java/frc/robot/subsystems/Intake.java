@@ -92,9 +92,9 @@ public class Intake extends TraceableSubsystem implements IIntakeSubsystem {
 
     public void periodic() {
         SmartDashboard.putNumber("Arm Encoder", armEncoder.get());
-        double armOutput = m_armPIDController.calculate(armEncoder.get());
+        // double armOutput = m_armPIDController.calculate(armEncoder.get());
         // armController.set(armOutput);
-        SmartDashboard.putNumber("Arm Output", armOutput);
+        // SmartDashboard.putNumber("Arm Output", armOutput);
     }
 
     public void controlledSpinIntake(double amount) {
