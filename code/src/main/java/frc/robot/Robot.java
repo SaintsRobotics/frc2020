@@ -22,6 +22,7 @@ import frc.robot.commands.navcommands.ResetGyro;
 import frc.robot.commands.navcommands.SetDriveCoastMode;
 import frc.robot.commands.navcommands.ShootOneBallCommand;
 import frc.robot.commands.navcommands.ShooterFeedBackwardCommand;
+import frc.robot.commands.navcommands.ShooterShutdownCommand;
 import frc.robot.commands.navcommands.ShooterStartupCommand;
 import frc.robot.common.IDrivetrainSubsystem;
 import frc.robot.ioc.DependenciesModule;
@@ -102,7 +103,10 @@ public class Robot extends TimedRobot {
     // read mouseover on whileHeld method
 
     JoystickButton feed = new JoystickButton(_operatorController, _config.Controller.feedOneBallButtonPort);
-    feed.whileHeld(_container.getInstance(ShootOneBallCommand.class));
+    feed.whileHeld(_container.getInstance(ShootOneBallCommand.class).withTimeout(_config.Shooter.feederTimeoutSeconds));
+
+    JoystickButton shutdown = new JoystickButton(_operatorController, _config.Controller.shooterShutdownButtonPort);
+    shutdown.whenPressed(_container.getInstance(ShooterShutdownCommand.class));
 
     JoystickButton intakeIn = new JoystickButton(_operatorController, _config.Controller.intakeInButtonPort);
     intakeIn.whileHeld(_container.getInstance(IntakeIn.class));
