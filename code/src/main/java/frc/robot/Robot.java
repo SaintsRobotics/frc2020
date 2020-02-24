@@ -11,8 +11,12 @@ import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 
+import edu.wpi.first.networktables.NetworkTable;
+import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
@@ -26,6 +30,7 @@ import frc.robot.commands.navcommands.ShooterFeedBackwardCommand;
 import frc.robot.commands.navcommands.ShooterShutdownCommand;
 import frc.robot.commands.navcommands.ShooterStartupCommand;
 import frc.robot.common.IDrivetrainSubsystem;
+import frc.robot.common.Limelight;
 import frc.robot.ioc.DependenciesModule;
 
 /**
@@ -41,6 +46,7 @@ public class Robot extends TimedRobot {
   private RobotConfig _config;
   private XboxController _driverController;
   private XboxController _operatorController;
+  private Limelight limelight;
 
   private final Injector _container;
 
@@ -54,6 +60,7 @@ public class Robot extends TimedRobot {
     _config = _container.getInstance(RobotConfig.class);
     _driverController = new XboxController(_config.Controller.driverControllerPort);
     _operatorController = new XboxController(_config.Controller.operatorControllerPort);
+    limelight = new Limelight(_config);
   }
 
   public RobotContainer getRobot() {
@@ -136,6 +143,8 @@ public class Robot extends TimedRobot {
     // and running subsystem periodic() methods. This must be called from the
     // robot's periodic
     // block in order for anything in the Command-based framework to work.
+    SmartDashboard.putNumber("disance", limelight.getDistanceFromTarget());
+
     CommandScheduler.getInstance().run();
 
     _robot.robotPeriodic();
