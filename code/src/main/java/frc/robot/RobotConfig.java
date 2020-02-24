@@ -20,6 +20,7 @@ public final class RobotConfig {
     public final RobotConfig.Physical Physical = new RobotConfig.Physical();
     public final RobotConfig.Intake Intake = new RobotConfig.Intake();
     public final RobotConfig.Shooter Shooter = new RobotConfig.Shooter();
+    public final RobotConfig.Climber Climber = new RobotConfig.Climber();
 
     public final class Controller {
         public final int driverControllerPort = 0;
@@ -34,6 +35,8 @@ public final class RobotConfig {
         public final int shooterShutdownButtonPort = XboxController.Button.kY.value;
         public final int intakeInButtonPort = XboxController.Button.kBumperLeft.value;
         public final int intakeOutButtonPort = XboxController.Button.kBumperRight.value;
+
+        public final int climberReleaseButtonPort = XboxController.Button.kBack.value;
     }
 
     public final class SwerveDrivetrain {
@@ -81,7 +84,10 @@ public final class RobotConfig {
     }
 
     public final class Climber {
-        public final int motorPort = 19;
+        public final int winchPort = 19;
+        public final int servoPort = 1;
+        public final double servoReleasePosition = 0;
+        public final double servoReturnPosition = 0.5;
     }
 
     public final class Shooter {
