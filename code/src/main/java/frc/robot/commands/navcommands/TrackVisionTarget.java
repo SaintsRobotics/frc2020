@@ -10,62 +10,49 @@ package frc.robot.commands.navcommands;
 import com.google.inject.Inject;
 
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.GenericHID.Hand;
+import edu.wpi.first.wpilibj.controller.PIDController;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.RobotConfig;
+import frc.robot.commands.DrivetrainCommandBase;
+import frc.robot.commands.Util;
 import frc.robot.common.*;
 
 /**
  * Add your docs here.
  */
-public class TrackVisionTarget extends TraceableCommand {
-    private final IDrivetrainSubsystem _drivetrain;
-    private final XboxController _controller;
+public class TrackVisionTarget extends DrivetrainCommandBase {
     private final Limelight _limelight;
-
-    // TODO ADD FLUENT API TO SET SETPOINT (remember, it's probably going to be a
-    // magic number passed in from config)
+    private final PIDController _pidController;
+    private double _pidOutput;
 
     @Inject
     public TrackVisionTarget(final ILogger logger, RobotConfig config, IDrivetrainSubsystem drivetrain,
-            XboxController controller, Limelight limelight) {
-        super(logger);
-        _drivetrain = drivetrain;
-        _controller = controller;
+            Limelight limelight) {
+        super(logger, config, drivetrain);
         _limelight = limelight;
-        addRequirements(_drivetrain);
+        _pidController = new PIDController(config.Limelight.kP, config.Limelight.kI, config.Limelight.kD);
+        _pidController.setSetpoint(config.Limelight.angleSetpointDegrees);
     }
 
     @Override
     public void initialize() {
         super.initialize();
-        // TODO needs implementation
+        _limelight.setLEDState(3);
     }
 
     @Override
-    public void execute() {
-        super.execute();
-        // TODO needs implementation
+    protected double getRotation() {
+        SmartDashboard.putBoolean("on setpoint ", _pidController.atSetpoint());
+        SmartDashboard.putNumber("pid output ", -_pidController.calculate(_limelight.getRotationalOffset()));
+        SmartDashboard.putNumber("pid error ", _pidController.getPositionError());
 
+        return -_pidController.calculate(_limelight.getRotationalOffset());
     }
 
-    /**
-     * 
-     * @param input    value to be modified (deadzoned)
-     * @param deadZone the maximum value to be considered zero
-     * @return the modified version of input
-     */
-    public double deadZones(double input, double deadZone) {
-        if (Math.abs(input) < deadZone) {
-            return 0;
-        }
-        return input;
-    }
-
-    /**
-     * this command controllers a controller so will run forever!
-     */
     @Override
-    public boolean isFinished() {
-        return false;
-        // TODO needs implementation
+    public void end(boolean interrupted) {
+        super.end(interrupted);
+        _limelight.setLEDState(1);
     }
 }
