@@ -25,6 +25,7 @@ import frc.robot.commands.navcommands.ShootOneBallCommand;
 import frc.robot.commands.navcommands.ShooterFeedBackwardCommand;
 import frc.robot.commands.navcommands.ShooterShutdownCommand;
 import frc.robot.commands.navcommands.ShooterStartupCommand;
+import frc.robot.commands.navcommands.TrackVisionTarget;
 import frc.robot.common.IDrivetrainSubsystem;
 import frc.robot.ioc.DependenciesModule;
 
@@ -116,7 +117,8 @@ public class Robot extends TimedRobot {
     JoystickButton intakeOut = new JoystickButton(_operatorController, _config.Controller.intakeOutButtonPort);
     intakeOut.whileHeld(_container.getInstance(IntakeOut.class));
 
-    // TODO can we cleanup the constructing button, then binding it?
+    JoystickButton visionTrack = new JoystickButton(_driverController, _config.Controller.visionTrackButtonPort);
+    visionTrack.whileHeld(_container.getInstance(TrackVisionTarget.class));
   }
 
   /**

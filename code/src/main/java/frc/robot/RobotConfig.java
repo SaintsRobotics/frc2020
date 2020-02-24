@@ -36,6 +36,8 @@ public final class RobotConfig {
         public final int intakeInButtonPort = XboxController.Button.kBumperLeft.value;
         public final int intakeOutButtonPort = XboxController.Button.kBumperRight.value;
 
+        public final int visionTrackButtonPort = XboxController.Button.kB.value;
+
         public final double kDriveDeadzone = 0.2;
         public final double kDriveScale = .75;
         public final double kTurnDeadzone = 0.2;
@@ -111,10 +113,11 @@ public final class RobotConfig {
     }
 
     public final class Limelight {
-        public final double kP = .05;
+        public final double kP = .01;
         public final double kI = 0.0;
         public final double kD = 0.0;
-        public final double tolerance = 1;
+        public final double tolerance = .5;
+
         public final double angleSetpointDegrees = 0.0;
         public final double mountingAngleDegrees = 45.0;
         public final double mountingHeightMeters = 0.508;

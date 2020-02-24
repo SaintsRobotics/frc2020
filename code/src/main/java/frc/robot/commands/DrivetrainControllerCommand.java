@@ -17,43 +17,11 @@ import frc.robot.common.*;
 /**
  * Add your docs here.
  */
-public class DrivetrainControllerCommand extends TraceableCommand {
-    private final IDrivetrainSubsystem _drivetrain;
-    private final XboxController _controller;
-    private final RobotConfig _config;
+public class DrivetrainControllerCommand extends DrivetrainCommandBase {
 
     @Inject
-    public DrivetrainControllerCommand(final ILogger logger, IDrivetrainSubsystem drivetrain, RobotConfig config) {
-        super(logger);
-        _drivetrain = drivetrain;
-        _controller = new XboxController(0);
-        _config = config;
-        addRequirements(_drivetrain);
-    }
-
-    @Override
-    public void initialize() {
-        super.initialize();
-
-    }
-
-    @Override
-    public void execute() {
-        super.execute();
-
-        double x = Util.oddSquare(Util.deadZones(_controller.getY(Hand.kLeft), _config.Controller.kDriveDeadzone))
-                * _drivetrain.getMaxSpeed();
-        double y = Util.oddSquare(Util.deadZones(_controller.getX(Hand.kLeft), _config.Controller.kDriveDeadzone))
-                * _drivetrain.getMaxSpeed();
-        double r = Util.oddSquare(Util.deadZones(_controller.getX(Hand.kRight), _config.Controller.kTurnDeadzone)
-                * _drivetrain.getMaxAngularSpeed());
-
-        _drivetrain.move(x * _config.Controller.kDriveScale, y * _config.Controller.kDriveScale,
-                r * _config.Controller.kTurnScale, !_controller.getBumper(Hand.kRight));
-
-        // Multiplying the rotating joystick by the max angular speed instead of linear
-        // speed because the rotation input is in radians per second
-
+    public DrivetrainControllerCommand(final ILogger logger, RobotConfig config, IDrivetrainSubsystem drivetrain) {
+        super(logger, config, drivetrain);
     }
 
     /**
@@ -62,5 +30,11 @@ public class DrivetrainControllerCommand extends TraceableCommand {
     @Override
     public boolean isFinished() {
         return false;
+    }
+
+    @Override
+    protected double getRotation() {
+        return Util.oddSquare(Util.deadZones(_controller.getX(Hand.kRight), _config.Controller.kTurnDeadzone))
+                * _drivetrain.getMaxAngularSpeed();
     }
 }

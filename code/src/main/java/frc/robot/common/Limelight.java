@@ -35,9 +35,9 @@ public class Limelight {
   }
 
   /**
-   * @param int state 0 is the default value set in pipeline 1 is turning the
-   *            LED's off 2 is forcing the LED's to blink 3 is turning the LED's
-   *            on
+   * @param state state 0 is the default value set in pipeline 1 is turning the
+   *              LED's off 2 is forcing the LED's to blink 3 is turning the LED's
+   *              on
    */
   public void setLEDState(int state) {
     m_limelight.getEntry("ledMode").setNumber(state);

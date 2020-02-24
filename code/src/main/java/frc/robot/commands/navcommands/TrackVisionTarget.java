@@ -12,61 +12,47 @@ import com.google.inject.Inject;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.GenericHID.Hand;
 import edu.wpi.first.wpilibj.controller.PIDController;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.RobotConfig;
+import frc.robot.commands.DrivetrainCommandBase;
 import frc.robot.commands.Util;
 import frc.robot.common.*;
 
 /**
  * Add your docs here.
  */
-public class TrackVisionTarget extends TraceableCommand {
-    private final IDrivetrainSubsystem _drivetrain;
-    private final double _angleSetpoint;
-    private final XboxController _controller;
+public class TrackVisionTarget extends DrivetrainCommandBase {
     private final Limelight _limelight;
     private final PIDController _pidController;
     private double _pidOutput;
-    private RobotConfig _config;
 
     @Inject
     public TrackVisionTarget(final ILogger logger, RobotConfig config, IDrivetrainSubsystem drivetrain,
-            XboxController controller, Limelight limelight) {
-        super(logger);
-        _drivetrain = drivetrain;
-        _angleSetpoint = config.Limelight.angleSetpointDegrees;
-        _controller = controller;
+            Limelight limelight) {
+        super(logger, config, drivetrain);
         _limelight = limelight;
         _pidController = new PIDController(config.Limelight.kP, config.Limelight.kI, config.Limelight.kD);
-        _config = config;
-        addRequirements(_drivetrain);
+        _pidController.setSetpoint(config.Limelight.angleSetpointDegrees);
     }
 
     @Override
     public void initialize() {
         super.initialize();
-        // TODO needs implementation
+        _limelight.setLEDState(3);
     }
 
     @Override
-    public void execute() {
-        super.execute();
-        _pidOutput = _pidController.calculate(_limelight.getRotationalOffset());
-        double x = Util.oddSquare(Util.deadZones(_controller.getY(Hand.kLeft), _config.Controller.kDriveDeadzone))
-                * _drivetrain.getMaxSpeed();
-        double y = Util.oddSquare(Util.deadZones(_controller.getX(Hand.kLeft), _config.Controller.kDriveDeadzone))
-                * _drivetrain.getMaxSpeed();
-        _drivetrain.move(x * _config.Controller.kDriveScale, y * _config.Controller.kDriveScale, _pidOutput,
-                !_controller.getBumper(Hand.kRight));
-        // TODO needs implementation
+    protected double getRotation() {
+        SmartDashboard.putBoolean("on setpoint ", _pidController.atSetpoint());
+        SmartDashboard.putNumber("pid output ", -_pidController.calculate(_limelight.getRotationalOffset()));
+        SmartDashboard.putNumber("pid error ", _pidController.getPositionError());
 
+        return -_pidController.calculate(_limelight.getRotationalOffset());
     }
 
-    /**
-     * this command controllers a controller so will run forever!
-     */
     @Override
-    public boolean isFinished() {
-        return false;
-        // TODO needs implementation
+    public void end(boolean interrupted) {
+        super.end(interrupted);
+        _limelight.setLEDState(1);
     }
 }
