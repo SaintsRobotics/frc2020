@@ -18,6 +18,7 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.commands.navcommands.IntakeIn;
 import frc.robot.commands.navcommands.IntakeOut;
+import frc.robot.commands.navcommands.ReleaseClimber;
 import frc.robot.commands.navcommands.ResetGyro;
 import frc.robot.commands.navcommands.SetDriveBrakeMode;
 import frc.robot.commands.navcommands.SetDriveCoastMode;
@@ -117,8 +118,13 @@ public class Robot extends TimedRobot {
     JoystickButton intakeOut = new JoystickButton(_operatorController, _config.Controller.intakeOutButtonPort);
     intakeOut.whileHeld(_container.getInstance(IntakeOut.class));
 
+    new JoystickButton(_operatorController, _config.Controller.climberReleaseButtonPort)
+        .whenPressed(_container.getInstance(ReleaseClimber.class));
+
     JoystickButton visionTrack = new JoystickButton(_driverController, _config.Controller.visionTrackButtonPort);
     visionTrack.whileHeld(_container.getInstance(TrackVisionTarget.class));
+
+    // TODO can we cleanup the constructing button, then binding it?
   }
 
   /**
