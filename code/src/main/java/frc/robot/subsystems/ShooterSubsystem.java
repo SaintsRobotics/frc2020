@@ -163,12 +163,12 @@ public class ShooterSubsystem extends TraceableSubsystem implements IShooterSubs
         // SmartDashboard.putNumber("Shooter Pid Output", shooterSpeed);
         // SmartDashboard.putNumber("shooter pid setpoint ",
         // this.m_shooterPID.getSetpoint());
-        // SmartDashboard.putNumber("Shooter RPM", m_leftEncoder.getVelocity());
-        // SmartDashboard.putNumber("Shooter Current", m_leftShooter.getBusVoltage());
-        // SmartDashboard.putBoolean("has shot ball ", this.m_hasShotBall);
-        // SmartDashboard.putBoolean("m_feedBackward ", m_feedBackward);
-        // SmartDashboard.putBoolean("is up to speed", this.isUpToSpeed());
-        // SmartDashboard.putNumber("Shooter Speed", shooterSpeed);
+        SmartDashboard.putNumber("Shooter RPM", m_leftEncoder.getVelocity());
+        SmartDashboard.putNumber("Shooter Current", m_leftShooter.getBusVoltage());
+        SmartDashboard.putBoolean("has shot ball ", this.m_hasShotBall);
+        SmartDashboard.putBoolean("m_feedBackward ", m_feedBackward);
+        SmartDashboard.putBoolean("is up to speed", this.isUpToSpeed());
+        SmartDashboard.putNumber("Shooter Speed", shooterSpeed);
 
     }
 

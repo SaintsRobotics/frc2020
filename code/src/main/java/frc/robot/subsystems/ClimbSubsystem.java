@@ -25,8 +25,8 @@ public class ClimbSubsystem extends TraceableSubsystem implements IClimbSubsyste
     public ClimbSubsystem(final ILogger logger, RobotConfig config) {
         super(logger);
 
-        servoMotor = new Servo(config.Climber.servoPort);
-        winchMotor = new CANSparkMax(config.Climber.winchPort, MotorType.kBrushless);
+        this.servoMotor = new Servo(config.Climber.servoPort);
+        this.winchMotor = new CANSparkMax(config.Climber.winchPort, MotorType.kBrushless);
         this.releasePosition = config.Climber.servoReleasePosition;
         this.returnPosition = config.Climber.servoReturnPosition;
     }
@@ -36,20 +36,20 @@ public class ClimbSubsystem extends TraceableSubsystem implements IClimbSubsyste
     }
 
     public void releaseClimber() {
-        servoMotor.set(this.releasePosition);
+        this.servoMotor.set(this.releasePosition);
         DriverStation.reportError("climb released ", false);
     }
 
     public void lockServo() {
-        servoMotor.set(this.returnPosition);
+        this.servoMotor.set(this.returnPosition);
     }
 
     public void climb(double speed) {
-        winchMotor.set(speed);
+        this.winchMotor.set(speed);
     }
 
     public double getSpeed() {
-        return winchMotor.getEncoder().getVelocity();
+        return this.winchMotor.getEncoder().getVelocity();
     }
 
 }

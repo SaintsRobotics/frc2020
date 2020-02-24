@@ -27,7 +27,6 @@ public class ClimbControllerCommand extends TraceableCommand {
 
     public void execute() {
         _climb.climb(-_controller.getTriggerAxis(Hand.kRight));
-
     }
 
     public boolean isFinished() {

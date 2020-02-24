@@ -116,7 +116,7 @@ public class Robot extends TimedRobot {
     JoystickButton intakeOut = new JoystickButton(_operatorController, _config.Controller.intakeOutButtonPort);
     intakeOut.whileHeld(_container.getInstance(IntakeOut.class));
 
-    new JoystickButton(_operatorController, _config.Controller.cliberReleaseButtonPort)
+    new JoystickButton(_operatorController, _config.Controller.climberReleaseButtonPort)
         .whenPressed(_container.getInstance(ReleaseClimber.class));
 
     // TODO can we cleanup the constructing button, then binding it?

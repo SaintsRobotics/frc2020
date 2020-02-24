@@ -26,7 +26,6 @@ public class ReleaseClimber extends TraceableCommand {
     @Override
     public void execute() {
         _climb.releaseClimber();
-
     }
 
     public boolean isFinished() {
