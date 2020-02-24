@@ -42,11 +42,11 @@ public abstract class DrivetrainCommandBase extends TraceableCommand {
                 * _drivetrain.getMaxSpeed();
 
         double r = this.getRotation() * _drivetrain.getMaxAngularSpeed();
+        // Multiplying the rotating joystick by the max angular speed instead of linear
+        // speed because the rotation input is in radians per second
 
         _drivetrain.move(x * _config.Controller.kDriveScale, y * _config.Controller.kDriveScale,
                 r * _config.Controller.kTurnScale, !_controller.getBumper(Hand.kRight));
-        // Multiplying the rotating joystick by the max angular speed instead of linear
-        // speed because the rotation input is in radians per second
     }
 
     /**
