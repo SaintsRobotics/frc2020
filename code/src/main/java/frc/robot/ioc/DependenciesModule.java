@@ -16,6 +16,7 @@ import frc.robot.common.*;
 import frc.robot.subsystems.*;
 import frc.robot.subsystems.mocks.MockDrivetrain;
 import frc.robot.subsystems.mocks.MockIntake;
+import frc.robot.subsystems.mocks.MockLedSubsystem;
 import frc.robot.subsystems.mocks.MockShooter;
 
 /**
@@ -31,13 +32,14 @@ public class DependenciesModule extends AbstractModule {
         if (RobotBase.isReal()) {
             this.bind(IShooterSubsystem.class).to(ShooterSubsystem.class).in(Singleton.class);
             this.bind(IDrivetrainSubsystem.class).to(SwerveDrivetrain.class).in(Singleton.class);
-
             this.bind(IIntakeSubsystem.class).to(Intake.class).in(Singleton.class);
+            this.bind(ILedSubsystem.class).to(LedSubsystem.class).in(Singleton.class);
 
         } else {
             this.bind(IShooterSubsystem.class).to(MockShooter.class).in(Singleton.class);
             this.bind(IDrivetrainSubsystem.class).to(MockDrivetrain.class).in(Singleton.class);
             this.bind(IIntakeSubsystem.class).to(MockIntake.class).in(Singleton.class);
+            this.bind(ILedSubsystem.class).to(MockLedSubsystem.class).in(Singleton.class);
         }
     }
 }

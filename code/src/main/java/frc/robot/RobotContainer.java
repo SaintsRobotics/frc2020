@@ -11,10 +11,11 @@ import com.google.inject.Inject;
 
 import frc.robot.commands.DriveArmCommand;
 import frc.robot.commands.DrivetrainControllerCommand;
-
+import frc.robot.commands.SetAllianceColorCommand;
 import frc.robot.common.CompetitionRobot;
 import frc.robot.common.IDrivetrainSubsystem;
 import frc.robot.common.IIntakeSubsystem;
+import frc.robot.common.ILedSubsystem;
 import frc.robot.common.ILogger;
 import edu.wpi.first.wpilibj2.command.Command;
 
@@ -33,12 +34,15 @@ public class RobotContainer extends CompetitionRobot {
    */
   @Inject
   private RobotContainer(final ILogger logger, IDrivetrainSubsystem drivetrain,
-      DrivetrainControllerCommand driveCommand, IIntakeSubsystem intake, DriveArmCommand armCommand) {
+      DrivetrainControllerCommand driveCommand, IIntakeSubsystem intake, DriveArmCommand armCommand,
+      ILedSubsystem ledSubsystem, SetAllianceColorCommand setAllianceColorCommand) {
     super(logger);
 
     intake.setDefaultCommand(armCommand);
 
     drivetrain.setDefaultCommand(driveCommand);
+
+    ledSubsystem.setDefaultCommand(setAllianceColorCommand);
 
   }
 
