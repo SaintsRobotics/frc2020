@@ -11,33 +11,24 @@ import com.google.inject.Inject;
 
 import frc.robot.common.IDrivetrainSubsystem;
 import frc.robot.common.ILogger;
-import frc.robot.common.Location;
 import frc.robot.common.TraceableMockSubsystem;
-import frc.robot.common.Utils;
 
 public class MockDrivetrain extends TraceableMockSubsystem implements IDrivetrainSubsystem {
-    private Location _location;
     protected boolean _isIdle;
 
     /**
      * Creates a new ExampleSubsystem.
      */
     @Inject
-    public MockDrivetrain(ILogger logger, Location location) {
+    public MockDrivetrain(ILogger logger) {
         super(logger);
 
-        _location = location;
         _isIdle = true;
 
     }
 
     protected void setIdle(boolean idle) {
         _isIdle = idle;
-    }
-
-    @Override
-    public boolean isIdle() {
-        return _isIdle;
     }
 
     @Override

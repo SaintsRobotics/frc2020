@@ -19,12 +19,11 @@ import org.junit.Before;
 import org.junit.Test;
 
 import frc.robot.common.ConsoleLogger;
-import frc.robot.common.IDrivetrainSubsystem;
 import frc.robot.common.ILogger;
 import frc.robot.common.Location;
-import frc.robot.common.Position;
 import frc.robot.mocks.MockMatchSimulator;
-import frc.robot.subsystems.mocks.MockDrivetrain;
+import frc.robot.subsystems.mocks.MockCommandDrivetrain;
+import frc.robot.unit.Pose2dEx;
 
 /**
  * Add your docs here.@
@@ -34,13 +33,13 @@ import frc.robot.subsystems.mocks.MockDrivetrain;
 public class Feature_move_robot_using_high_level_commands {
     Location _location;
     ILogger _logger;
-    IDrivetrainSubsystem _drivetrain;
+    MockCommandDrivetrain _drivetrain;
 
     @Before
     public void beforeEachTest() {
         _logger = new ConsoleLogger();
         _location = new Location(_logger, new MockMatchSimulator());
-        _drivetrain = new MockDrivetrain(_logger, _location);
+        _drivetrain = new MockCommandDrivetrain(_logger, _location);
     }
 
     @DataProvider
@@ -56,233 +55,224 @@ public class Feature_move_robot_using_high_level_commands {
 
         _location.updateHeading(initialHeading);
         _drivetrain.rotate(rotation);
-        assertEquals(finalHeading, _location.getHeading(), 0);
+        assertEquals(finalHeading, _location.getHeading(), 0.01);
     }
     /// ---------------------------------------------------------------------------------------
 
     @DataProvider
     public static Object[][] moveForwardData() {
         // heading, initialPos(x,y), distance, finalPos(x,y)
-        return new Object[][] { { 0, new Position(0, 0), 1.5, new Position(0, 1.5) },
-                { 0, new Position(2.4, 4.9), 2.5, new Position(2.4, 7.4) },
+        return new Object[][] {
+                //
+                { 0, new Pose2dEx(0, 0), 1.5, new Pose2dEx(0, 1.5) },
+                { 0, new Pose2dEx(2.4, 4.9), 2.5, new Pose2dEx(2.4, 7.4) },
                 // with rotation
-                { 45, new Position(0, 0), 8.6, new Position(6.08111, 6.08111) },
-                { 90, new Position(2, 1), 2, new Position(4, 1) }, { 180, new Position(2, 2), 2, new Position(2, 0) },
-                { 270, new Position(2, 2), 2, new Position(0, 2) },
+                { 45, new Pose2dEx(0, 0), 8.6, new Pose2dEx(6.08111, 6.08111) },
+                { 90, new Pose2dEx(2, 1), 2, new Pose2dEx(4, 1) },
+                //
+                { 180, new Pose2dEx(2, 2), 2, new Pose2dEx(2, 0) },
+                //
+                { 270, new Pose2dEx(2, 2), 2, new Pose2dEx(0, 2) },
                 // invalid values wont move the robot
-                { 0, new Position(1, 1), -1, new Position(1, 1) } };
+                { 0, new Pose2dEx(1, 1), -1, new Pose2dEx(1, 1) } };
     }
 
     @Test
     @UseDataProvider("moveForwardData")
-    public void Scenario_move_forward(final double heading, final Position initialPosition, final double distance,
-            final Position finalPosition) {
+    public void Scenario_move_forward(final double heading, final Pose2dEx initialPose2dEx, final double distance,
+            final Pose2dEx finalPosition) {
 
-        _location.updatePosition(initialPosition);
+        _location.updatePosition(initialPose2dEx);
         _location.updateHeading(heading);
         _drivetrain.moveForward(distance);
-        final Position pos = _location.getPosition();
 
-        assertEquals(finalPosition.getX(), pos.getX(), 0.001);
-        assertEquals(finalPosition.getY(), pos.getY(), 0.001);
+        assertEquals(finalPosition.getX(), _location.getX(), 0.001);
+        assertEquals(finalPosition.getY(), _location.getY(), 0.001);
     }
 
     /// ---------------------------------------------------------------------------------------
     @DataProvider
     public static Object[][] moveBackwardData() {
         // initialPos(x,y), distance, finalPos(x,y)
-        return new Object[][] { { 0, new Position(3, 3), 1.5, new Position(3, 1.5) },
-                { 0, new Position(2.4, 4.9), 2.5, new Position(2.4, 2.4) },
+        return new Object[][] { { 0, new Pose2dEx(3, 3), 1.5, new Pose2dEx(3, 1.5) },
+                { 0, new Pose2dEx(2.4, 4.9), 2.5, new Pose2dEx(2.4, 2.4) },
                 // with rotation
-                { 45, new Position(10, 10), 8.6, new Position(3.91888, 3.91888) },
-                { 90, new Position(2, 1), 2, new Position(0, 1) }, { 180, new Position(2, 2), 2, new Position(2, 4) },
-                { 270, new Position(2, 2), 2, new Position(4, 2) },
+                { 45, new Pose2dEx(10, 10), 8.6, new Pose2dEx(3.91888, 3.91888) },
+                { 90, new Pose2dEx(2, 1), 2, new Pose2dEx(0, 1) }, { 180, new Pose2dEx(2, 2), 2, new Pose2dEx(2, 4) },
+                { 270, new Pose2dEx(2, 2), 2, new Pose2dEx(4, 2) },
                 // invalid values wont move the robot
-                { 0, new Position(1, 1), -1, new Position(1, 1) } };
+                { 0, new Pose2dEx(1, 1), -1, new Pose2dEx(1, 1) } };
     }
 
     @Test
     @UseDataProvider("moveBackwardData")
-    public void Scenario_move_backward(final double heading, final Position initialPosition, final double distance,
-            final Position finalPosition) {
+    public void Scenario_move_backward(final double heading, final Pose2dEx initialPose2dEx, final double distance,
+            final Pose2dEx finalPosition) {
 
-        _location.updatePosition(initialPosition);
+        _location.updatePosition(initialPose2dEx);
         _location.updateHeading(heading);
         _drivetrain.moveBackward(distance);
-        final Position pos = _location.getPosition();
 
-        assertEquals(finalPosition.getX(), pos.getX(), 0.001);
-        assertEquals(finalPosition.getY(), pos.getY(), 0.001);
+        assertEquals(finalPosition.getX(), _location.getX(), 0.001);
+        assertEquals(finalPosition.getY(), _location.getY(), 0.001);
     }
 
     /// ------------------------------------------------------------------------------
     @DataProvider
     public static Object[][] moveLeftData() {
         // initialPos(x,y), distance, finalPos(x,y)
-        return new Object[][] { { 0, new Position(3, 3), 1.5, new Position(1.5, 3) },
-                { 90, new Position(2.4, 4.9), 2.5, new Position(2.4, 7.4) },
-                { 135, new Position(0, 0), 8.6, new Position(6.08111, 6.08111) },
-                { 180, new Position(2, 1), 2, new Position(4, 1) }, { 270, new Position(2, 2), 2, new Position(2, 0) },
-                { 360, new Position(2, 2), 2, new Position(0, 2) },
+        return new Object[][] { { 0, new Pose2dEx(3, 3), 1.5, new Pose2dEx(1.5, 3) },
+                { 90, new Pose2dEx(2.4, 4.9), 2.5, new Pose2dEx(2.4, 7.4) },
+                { 135, new Pose2dEx(0, 0), 8.6, new Pose2dEx(6.08111, 6.08111) },
+                { 180, new Pose2dEx(2, 1), 2, new Pose2dEx(4, 1) }, { 270, new Pose2dEx(2, 2), 2, new Pose2dEx(2, 0) },
+                { 360, new Pose2dEx(2, 2), 2, new Pose2dEx(0, 2) },
                 // invalid values wont move the robot
-                { 0, new Position(1, 1), -1, new Position(1, 1) } };
+                { 0, new Pose2dEx(1, 1), -1, new Pose2dEx(1, 1) } };
     }
 
     @Test
     @UseDataProvider("moveLeftData")
-    public void Scenario_move_Left(final double heading, final Position initialPosition, final double distance,
-            final Position finalPosition) {
+    public void Scenario_move_Left(final double heading, final Pose2dEx initialPose2dEx, final double distance,
+            final Pose2dEx finalPosition) {
 
-        _location.updatePosition(initialPosition);
+        _location.updatePosition(initialPose2dEx);
         _location.updateHeading(heading);
         _drivetrain.moveLeft(distance);
 
-        final Position pos = _location.getPosition();
-
-        assertEquals(finalPosition.getX(), pos.getX(), 0.001);
-        assertEquals(finalPosition.getY(), pos.getY(), 0.001);
+        assertEquals(finalPosition.getX(), _location.getX(), 0.001);
+        assertEquals(finalPosition.getY(), _location.getY(), 0.001);
     }
 
     /// ---------------------------------------------------------------------------------------
     @DataProvider
     public static Object[][] moveRightData() {
         // initialPos(x,y), distance, finalPos(x,y)
-        return new Object[][] { { 0, new Position(2, 2), 2, new Position(4, 2) },
-                { 90, new Position(2, 2), 2, new Position(2, 0) },
-                { 315, new Position(0, 0), 8.6, new Position(6.08111, 6.08111) },
-                { 180, new Position(2, 2), 2, new Position(0, 2) }, { 270, new Position(2, 2), 2, new Position(2, 4) },
-                { 360, new Position(2, 2), 2, new Position(4, 2) },
+        return new Object[][] { { 0, new Pose2dEx(2, 2), 2, new Pose2dEx(4, 2) },
+                { 90, new Pose2dEx(2, 2), 2, new Pose2dEx(2, 0) },
+                { 315, new Pose2dEx(0, 0), 8.6, new Pose2dEx(6.08111, 6.08111) },
+                { 180, new Pose2dEx(2, 2), 2, new Pose2dEx(0, 2) }, { 270, new Pose2dEx(2, 2), 2, new Pose2dEx(2, 4) },
+                { 360, new Pose2dEx(2, 2), 2, new Pose2dEx(4, 2) },
                 // invalid values wont move the robot
-                { 0, new Position(1, 1), -1, new Position(1, 1) } };
+                { 0, new Pose2dEx(1, 1), -1, new Pose2dEx(1, 1) } };
     }
 
     @Test
     @UseDataProvider("moveRightData")
-    public void Scenario_move_Right(final double heading, final Position initialPosition, final double distance,
-            final Position finalPosition) {
+    public void Scenario_move_Right(final double heading, final Pose2dEx initialPose2dEx, final double distance,
+            final Pose2dEx finalPosition) {
 
-        _location.updatePosition(initialPosition);
+        _location.updatePosition(initialPose2dEx);
         _location.updateHeading(heading);
         _drivetrain.moveRight(distance);
 
-        final Position pos = _location.getPosition();
-
-        assertEquals(finalPosition.getX(), pos.getX(), 0.001);
-        assertEquals(finalPosition.getY(), pos.getY(), 0.001);
+        assertEquals(finalPosition.getX(), _location.getX(), 0.001);
+        assertEquals(finalPosition.getY(), _location.getY(), 0.001);
     }
 
     /// ---------------------------------------------------------------------------------------
     @DataProvider
     public static Object[][] moveNorthData() {
         // initialPos(x,y), distance, finalPos(x,y)
-        return new Object[][] { { 0, new Position(2, 2), 2, new Position(2, 4) },
-                { 90, new Position(2, 4), 2, new Position(2, 6) },
-                { 45, new Position(0, 0), 8.6, new Position(0, 8.6) },
-                { 180, new Position(7, 1), 2, new Position(7, 3) }, { 270, new Position(0, 3), 2, new Position(0, 5) },
-                { 360, new Position(3, 6), 2, new Position(3, 8) },
+        return new Object[][] { { 0, new Pose2dEx(2, 2), 2, new Pose2dEx(2, 4) },
+                { 90, new Pose2dEx(2, 4), 2, new Pose2dEx(2, 6) },
+                { 45, new Pose2dEx(0, 0), 8.6, new Pose2dEx(0, 8.6) },
+                { 180, new Pose2dEx(7, 1), 2, new Pose2dEx(7, 3) }, { 270, new Pose2dEx(0, 3), 2, new Pose2dEx(0, 5) },
+                { 360, new Pose2dEx(3, 6), 2, new Pose2dEx(3, 8) },
                 // invalid values wont move the robot
-                { 0, new Position(1, 1), -1, new Position(1, 1) } };
+                { 0, new Pose2dEx(1, 1), -1, new Pose2dEx(1, 1) } };
     }
 
     @Test
     @UseDataProvider("moveNorthData")
-    public void Scenario_move_North(final double heading, final Position initialPosition, final double distance,
-            final Position finalPosition) {
+    public void Scenario_move_North(final double heading, final Pose2dEx initialPose2dEx, final double distance,
+            final Pose2dEx finalPosition) {
 
-        _location.updatePosition(initialPosition);
+        _location.updatePosition(initialPose2dEx);
         _location.updateHeading(heading);
         _drivetrain.moveNorth(distance);
 
-        final Position pos = _location.getPosition();
-
-        assertEquals(finalPosition.getX(), pos.getX(), 0.001);
-        assertEquals(finalPosition.getY(), pos.getY(), 0.001);
+        assertEquals(finalPosition.getX(), _location.getX(), 0.001);
+        assertEquals(finalPosition.getY(), _location.getY(), 0.001);
     }
 
     /// ---------------------------------------------------------------------------------------
     @DataProvider
     public static Object[][] moveEastData() {
         // initialPos(x,y), distance, finalPos(x,y)
-        return new Object[][] { { 0, new Position(2, 2), 2, new Position(4, 2) },
-                { 90, new Position(2, 2), 3, new Position(5, 2) },
-                { 45, new Position(0, 0), 8.6, new Position(8.6, 0) },
-                { 180, new Position(8, 2), 4, new Position(12, 2) },
-                { 270, new Position(2, 2), 10, new Position(12, 2) },
-                { 360, new Position(2, 2), 6, new Position(8, 2) },
+        return new Object[][] { { 0, new Pose2dEx(2, 2), 2, new Pose2dEx(4, 2) },
+                { 90, new Pose2dEx(2, 2), 3, new Pose2dEx(5, 2) },
+                { 45, new Pose2dEx(0, 0), 8.6, new Pose2dEx(8.6, 0) },
+                { 180, new Pose2dEx(8, 2), 4, new Pose2dEx(12, 2) },
+                { 270, new Pose2dEx(2, 2), 10, new Pose2dEx(12, 2) },
+                { 360, new Pose2dEx(2, 2), 6, new Pose2dEx(8, 2) },
                 // invalid values wont move the robot
-                { 0, new Position(1, 1), -1, new Position(1, 1) } };
+                { 0, new Pose2dEx(1, 1), -1, new Pose2dEx(1, 1) } };
     }
 
     @Test
     @UseDataProvider("moveEastData")
-    public void Scenario_move_East(final double heading, final Position initialPosition, final double distance,
-            final Position finalPosition) {
+    public void Scenario_move_East(final double heading, final Pose2dEx initialPose2dEx, final double distance,
+            final Pose2dEx finalPosition) {
 
-        _location.updatePosition(initialPosition);
+        _location.updatePosition(initialPose2dEx);
         _location.updateHeading(heading);
         _drivetrain.moveEast(distance);
 
-        final Position pos = _location.getPosition();
-
-        assertEquals(finalPosition.getX(), pos.getX(), 0.001);
-        assertEquals(finalPosition.getY(), pos.getY(), 0.001);
+        assertEquals(finalPosition.getX(), _location.getX(), 0.001);
+        assertEquals(finalPosition.getY(), _location.getY(), 0.001);
     }
 
     /// ---------------------------------------------------------------------------------------
     @DataProvider
     public static Object[][] moveWestData() {
         // initialPos(x,y), distance, finalPos(x,y)
-        return new Object[][] { { 0, new Position(2, 2), 2, new Position(0, 2) },
-                { 90, new Position(2, 2), 2, new Position(0, 2) },
-                { 45, new Position(10, 0), 8.6, new Position(1.4, 0) },
-                { 180, new Position(2, 2), 1, new Position(1, 2) }, { 270, new Position(7, 2), 2, new Position(5, 2) },
-                { 360, new Position(100, 2), 58, new Position(42, 2) },
+        return new Object[][] { { 0, new Pose2dEx(2, 2), 2, new Pose2dEx(0, 2) },
+                { 90, new Pose2dEx(2, 2), 2, new Pose2dEx(0, 2) },
+                { 45, new Pose2dEx(10, 0), 8.6, new Pose2dEx(1.4, 0) },
+                { 180, new Pose2dEx(2, 2), 1, new Pose2dEx(1, 2) }, { 270, new Pose2dEx(7, 2), 2, new Pose2dEx(5, 2) },
+                { 360, new Pose2dEx(100, 2), 58, new Pose2dEx(42, 2) },
                 // invalid values wont move the robot
-                { 0, new Position(1, 1), -1, new Position(1, 1) } };
+                { 0, new Pose2dEx(1, 1), -1, new Pose2dEx(1, 1) } };
     }
 
     @Test
     @UseDataProvider("moveWestData")
-    public void Scenario_move_West(final double heading, final Position initialPosition, final double distance,
-            final Position finalPosition) {
+    public void Scenario_move_West(final double heading, final Pose2dEx initialPose2dEx, final double distance,
+            final Pose2dEx finalPosition) {
 
-        _location.updatePosition(initialPosition);
+        _location.updatePosition(initialPose2dEx);
         _location.updateHeading(heading);
         _drivetrain.moveWest(distance);
 
-        final Position pos = _location.getPosition();
-
-        assertEquals(finalPosition.getX(), pos.getX(), 0.001);
-        assertEquals(finalPosition.getY(), pos.getY(), 0.001);
+        assertEquals(finalPosition.getX(), _location.getX(), 0.001);
+        assertEquals(finalPosition.getY(), _location.getY(), 0.001);
     }
 
     /// ---------------------------------------------------------------------------------------
     @DataProvider
     public static Object[][] moveSouthData() {
         // initialPos(x,y), distance, finalPos(x,y)
-        return new Object[][] { { 0, new Position(2, 2), 2, new Position(2, 0) },
-                { 90, new Position(2, 4), 2, new Position(2, 2) },
-                { 45, new Position(17.2, 17.2), 8.6, new Position(17.2, 8.6) },
-                { 180, new Position(7, 4), 2, new Position(7, 2) },
-                { 270, new Position(123, 123), 123, new Position(123, 0) },
-                { 360, new Position(3, 6), 2, new Position(3, 4) },
+        return new Object[][] { { 0, new Pose2dEx(2, 2), 2, new Pose2dEx(2, 0) },
+                { 90, new Pose2dEx(2, 4), 2, new Pose2dEx(2, 2) },
+                { 45, new Pose2dEx(17.2, 17.2), 8.6, new Pose2dEx(17.2, 8.6) },
+                { 180, new Pose2dEx(7, 4), 2, new Pose2dEx(7, 2) },
+                { 270, new Pose2dEx(123, 123), 123, new Pose2dEx(123, 0) },
+                { 360, new Pose2dEx(3, 6), 2, new Pose2dEx(3, 4) },
                 // invalid values wont move the robot
-                { 0, new Position(1, 1), -1, new Position(1, 1) } };
+                { 0, new Pose2dEx(1, 1), -1, new Pose2dEx(1, 1) } };
     }
 
     @Test
     @UseDataProvider("moveSouthData")
-    public void Scenario_move_South(final double heading, final Position initialPosition, final double distance,
-            final Position finalPosition) {
+    public void Scenario_move_South(final double heading, final Pose2dEx initialPose2dEx, final double distance,
+            final Pose2dEx finalPosition) {
 
-        _location.updatePosition(initialPosition);
+        _location.updatePosition(initialPose2dEx);
         _location.updateHeading(heading);
         _drivetrain.moveSouth(distance);
 
-        final Position pos = _location.getPosition();
-
-        assertEquals(finalPosition.getX(), pos.getX(), 0.001);
-        assertEquals(finalPosition.getY(), pos.getY(), 0.001);
+        assertEquals(finalPosition.getX(), _location.getX(), 0.001);
+        assertEquals(finalPosition.getY(), _location.getY(), 0.001);
     }
 
     /// ---------------------------------------------------------------------------------------
@@ -291,26 +281,21 @@ public class Feature_move_robot_using_high_level_commands {
         // initialHeading, finalHeading, waypoints
         return new Object[][] {
                 //
-                { 0, 0, 0, new Position[] { new Position(2, 2), new Position(1, 1) } },
+                { 0, 0, 0, new Pose2dEx[] { new Pose2dEx(2, 2), new Pose2dEx(1, 1) } },
                 //
-                { 0, 0, 0, new Position[] { new Position(2, 2), new Position(10, 10) } } };
+                { 0, 0, 0, new Pose2dEx[] { new Pose2dEx(2, 2), new Pose2dEx(10, 10) } } };
     }
 
     @Test
     @UseDataProvider("followPathData")
     public void Scenario_follow_Path(final double maxSpeed, final double initialHeading, final double finalHeading,
-            final Position[] waypoints) {
+            final Pose2dEx[] waypoints) {
 
         _drivetrain.followPath(maxSpeed, initialHeading, waypoints);
 
-        Position pos = _location.getPosition();
+        Pose2dEx finalPos = waypoints[waypoints.length - 1];
 
-        Position finalPos = waypoints[waypoints.length - 1];
-
-        assertEquals(finalPos.getX(), pos.getX(), 0.001);
-        assertEquals(finalPos.getY(), pos.getY(), 0.001);
-
+        assertEquals(finalPos.getX(), _location.getX(), 0.001);
+        assertEquals(finalPos.getY(), _location.getY(), 0.001);
     }
-
-    /// ---------------------------------------------------------------------------------------
 }

@@ -16,18 +16,13 @@ import frc.robot.common.Location;
  * A Mock drivetrain that can be used with the Match Simulator This mock tries
  * to add in delays to simulate (roughly) travel time
  */
-public class MatchSimDrivetrain extends MockDrivetrain {
+public class MatchSimDrivetrain extends MockCommandDrivetrain {
     @Inject
     public MatchSimDrivetrain(ILogger logger, Location location) {
         super(logger, location);
     }
 
     private final int intervalInMilliseconds = 100;
-
-    @Override
-    public double getMaxSpeed() {
-        return 1;
-    }
 
     @Override
     protected void updateRelativeLocation(double distance) {
@@ -44,7 +39,7 @@ public class MatchSimDrivetrain extends MockDrivetrain {
             public void run() {
                 try {
                     setIdle(false);
-                    ;
+
                     double iterations = Math.abs(distance) / getMaxSpeed() * (1000 / intervalInMilliseconds);
                     double distancePerIteration = distance / iterations;
                     for (int i = 0; i < iterations; i++) {

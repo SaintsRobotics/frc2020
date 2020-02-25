@@ -21,7 +21,13 @@ public class MatchSimulator {
     public MatchSimulator() {
         NetworkTableInstance networkTables = NetworkTableInstance.getDefault();
         _locationTable = networkTables.getTable(_tableRoot + "Location");
+        // _locationTable = networkTables.getTable(_tableRoot + "Location");
 
+        // set defaults so that they are visible in the NetworkTables without
+        // starting the robot
+
+        this.updateLocation(0, 0, 0);
+        this.updateStartingLocation(0, 0, 0);
     }
 
     /**
@@ -35,5 +41,11 @@ public class MatchSimulator {
         _locationTable.getEntry("x").forceSetDouble(x);
         _locationTable.getEntry("y").forceSetDouble(y);
         _locationTable.getEntry("heading").forceSetDouble(heading);
+    }
+
+    public void updateStartingLocation(double x, double y, double heading) {
+        _locationTable.getEntry("start-x").forceSetDouble(x);
+        _locationTable.getEntry("start-y").forceSetDouble(x);
+        _locationTable.getEntry("start-heading").forceSetDouble(heading);
     }
 }

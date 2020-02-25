@@ -8,6 +8,7 @@
 package frc.robot;
 
 import com.google.inject.Inject;
+import com.google.inject.Provider;
 
 import frc.robot.commands.DrivetrainControllerCommand;
 
@@ -17,6 +18,7 @@ import frc.robot.common.CompetitionRobot;
 import frc.robot.common.IDrivetrainSubsystem;
 import frc.robot.common.IIntakeSubsystem;
 import frc.robot.common.ILogger;
+import frc.robot.strategies.Easy23StrategyCommand;
 import edu.wpi.first.wpilibj2.command.Command;
 
 /**
@@ -27,6 +29,8 @@ import edu.wpi.first.wpilibj2.command.Command;
 public class RobotContainer extends CompetitionRobot {
 
   private Command m_teleopCommand;
+  private Provider<Easy23StrategyCommand> _autonomousCommand;
+
   // private final Provider<DrivetrainControllerCommand> _autonomousCommand;
 
   /**
@@ -34,7 +38,8 @@ public class RobotContainer extends CompetitionRobot {
    */
   @Inject
   private RobotContainer(final ILogger logger, IDrivetrainSubsystem drivetrain,
-      DrivetrainControllerCommand driveCommand, IIntakeSubsystem intake, IntakeControllerCommand intakeCommand) {
+      DrivetrainControllerCommand driveCommand, IIntakeSubsystem intake, IntakeControllerCommand intakeCommand,
+      Provider<Easy23StrategyCommand> autonomousCommand) {
     super(logger);
     _autonomousCommand = autonomousCommand;
     intake.setDefaultCommand(intakeCommand);

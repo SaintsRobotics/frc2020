@@ -5,28 +5,25 @@
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
 
-package frc.robot.strategies;
+package frc.robot.commands.navcommands;
 
 import com.google.inject.Inject;
 
-import frc.robot.commands.navcommands.MoveBackwardsCommand;
 import frc.robot.common.ILogger;
-import frc.robot.common.TraceableCommand;
+import frc.robot.common.Location;
 
 /**
- * Add your docs here.
+ * Moves the robot backwards based on the distance in meters
  */
-public class MoveOffLineStrategyCommand extends TraceableCommand {
-    MoveBackwardsCommand _moveBackwards;
+public class MoveBackwardsCommand extends MoveCommand {
 
     @Inject
-    public MoveOffLineStrategyCommand(ILogger logger, MoveBackwardsCommand moveBackwardsCommand) {
-        super(logger);
-        _moveBackwards = moveBackwardsCommand;
+    public MoveBackwardsCommand(ILogger logger, GoToPosition gotoPositionCommand, Location location) {
+        super(logger, gotoPositionCommand, location);
     }
 
     @Override
-    public void initialize() {
-        _moveBackwards.forDistance(1).schedule();
+    public MoveCommand forDistance(double distance) {
+        return super.forDistance(-distance);
     }
 }

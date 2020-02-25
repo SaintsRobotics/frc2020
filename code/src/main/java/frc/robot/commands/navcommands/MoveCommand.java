@@ -5,34 +5,40 @@
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
 
-package frc.robot.strategies;
+package frc.robot.commands.navcommands;
 
 import com.google.inject.Inject;
 
-import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj.geometry.Pose2d;
 import frc.robot.common.ILogger;
 import frc.robot.common.Location;
 import frc.robot.common.TraceableCommand;
+import frc.robot.common.Utils;
 
 /**
- * Add your docs here.
+ * Moves the robot based on the distance in meters
  */
-public class Easy23StrategyCommand extends TraceableCommand {
-    MoveOffLineStrategyCommand _moveOfflineCommand;
+public class MoveCommand extends TraceableCommand {
+    GoToPosition _gotoPositionCommand;
     Location _location;
+    double _distance;
 
     @Inject
-    public Easy23StrategyCommand(ILogger logger, Location location, MoveOffLineStrategyCommand moveOfflineCommand) {
+    public MoveCommand(ILogger logger, GoToPosition gotoPositionCommand, Location location) {
         super(logger);
-        _moveOfflineCommand = moveOfflineCommand;
+        _gotoPositionCommand = gotoPositionCommand;
         _location = location;
+    }
+
+    public MoveCommand forDistance(double distance) {
+        _distance = distance;
+        return this;
     }
 
     @Override
     public void initialize() {
-        new InstantCommand(() -> {
-            _location.updatePosition(12.53, 5.83);
-            _location.updateHeading(0);
-        }).andThen(_moveOfflineCommand).schedule();
+        Pose2d position = Utils.calculateRelativePosition(_distance, _location);
+
+        _gotoPositionCommand.withPosition(position).schedule();
     }
 }

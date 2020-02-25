@@ -207,10 +207,4 @@ public class SwerveDrivetrain extends TraceableSubsystem implements IDrivetrainS
         // SmartDashboard.putBoolean("is turning ", this.m_isTurning);
         // SmartDashboard.putNumber("CAN LEFT DRIVE power", m_leftdrive.getVelocity());
     }
-
-    @Override
-    public boolean isIdle() {
-        // TODO: Need to update based on movement.
-        return true;
-    }
 }

@@ -18,6 +18,7 @@ import frc.robot.common.TraceableMockSubsystem;
  */
 public class MockShooter extends TraceableMockSubsystem implements IShooterSubsystem {
 
+    @Inject
     public MockShooter(ILogger logger) {
         super(logger);
         // TODO Auto-generated constructor stub
