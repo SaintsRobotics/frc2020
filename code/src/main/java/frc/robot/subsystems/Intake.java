@@ -1,15 +1,12 @@
 
 package frc.robot.subsystems;
 
-import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
 import com.google.inject.Inject;
 
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
 
-import edu.wpi.first.wpilibj.Encoder;
-import edu.wpi.first.wpilibj.PWMVictorSPX;
 import edu.wpi.first.wpilibj.SpeedController;
 import edu.wpi.first.wpilibj.controller.PIDController;
 
@@ -62,6 +59,10 @@ public class Intake extends TraceableSubsystem implements IIntakeSubsystem {
         DriverStation.reportError("Lower Arm", false);
     }
 
+    public void setArmMotor(double speed) {
+        armController.set(speed);
+    }
+
     // Checks if arm is currently lowered
     public boolean isLowered() {
         return armEncoder.get() > .3 && armEncoder.get() < .32;
@@ -70,12 +71,12 @@ public class Intake extends TraceableSubsystem implements IIntakeSubsystem {
 
     // Spin the intake to accept balls into robot
     public void spinIntake() {
-        intakeController.set(.6);
+        intakeController.set(.8);
     }
 
     // Reverse the intake to push balls away from intake
     public void reverseIntake() {
-        intakeController.set(-.6);
+        intakeController.set(-.8);
 
     }
 

@@ -16,11 +16,17 @@ import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import frc.robot.commands.navcommands.IntakeIn;
+import frc.robot.commands.navcommands.IntakeOut;
+import frc.robot.commands.navcommands.ReleaseClimber;
 import frc.robot.commands.navcommands.ResetGyro;
+import frc.robot.commands.navcommands.SetDriveBrakeMode;
 import frc.robot.commands.navcommands.SetDriveCoastMode;
 import frc.robot.commands.navcommands.ShootOneBallCommand;
 import frc.robot.commands.navcommands.ShooterFeedBackwardCommand;
+import frc.robot.commands.navcommands.ShooterShutdownCommand;
 import frc.robot.commands.navcommands.ShooterStartupCommand;
+import frc.robot.commands.navcommands.TrackVisionTarget;
 import frc.robot.common.IDrivetrainSubsystem;
 import frc.robot.ioc.DependenciesModule;
 
@@ -75,6 +81,7 @@ public class Robot extends TimedRobot {
     // these have to be done here as they are not unit testable
     configureButtonBindings();
     _container.getInstance(IDrivetrainSubsystem.class).resetGyro();
+    _container.getInstance(frc.robot.common.Limelight.class).setLEDState(1);
   }
 
   /**
@@ -89,7 +96,7 @@ public class Robot extends TimedRobot {
 
     JoystickButton idleState = new JoystickButton(_driverController, _config.Controller.driveMotorIdleStateButtonPort);
     idleState.whenPressed(_container.getInstance(SetDriveCoastMode.class));
-    idleState.whenReleased(_container.getInstance(SetDriveCoastMode.class));
+    idleState.whenReleased(_container.getInstance(SetDriveBrakeMode.class));
 
     JoystickButton start = new JoystickButton(_operatorController, _config.Controller.shooterStartupButtonPort);
     start.whenPressed(_container.getInstance(ShooterStartupCommand.class));
@@ -100,7 +107,22 @@ public class Robot extends TimedRobot {
     // read mouseover on whileHeld method
 
     JoystickButton feed = new JoystickButton(_operatorController, _config.Controller.feedOneBallButtonPort);
-    feed.whileHeld(_container.getInstance(ShootOneBallCommand.class));
+    feed.whileHeld(_container.getInstance(ShootOneBallCommand.class).withTimeout(_config.Shooter.feederTimeoutSeconds));
+
+    JoystickButton shutdown = new JoystickButton(_operatorController, _config.Controller.shooterShutdownButtonPort);
+    shutdown.whenPressed(_container.getInstance(ShooterShutdownCommand.class));
+
+    JoystickButton intakeIn = new JoystickButton(_operatorController, _config.Controller.intakeInButtonPort);
+    intakeIn.whileHeld(_container.getInstance(IntakeIn.class));
+
+    JoystickButton intakeOut = new JoystickButton(_operatorController, _config.Controller.intakeOutButtonPort);
+    intakeOut.whileHeld(_container.getInstance(IntakeOut.class));
+
+    new JoystickButton(_operatorController, _config.Controller.climberReleaseButtonPort)
+        .whenPressed(_container.getInstance(ReleaseClimber.class));
+
+    JoystickButton visionTrack = new JoystickButton(_driverController, _config.Controller.visionTrackButtonPort);
+    visionTrack.whileHeld(_container.getInstance(TrackVisionTarget.class));
 
     // TODO can we cleanup the constructing button, then binding it?
   }

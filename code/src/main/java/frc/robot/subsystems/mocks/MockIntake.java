@@ -68,4 +68,10 @@ public class MockIntake extends TraceableMockSubsystem implements IIntakeSubsyst
         // TODO Auto-generated method stub
 
     }
+
+    @Override
+    public void setArmMotor(double speed) {
+        // TODO Auto-generated method stub
+
+    }
 }
