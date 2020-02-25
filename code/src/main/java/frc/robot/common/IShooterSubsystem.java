@@ -19,7 +19,7 @@ public interface IShooterSubsystem extends Subsystem {
      *
      */
 
-    void turnOnShooter();
+    void turnOnShooter(double rpm);
 
     /**
      * basically, this makes sure one ball is yeeted, if feedbackward is false if

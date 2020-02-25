@@ -22,12 +22,6 @@ public class MockShooter extends TraceableMockSubsystem implements IShooterSubsy
     }
 
     @Override
-    public void turnOnShooter() {
-        // TODO Auto-generated method stub
-
-    }
-
-    @Override
     public void feed(boolean feedBackward) {
         // TODO Auto-generated method stub
 
@@ -49,6 +43,12 @@ public class MockShooter extends TraceableMockSubsystem implements IShooterSubsy
     public boolean getHasShotBall() {
         // TODO Auto-generated method stub
         return false;
+    }
+
+    @Override
+    public void turnOnShooter(double rpm) {
+        // TODO Auto-generated method stub
+
     }
 
 }
