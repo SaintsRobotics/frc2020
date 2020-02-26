@@ -15,17 +15,17 @@ import frc.robot.common.*;
 /**
  * Add your docs here.
  */
-public class TimedAutonMoveForward extends TraceableCommand {
+public class TimedAutonMoveBackward extends TraceableCommand {
     private final IDrivetrainSubsystem _drivetrain;
 
     private final RobotConfig _config;
     private double currentTime = 0;
     private double x, y, r;
     private double _targetTime = 1;
+    private double _velocity = 1.5;
 
     @Inject
-    public TimedAutonMoveForward(final ILogger logger, RobotConfig config, IDrivetrainSubsystem drivetrain,
-            IShooterSubsystem shooter) {
+    public TimedAutonMoveBackward(final ILogger logger, RobotConfig config, IDrivetrainSubsystem drivetrain) {
         super(logger);
         _drivetrain = drivetrain;
 
@@ -33,25 +33,32 @@ public class TimedAutonMoveForward extends TraceableCommand {
         addRequirements(_drivetrain);
     }
 
-    public TimedAutonMoveForward withTime(int time) {
+    public TimedAutonMoveBackward withTime(double time) {
         _targetTime = time;
+        return this;
+    }
+
+    public TimedAutonMoveBackward withVelocity(double velocity) {
+        _velocity = velocity;
         return this;
     }
 
     @Override
     public void initialize() {
         super.initialize();
+        currentTime = 0;
     }
 
     @Override
     public void execute() {
         super.execute();
 
-        x = -1;
+        x = _velocity;
         y = 0;
 
         r = 0;
         _drivetrain.move(x, y, r, true);
+        currentTime += .02;
 
     }
 
