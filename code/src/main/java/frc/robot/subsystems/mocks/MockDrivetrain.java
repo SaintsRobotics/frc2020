@@ -71,4 +71,10 @@ public class MockDrivetrain extends TraceableMockSubsystem implements IDrivetrai
 
     }
 
+    @Override
+    public double getGyroAngle() {
+        // TODO Auto-generated method stub
+        return 0;
+    }
+
 }

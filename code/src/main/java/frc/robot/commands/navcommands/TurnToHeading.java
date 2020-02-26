@@ -10,71 +10,82 @@ package frc.robot.commands.navcommands;
 import com.google.inject.Inject;
 
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.controller.PIDController;
 import frc.robot.RobotConfig;
+import frc.robot.commands.DrivetrainCommandBase;
 import frc.robot.common.*;
 
 /**
  * Add your docs here.
  */
-public class TurnToHeading extends TraceableCommand {
+public class TurnToHeading extends DrivetrainCommandBase {
     private final IDrivetrainSubsystem _drivetrain;
-    private final XboxController _controller;
-    private double _heading; // TODO **ADD FLUENT API TO SET HEADING!!
+    private final RobotConfig _config;
+    private PIDController _PidController;
+
+    private double _pidOutput;
+    private double _onTargetTicks;
 
     @Inject
     public TurnToHeading(final ILogger logger, RobotConfig config, IDrivetrainSubsystem drivetrain) {
-        super(logger);
+        super(logger, config, drivetrain);
         _drivetrain = drivetrain;
-        _controller = new XboxController(config.Controller.driverControllerPort);
+        _config = config;
+        _PidController = new PIDController(_config.turnToHeading.kP, _config.turnToHeading.kI,
+                _config.turnToHeading.kD);
+        _PidController.enableContinuousInput(0, 360);
+        _PidController.setTolerance(_config.turnToHeading.pidTolerance);
 
-        // TODO **YOU WILL NEED TO ADD A GETTER FOR THE GYRO IN THE SUBSYSTEM. FIGURE
-        // OUT IF IT SHOULD BE RADIANS/DEGREES, AND WHICH DIRECTION IS POSITIVE
         addRequirements(_drivetrain);
     }
 
     /**
      * 
      * @param heading direction robot should face, in degrees. zero is away from the
-     *                alliance wall
+     *                driver station wall. Heading increases with clockwise rotation
      * @return returns this for chaining methods
      */
     public TurnToHeading withHeadingDegrees(double heading) {
-        // TODO needs implemenation. also, beware of units!!
+
+        _PidController.setSetpoint(heading);
         return this;
     }
 
     @Override
     public void initialize() {
         super.initialize();
-        // TODO needs implementation
+        _onTargetTicks = 0;
+
     }
 
     @Override
     public void execute() {
+
         super.execute();
-        // TODO needs implementation
-
-    }
-
-    /**
-     * 
-     * @param input    value to be modified (deadzoned)
-     * @param deadZone the maximum value to be considered zero
-     * @return the modified version of input
-     */
-    public double deadZones(double input, double deadZone) {
-        if (Math.abs(input) < deadZone) {
-            return 0;
+        if (_PidController.atSetpoint()) {
+            _onTargetTicks++;
+        } else {
+            _onTargetTicks = 0;
         }
-        return input;
+
     }
 
     /**
-     * this command controllers a controller so will run forever!
+     * this method checks that the bot is facing the right direction for a certain
+     * number of ticks
      */
     @Override
     public boolean isFinished() {
-        return false;
-        // TODO needs implementation
+
+        return _onTargetTicks >= _config.turnToHeading.pidOnTargetTicksGoal && _PidController.atSetpoint();
+
     }
+
+    @Override
+    protected double getRotation() {
+
+        _pidOutput = _PidController.calculate(_drivetrain.getGyroAngle());
+        return _pidOutput;
+    }
+
 }

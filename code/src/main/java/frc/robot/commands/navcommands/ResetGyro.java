@@ -20,6 +20,9 @@ public class ResetGyro extends TraceableCommand {
     @Inject
     public ResetGyro(final ILogger logger, IDrivetrainSubsystem drivetrain) {
         super(logger);
+        // This is to prevent edge cases where the user is in the middle of rotating
+        // with Turn to heading and resetting gyro from doing unexpected behaviors.
+        addRequirements(drivetrain);
         _drivetrain = drivetrain;
 
     }
