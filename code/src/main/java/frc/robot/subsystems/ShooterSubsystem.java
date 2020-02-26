@@ -75,6 +75,17 @@ public class ShooterSubsystem extends TraceableSubsystem implements IShooterSubs
     /*
      */
     @Override
+    public void turnOnShooter(double targetRPM) {
+        if (m_shooterPID.getSetpoint() != targetRPM) {
+            return;
+        }
+        m_shooterPID.reset();
+        int setpoint = Preferences.getInstance().getInt("shooterTargetRPM", shooterRPM);
+        m_shooterPID.setSetpoint(targetRPM);
+        SmartDashboard.putNumber("ShooterTargetRPM", setpoint);
+    }
+
+    @Override
     public void turnOnShooter() {
         if (m_shooterPID.getSetpoint() != 0) {
             return;

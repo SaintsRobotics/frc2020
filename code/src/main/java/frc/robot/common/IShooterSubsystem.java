@@ -19,6 +19,12 @@ public interface IShooterSubsystem extends Subsystem {
      *
      */
 
+    void turnOnShooter(double targetRPM);
+
+    /**
+     * starts shooter using preferences in smart dashboard.
+     */
+
     void turnOnShooter();
 
     /**
