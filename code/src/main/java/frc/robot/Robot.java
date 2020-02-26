@@ -125,18 +125,18 @@ public class Robot extends TimedRobot {
 
     JoystickButton visionTrack = new JoystickButton(_driverController, _config.Controller.visionTrackButtonPort);
     visionTrack.whileHeld(_container.getInstance(TrackVisionTarget.class));
-    POVButton turnForward = new POVButton(_driverController, _config.Controller.forwardHeading);
-    turnForward
-        .whenPressed(_container.getInstance(TurnToHeading.class).withHeadingDegrees(_config.Controller.forwardHeading));
-    POVButton turnRight = new POVButton(_driverController, _config.Controller.rightHeading);
-    turnRight
-        .whenPressed(_container.getInstance(TurnToHeading.class).withHeadingDegrees(_config.Controller.backHeading));
-    POVButton turnBack = new POVButton(_driverController, _config.Controller.backHeading);
-    turnBack
-        .whenPressed(_container.getInstance(TurnToHeading.class).withHeadingDegrees(_config.Controller.backHeading));
-    POVButton turnLeft = new POVButton(_driverController, _config.Controller.leftHeading);
-    turnLeft
-        .whenPressed(_container.getInstance(TurnToHeading.class).withHeadingDegrees(_config.Controller.leftHeading));
+    POVButton turnForward = new POVButton(_driverController, _config.Controller.fieldNorthButtonAngle);
+    turnForward.whenPressed(
+        _container.getInstance(TurnToHeading.class).withHeadingDegrees(_config.Controller.fieldNorthButtonAngle));
+    POVButton turnRight = new POVButton(_driverController, _config.Controller.fieldEastButtonAngle);
+    turnRight.whenPressed(
+        _container.getInstance(TurnToHeading.class).withHeadingDegrees(_config.Controller.fieldEastButtonAngle));
+    POVButton turnBack = new POVButton(_driverController, _config.Controller.fieldSouthButtonAngle);
+    turnBack.whenPressed(
+        _container.getInstance(TurnToHeading.class).withHeadingDegrees(_config.Controller.fieldSouthButtonAngle));
+    POVButton turnLeft = new POVButton(_driverController, _config.Controller.fieldWestButtonAngle);
+    turnLeft.whenPressed(
+        _container.getInstance(TurnToHeading.class).withHeadingDegrees(_config.Controller.fieldWestButtonAngle));
 
     // TODO can we cleanup the constructing button, then binding it?
   }

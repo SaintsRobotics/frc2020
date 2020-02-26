@@ -40,10 +40,10 @@ public final class RobotConfig {
 
         public final int visionTrackButtonPort = XboxController.Button.kB.value;
 
-        public final int leftHeading = 270;
-        public final int rightHeading = 90;
-        public final int forwardHeading = 0;
-        public final int backHeading = 270;
+        public final int fieldWestButtonAngle = 270;
+        public final int fieldEastButtonAngle = 90;
+        public final int fieldNorthButtonAngle = 0;
+        public final int fieldSouthButtonAngle = 270;
 
         public final double kDriveDeadzone = 0.2;
         public final double kDriveScale = .75;
