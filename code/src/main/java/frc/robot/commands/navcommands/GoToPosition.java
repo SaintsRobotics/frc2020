@@ -10,6 +10,7 @@ package frc.robot.commands.navcommands;
 import com.google.inject.Inject;
 
 import edu.wpi.first.wpilibj.geometry.Pose2d;
+import edu.wpi.first.wpilibj.geometry.Rotation2d;
 import frc.robot.RobotConfig;
 import frc.robot.common.*;
 
@@ -18,6 +19,7 @@ import frc.robot.common.*;
  */
 public class GoToPosition extends TraceableCommand {
     private final IDrivetrainSubsystem _drivetrain;
+    private Pose2d _position;
 
     @Inject
     public GoToPosition(final ILogger logger, RobotConfig config, IDrivetrainSubsystem drivetrain) {
@@ -31,14 +33,23 @@ public class GoToPosition extends TraceableCommand {
 
     /**
      * 
-     * @param position a pose 2d representing the x and y coordinates, along wiht
+     * @param position a pose 2d representing the x and y coordinates, along with
      *                 heading of the robot Represents forward velocity w.r.t the
      *                 robot frame of reference.
      * @return an instance of this so the methods can be chained
      */
     public GoToPosition withPosition(Pose2d position) {
         // TODO needs implemenation, also figure out frame of reference
+        _position = position;
         return this;
+    }
+
+    public GoToPosition withPosition(double x, double y, double degrees) {
+        return this.withPosition(new Pose2d(x, y, Rotation2d.fromDegrees(degrees)));
+    }
+
+    protected Pose2d getPosition() {
+        return _position;
     }
 
     @Override
