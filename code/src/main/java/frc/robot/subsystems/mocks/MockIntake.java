@@ -7,6 +7,8 @@
 
 package frc.robot.subsystems.mocks;
 
+import com.google.inject.Inject;
+
 import frc.robot.common.IIntakeSubsystem;
 import frc.robot.common.ILogger;
 import frc.robot.common.TraceableMockSubsystem;
@@ -18,6 +20,7 @@ public class MockIntake extends TraceableMockSubsystem implements IIntakeSubsyst
     private boolean _isRaised = false;
     private boolean _isSpinning = false;
 
+    @Inject
     public MockIntake(ILogger logger) {
         super(logger);
     }

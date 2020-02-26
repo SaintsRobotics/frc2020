@@ -8,6 +8,7 @@
 package frc.robot;
 
 import com.google.inject.Inject;
+import com.google.inject.Provider;
 
 import frc.robot.commands.ClimbControllerCommand;
 import frc.robot.commands.DriveArmCommand;
@@ -27,6 +28,7 @@ import frc.robot.common.IIntakeSubsystem;
 import frc.robot.common.ILogger;
 import frc.robot.common.IShooterSubsystem;
 import frc.robot.common.Limelight;
+import frc.robot.strategies.Easy23StrategyCommand;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
@@ -43,6 +45,8 @@ public class RobotContainer extends CompetitionRobot {
   private SequentialCommandGroup m_autonomousCommand;
   private SequentialCommandGroup m_trenchAuton;
   private RobotConfig _config;
+  private Provider<Easy23StrategyCommand> _autonomousCommand;
+
   // private final Provider<DrivetrainControllerCommand> _autonomousCommand;
 
   /**
