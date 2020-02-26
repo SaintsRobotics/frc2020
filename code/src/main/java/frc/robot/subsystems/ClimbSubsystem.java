@@ -36,6 +36,11 @@ public class ClimbSubsystem extends TraceableSubsystem implements IClimbSubsyste
     }
 
     public void releaseClimber() {
+        // If there is more than 30 seconds left in the match, we're not allowed to
+        // release the climber
+        if (DriverStation.getInstance().getMatchTime() > 30) {
+            return;
+        }
         this.servoMotor.set(this.releasePosition);
         DriverStation.reportError("climb released ", false);
     }
