@@ -7,6 +7,8 @@
 
 package frc.robot.subsystems.mocks;
 
+import com.google.inject.Inject;
+
 import frc.robot.common.ILogger;
 import frc.robot.common.IShooterSubsystem;
 import frc.robot.common.TraceableMockSubsystem;
@@ -16,6 +18,7 @@ import frc.robot.common.TraceableMockSubsystem;
  */
 public class MockShooter extends TraceableMockSubsystem implements IShooterSubsystem {
 
+    @Inject
     public MockShooter(ILogger logger) {
         super(logger);
         // TODO Auto-generated constructor stub
