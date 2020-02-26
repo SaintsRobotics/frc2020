@@ -42,11 +42,11 @@ public class TurnToHeading extends DrivetrainCommandBase {
     /**
      * 
      * @param heading direction robot should face, in degrees. zero is away from the
-     *                alliance wall
+     *                driver station wall. Heading increases with clockwise rotation
      * @return returns this for chaining methods
      */
     public TurnToHeading withHeadingDegrees(double heading) {
-        // TODO needs implemenation. also, beware of units!!
+
         _PidController.setSetpoint(heading);
         return this;
     }
@@ -56,7 +56,6 @@ public class TurnToHeading extends DrivetrainCommandBase {
         super.initialize();
         _onTargetTicks = 0;
 
-        // TODO needs implementation
     }
 
     @Override
@@ -72,25 +71,19 @@ public class TurnToHeading extends DrivetrainCommandBase {
     }
 
     /**
-     * 
-     * @param input    value to be modified (deadzoned)
-     * @param deadZone the maximum value to be considered zero
-     * @return the modified version of input
-     */
-
-    /**
-     * this command controllers a controller so will run forever!
+     * this method checks that the bot is facing the right direction for a certain
+     * number of ticks
      */
     @Override
     public boolean isFinished() {
 
         return _onTargetTicks >= _config.turnToHeading.pidOnTargetTicksGoal && _PidController.atSetpoint();
-        // TODO needs implementation
+
     }
 
     @Override
     protected double getRotation() {
-        // TODO Auto-generated method stub
+
         _pidOutput = _PidController.calculate(_drivetrain.getGyroAngle());
         return _pidOutput;
     }
