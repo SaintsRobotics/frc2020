@@ -10,10 +10,10 @@ package frc.robot.commands.navcommands;
 import com.google.inject.Inject;
 
 import edu.wpi.first.wpilibj.geometry.Pose2d;
+import frc.robot.commands.Util;
 import frc.robot.common.ILogger;
 import frc.robot.common.Location;
 import frc.robot.common.TraceableCommand;
-import frc.robot.common.Utils;
 
 /**
  * Moves the robot based on the distance in meters
@@ -37,7 +37,7 @@ public class MoveCommand extends TraceableCommand {
 
     @Override
     public void initialize() {
-        Pose2d position = Utils.calculateRelativePosition(_distance, _location);
+        Pose2d position = Util.calculateRelativePosition(_distance, _location);
 
         _gotoPositionCommand.withPosition(position).schedule();
     }

@@ -10,10 +10,10 @@ package frc.robot.subsystems.mocks;
 import com.google.inject.Inject;
 
 import edu.wpi.first.wpilibj.geometry.Pose2d;
+import frc.robot.commands.Util;
 import frc.robot.common.ILogger;
 import frc.robot.common.Location;
 import frc.robot.common.TraceableMockSubsystem;
-import frc.robot.common.Utils;
 
 public class MockCommandDrivetrain extends TraceableMockSubsystem {
     private Location _location;
@@ -133,7 +133,7 @@ public class MockCommandDrivetrain extends TraceableMockSubsystem {
         // TODO Auto-generated method stub
 
         double heading = _location.getHeading();
-        heading = Utils.rotate(heading, degrees);
+        heading = Util.rotate(heading, degrees);
         _location.updateHeading(heading);
     }
 
@@ -168,7 +168,7 @@ public class MockCommandDrivetrain extends TraceableMockSubsystem {
     public void followPath(double maxSpeed, double finalHeading, Pose2d... waypoints) {
 
         for (int i = 0; i < waypoints.length; i++) {
-            double distance = Utils.distanceBetweenPoints(_location.getPosition(), waypoints[i]);
+            double distance = Util.distanceBetweenPoints(_location.getPosition(), waypoints[i]);
             this.updateRelativeLocation(distance);
         }
         _location.updateHeading(finalHeading);
@@ -187,7 +187,7 @@ public class MockCommandDrivetrain extends TraceableMockSubsystem {
         if (enableIdling)
             _isIdle = false;
 
-        Pose2d position = Utils.calculateRelativePosition(distance, _location);
+        Pose2d position = Util.calculateRelativePosition(distance, _location);
 
         _location.updatePosition(position.getTranslation().getX(), position.getTranslation().getY());
         if (enableIdling)
