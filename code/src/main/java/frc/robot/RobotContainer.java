@@ -12,18 +12,24 @@ import com.google.inject.Inject;
 import frc.robot.commands.ClimbControllerCommand;
 import frc.robot.commands.DriveArmCommand;
 import frc.robot.commands.DrivetrainControllerCommand;
+import frc.robot.commands.navcommands.IntakeIn;
+import frc.robot.commands.navcommands.LowerArm;
 import frc.robot.commands.navcommands.ShootOneBallCommand;
 import frc.robot.commands.navcommands.ShooterShutdownCommand;
 import frc.robot.commands.navcommands.ShooterStartupCommand;
 import frc.robot.commands.navcommands.TimedAutonMoveBackward;
-
+import frc.robot.commands.navcommands.TrackVisionTarget;
+import frc.robot.commands.navcommands.TurnToHeading;
 import frc.robot.common.CompetitionRobot;
 import frc.robot.common.IClimbSubsystem;
 import frc.robot.common.IDrivetrainSubsystem;
 import frc.robot.common.IIntakeSubsystem;
 import frc.robot.common.ILogger;
 import frc.robot.common.IShooterSubsystem;
+import frc.robot.common.Limelight;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 
 /**
@@ -35,6 +41,7 @@ public class RobotContainer extends CompetitionRobot {
 
   private Command m_teleopCommand;
   private SequentialCommandGroup m_autonomousCommand;
+  private SequentialCommandGroup m_trenchAuton;
   private RobotConfig _config;
   // private final Provider<DrivetrainControllerCommand> _autonomousCommand;
 
@@ -52,9 +59,16 @@ public class RobotContainer extends CompetitionRobot {
     climb.setDefaultCommand(climbCommand);
     m_autonomousCommand = new SequentialCommandGroup(new ShooterStartupCommand(logger, shooter),
         new TimedAutonMoveBackward(logger, _config, drivetrain).withTime(1.5).withVelocity(1),
-        new TimedAutonMoveBackward(logger, _config, drivetrain).withTime(1).withVelocity(.5).withTimeout(3));
-    new ShooterShutdownCommand(logger, shooter);
+        new TimedAutonMoveBackward(logger, _config, drivetrain).withTime(1).withVelocity(.5).withTimeout(3),
+        new TrackVisionTarget(logger, config, drivetrain, new Limelight(config)).withTimeout(2),
+        new ShootOneBallCommand(logger, shooter), new ShootOneBallCommand(logger, shooter),
+        new ShootOneBallCommand(logger, shooter), new ShooterShutdownCommand(logger, shooter));
 
+    // TODO finish this auton.
+    m_trenchAuton = new SequentialCommandGroup(m_autonomousCommand,
+        new TurnToHeading(logger, config, drivetrain).withHeadingDegrees(270), new LowerArm(logger, intake),
+        new ParallelRaceGroup(new IntakeIn(logger, intake),
+            new TimedAutonMoveBackward(logger, _config, drivetrain).withTime(1.5).withVelocity(1)));
   }
 
   public Command getTeleopCommand() {

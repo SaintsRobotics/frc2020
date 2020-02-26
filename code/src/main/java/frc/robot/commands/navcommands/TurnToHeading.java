@@ -22,11 +22,10 @@ public class TurnToHeading extends TraceableCommand {
     private double _heading; // TODO **ADD FLUENT API TO SET HEADING!!
 
     @Inject
-    public TurnToHeading(final ILogger logger, RobotConfig config, IDrivetrainSubsystem drivetrain,
-            XboxController controller) {
+    public TurnToHeading(final ILogger logger, RobotConfig config, IDrivetrainSubsystem drivetrain) {
         super(logger);
         _drivetrain = drivetrain;
-        _controller = controller;
+        _controller = new XboxController(config.Controller.driverControllerPort);
 
         // TODO **YOU WILL NEED TO ADD A GETTER FOR THE GYRO IN THE SUBSYSTEM. FIGURE
         // OUT IF IT SHOULD BE RADIANS/DEGREES, AND WHICH DIRECTION IS POSITIVE

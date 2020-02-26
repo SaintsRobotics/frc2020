@@ -5,20 +5,22 @@ import com.google.inject.Inject;
 import edu.wpi.first.wpilibj.DriverStation;
 import frc.robot.common.*;
 
-public class IntakeOut extends TraceableCommand {
+public class LowerArm extends TraceableCommand {
 
     private final IIntakeSubsystem _intake;
+    private double currentTime = 0;
 
     @Inject
 
-    public IntakeOut(final ILogger logger, IIntakeSubsystem intakeSubsystem) {
+    public LowerArm(final ILogger logger, IIntakeSubsystem intakeSubsystem) {
         super(logger);
         _intake = intakeSubsystem;
 
     }
 
     public void initialize() {
-        _intake.reverseIntake();
+
+        _intake.setArmMotor(-.2);
     }
 
     public void execute() {
@@ -27,11 +29,11 @@ public class IntakeOut extends TraceableCommand {
 
     @Override
     public void end(boolean interrupted) {
-        _intake.stopIntake();
+        _intake.setArmMotor(0);
     }
 
     public boolean isFinished() {
-        return false;
+        return _intake.isLowered();
     }
 
     /**
