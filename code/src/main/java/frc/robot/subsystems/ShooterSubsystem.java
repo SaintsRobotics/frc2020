@@ -21,6 +21,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.RobotConfig;
 import frc.robot.common.ILogger;
 import frc.robot.common.IShooterSubsystem;
+import frc.robot.common.Limelight;
 import frc.robot.common.TraceableSubsystem;
 
 /**
@@ -32,7 +33,7 @@ public class ShooterSubsystem extends TraceableSubsystem implements IShooterSubs
     private SpeedControllerGroup m_shooter;
     private CANEncoder m_leftEncoder;
     private PIDController m_shooterPID;
-
+    private double m_targetRPM;
     private boolean m_hasShotBall = true; // ONE ball, singular!
     private boolean m_isShooting = false;
 
@@ -46,8 +47,10 @@ public class ShooterSubsystem extends TraceableSubsystem implements IShooterSubs
     private SpeedControllerGroup m_feeder;
     private boolean m_feedBackward = false;
 
+    private Limelight m_limelight;
+
     @Inject
-    public ShooterSubsystem(ILogger logger, final RobotConfig config) {
+    public ShooterSubsystem(ILogger logger, final RobotConfig config, Limelight limelight) {
         super(logger);
         m_leftShooter = new CANSparkMax(config.Shooter.leftShooterPort, MotorType.kBrushless);
         m_rightShooter = new CANSparkMax(config.Shooter.rightShooterPort, MotorType.kBrushless);
@@ -64,15 +67,20 @@ public class ShooterSubsystem extends TraceableSubsystem implements IShooterSubs
         pidOnTargetTicks = config.Shooter.pidOnTargetTicks;
         shooterRPM = config.Shooter.shooterRPM;
 
+        m_targetRPM = 0;
+
         m_kicker = new WPI_VictorSPX(config.Shooter.feederPort);
         m_wheels = new WPI_VictorSPX(config.Shooter.spinnerPort);
         m_wheels.setInverted(true);
 
         m_feeder = new SpeedControllerGroup(m_kicker, m_wheels);
 
+        m_limelight = limelight;
+
     }
 
     /*
+     * @param rpm if -1, goes into limelight auto
      */
     @Override
     public void turnOnShooter(double targetRPM) {
@@ -80,9 +88,9 @@ public class ShooterSubsystem extends TraceableSubsystem implements IShooterSubs
             return;
         }
         m_shooterPID.reset();
-        int setpoint = Preferences.getInstance().getInt("shooterTargetRPM", shooterRPM);
+
         m_shooterPID.setSetpoint(targetRPM);
-        SmartDashboard.putNumber("ShooterTargetRPM", setpoint);
+        SmartDashboard.putNumber("ShooterTargetRPM", targetRPM);
     }
 
     @Override
@@ -90,10 +98,9 @@ public class ShooterSubsystem extends TraceableSubsystem implements IShooterSubs
         if (m_shooterPID.getSetpoint() != 0) {
             return;
         }
-        m_shooterPID.reset();
         int setpoint = Preferences.getInstance().getInt("shooterTargetRPM", shooterRPM);
-        m_shooterPID.setSetpoint(setpoint);
-        SmartDashboard.putNumber("ShooterTargetRPM", setpoint);
+        turnOnShooter(setpoint);
+
     }
 
     /**
@@ -115,7 +122,7 @@ public class ShooterSubsystem extends TraceableSubsystem implements IShooterSubs
 
     @Override
     public void turnOffShooter() {
-        m_shooterPID.setSetpoint(0);
+        m_targetRPM = 0;
         this.m_hasShotBall = true;
     }
 
@@ -134,8 +141,18 @@ public class ShooterSubsystem extends TraceableSubsystem implements IShooterSubs
 
     }
 
+    private double getRPMFromLimelight() {
+        return m_limelight.getHeightAngularOffset();
+        // TODO implement this
+    }
+
     public void periodic() {
-        double shooterSpeed = m_shooterPID.calculate(m_leftEncoder.getVelocity());
+        double pidRPM = m_targetRPM != -1 ? m_targetRPM : getRPMFromLimelight(); // TODO implement lval (limelight
+                                                                                 // value)
+        // if the target rpm given is -1, set the target rpm to the limelight value.
+        // else, it's the original target rpm given
+
+        double shooterSpeed = m_shooterPID.calculate(m_leftEncoder.getVelocity(), pidRPM);
         if (shooterSpeed > -0.2)
             m_shooter.set(shooterSpeed);
         else {
