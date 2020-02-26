@@ -20,6 +20,7 @@ public class ResetGyro extends TraceableCommand {
     @Inject
     public ResetGyro(final ILogger logger, IDrivetrainSubsystem drivetrain) {
         super(logger);
+        addRequirements(drivetrain);
         _drivetrain = drivetrain;
 
     }

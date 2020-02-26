@@ -10,26 +10,32 @@ package frc.robot.commands.navcommands;
 import com.google.inject.Inject;
 
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.controller.PIDController;
 import frc.robot.RobotConfig;
+import frc.robot.commands.DrivetrainCommandBase;
 import frc.robot.common.*;
 
 /**
  * Add your docs here.
  */
-public class TurnToHeading extends TraceableCommand {
+public class TurnToHeading extends DrivetrainCommandBase {
     private final IDrivetrainSubsystem _drivetrain;
-    private final XboxController _controller;
-    private double _heading; // TODO **ADD FLUENT API TO SET HEADING!!
+    private final RobotConfig _config;
+    private PIDController _PidController;
+
+    private double _pidOutput;
+    private double _onTargetTicks;
 
     @Inject
-    public TurnToHeading(final ILogger logger, RobotConfig config, IDrivetrainSubsystem drivetrain,
-            XboxController controller) {
-        super(logger);
+    public TurnToHeading(final ILogger logger, RobotConfig config, IDrivetrainSubsystem drivetrain) {
+        super(logger, config, drivetrain);
         _drivetrain = drivetrain;
-        _controller = controller;
+        _config = config;
+        _PidController = new PIDController(_config.turnToHeading.kP, _config.turnToHeading.kI,
+                _config.turnToHeading.kD);
+        _PidController.enableContinuousInput(0, 360);
+        _PidController.setTolerance(_config.turnToHeading.pidTolerance);
 
-        // TODO **YOU WILL NEED TO ADD A GETTER FOR THE GYRO IN THE SUBSYSTEM. FIGURE
-        // OUT IF IT SHOULD BE RADIANS/DEGREES, AND WHICH DIRECTION IS POSITIVE
         addRequirements(_drivetrain);
     }
 
@@ -41,19 +47,27 @@ public class TurnToHeading extends TraceableCommand {
      */
     public TurnToHeading withHeadingDegrees(double heading) {
         // TODO needs implemenation. also, beware of units!!
+        _PidController.setSetpoint(heading);
         return this;
     }
 
     @Override
     public void initialize() {
         super.initialize();
+        _onTargetTicks = 0;
+
         // TODO needs implementation
     }
 
     @Override
     public void execute() {
+
         super.execute();
-        // TODO needs implementation
+        if (_PidController.atSetpoint()) {
+            _onTargetTicks++;
+        } else {
+            _onTargetTicks = 0;
+        }
 
     }
 
@@ -63,19 +77,22 @@ public class TurnToHeading extends TraceableCommand {
      * @param deadZone the maximum value to be considered zero
      * @return the modified version of input
      */
-    public double deadZones(double input, double deadZone) {
-        if (Math.abs(input) < deadZone) {
-            return 0;
-        }
-        return input;
-    }
 
     /**
      * this command controllers a controller so will run forever!
      */
     @Override
     public boolean isFinished() {
-        return false;
+
+        return _onTargetTicks >= _config.turnToHeading.pidOnTargetTicksGoal && _PidController.atSetpoint();
         // TODO needs implementation
     }
+
+    @Override
+    protected double getRotation() {
+        // TODO Auto-generated method stub
+        _pidOutput = _PidController.calculate(_drivetrain.getGyroAngle());
+        return _pidOutput;
+    }
+
 }

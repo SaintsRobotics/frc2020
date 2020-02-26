@@ -16,6 +16,7 @@ import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import edu.wpi.first.wpilibj2.command.button.POVButton;
 import frc.robot.commands.navcommands.IntakeIn;
 import frc.robot.commands.navcommands.IntakeOut;
 import frc.robot.commands.navcommands.ReleaseClimber;
@@ -27,6 +28,7 @@ import frc.robot.commands.navcommands.ShooterFeedBackwardCommand;
 import frc.robot.commands.navcommands.ShooterShutdownCommand;
 import frc.robot.commands.navcommands.ShooterStartupCommand;
 import frc.robot.commands.navcommands.TrackVisionTarget;
+import frc.robot.commands.navcommands.TurnToHeading;
 import frc.robot.common.IDrivetrainSubsystem;
 import frc.robot.ioc.DependenciesModule;
 
@@ -123,6 +125,18 @@ public class Robot extends TimedRobot {
 
     JoystickButton visionTrack = new JoystickButton(_driverController, _config.Controller.visionTrackButtonPort);
     visionTrack.whileHeld(_container.getInstance(TrackVisionTarget.class));
+    POVButton turnForward = new POVButton(_driverController, _config.Controller.forwardHeading);
+    turnForward
+        .whenPressed(_container.getInstance(TurnToHeading.class).withHeadingDegrees(_config.Controller.forwardHeading));
+    POVButton turnRight = new POVButton(_driverController, _config.Controller.rightHeading);
+    turnRight
+        .whenPressed(_container.getInstance(TurnToHeading.class).withHeadingDegrees(_config.Controller.backHeading));
+    POVButton turnBack = new POVButton(_driverController, _config.Controller.backHeading);
+    turnBack
+        .whenPressed(_container.getInstance(TurnToHeading.class).withHeadingDegrees(_config.Controller.backHeading));
+    POVButton turnLeft = new POVButton(_driverController, _config.Controller.leftHeading);
+    turnLeft
+        .whenPressed(_container.getInstance(TurnToHeading.class).withHeadingDegrees(_config.Controller.leftHeading));
 
     // TODO can we cleanup the constructing button, then binding it?
   }

@@ -66,4 +66,6 @@ public interface IDrivetrainSubsystem extends Subsystem {
      */
     void setToCoastMode();
 
+    double getGyroAngle();
+
 }
