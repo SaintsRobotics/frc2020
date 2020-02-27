@@ -20,6 +20,7 @@ public class ClimbSubsystem extends TraceableSubsystem implements IClimbSubsyste
     private CANSparkMax winchMotor;
     private double releasePosition;
     private double returnPosition;
+    private double endgameTime;
 
     @Inject
     public ClimbSubsystem(final ILogger logger, RobotConfig config) {
@@ -27,7 +28,9 @@ public class ClimbSubsystem extends TraceableSubsystem implements IClimbSubsyste
 
         this.servoMotor = new Servo(config.Climber.servoPort);
         this.winchMotor = new CANSparkMax(config.Climber.winchPort, MotorType.kBrushless);
-        this.servoMotor.setBounds(2.5, 0, 0, 0, .5);
+        this.servoMotor.setBounds(config.Climber.servoMaxPWM, config.Climber.servoMaxDeadband,
+                config.Climber.servoCenterPWM, config.Climber.servoDeadbandMin, config.Climber.servoMinPWM);
+        this.endgameTime = config.Climber.matchTimeForEndgame;
         this.releasePosition = config.Climber.servoReleasePosition;
         this.returnPosition = config.Climber.servoReturnPosition;
     }
@@ -39,7 +42,7 @@ public class ClimbSubsystem extends TraceableSubsystem implements IClimbSubsyste
     public void releaseClimber() {
         // If there is more than 30 seconds left in the match, we're not allowed to
         // release the climber
-        if (DriverStation.getInstance().getMatchTime() > 30) {
+        if (DriverStation.getInstance().getMatchTime() > this.endgameTime) {
             return;
         }
         this.servoMotor.set(this.releasePosition);
