@@ -8,15 +8,19 @@
 package frc.robot;
 
 import com.google.inject.Inject;
+import com.google.inject.Provider;
 
+import frc.robot.commands.ClimbControllerCommand;
 import frc.robot.commands.DriveArmCommand;
 import frc.robot.commands.DrivetrainControllerCommand;
 import frc.robot.commands.SetAllianceColorCommand;
 import frc.robot.common.CompetitionRobot;
+import frc.robot.common.IClimbSubsystem;
 import frc.robot.common.IDrivetrainSubsystem;
 import frc.robot.common.IIntakeSubsystem;
 import frc.robot.common.ILedSubsystem;
 import frc.robot.common.ILogger;
+import frc.robot.strategies.Easy23StrategyCommand;
 import edu.wpi.first.wpilibj2.command.Command;
 
 /**
@@ -27,6 +31,8 @@ import edu.wpi.first.wpilibj2.command.Command;
 public class RobotContainer extends CompetitionRobot {
 
   private Command m_teleopCommand;
+  private Provider<Easy23StrategyCommand> _autonomousCommand;
+
   // private final Provider<DrivetrainControllerCommand> _autonomousCommand;
 
   /**
@@ -34,13 +40,15 @@ public class RobotContainer extends CompetitionRobot {
    */
   @Inject
   private RobotContainer(final ILogger logger, IDrivetrainSubsystem drivetrain,
-      DrivetrainControllerCommand driveCommand, IIntakeSubsystem intake, DriveArmCommand armCommand,
+      DrivetrainControllerCommand driveCommand, IIntakeSubsystem intake, DriveArmCommand driveArmCommand,
+      IClimbSubsystem climb, ClimbControllerCommand climbCommand, Provider<Easy23StrategyCommand> autonomousCommand,
       ILedSubsystem ledSubsystem, SetAllianceColorCommand setAllianceColorCommand) {
     super(logger);
-
-    intake.setDefaultCommand(armCommand);
+    _autonomousCommand = autonomousCommand;
 
     drivetrain.setDefaultCommand(driveCommand);
+    intake.setDefaultCommand(driveArmCommand);
+    climb.setDefaultCommand(climbCommand);
 
     System.out.println(ledSubsystem);
     System.out.println(setAllianceColorCommand);
@@ -58,10 +66,10 @@ public class RobotContainer extends CompetitionRobot {
    *
    * @return the command to run in autonomous
    */
-  // public Command getAutonomousCommand() {
-  // // An ExampleCommand will run in autonomous
-  // return _autonomousCommand.get();
-  // }
+  public Command getAutonomousCommand() {
+    // An ExampleCommand will run in autonomous
+    return _autonomousCommand.get();
+  }
 
   public Command whenButtonAPressed() {
     // add a command that should be run when the controller A button is pressed

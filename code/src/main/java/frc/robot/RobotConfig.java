@@ -20,6 +20,9 @@ public final class RobotConfig {
     public final RobotConfig.Physical Physical = new RobotConfig.Physical();
     public final RobotConfig.Intake Intake = new RobotConfig.Intake();
     public final RobotConfig.Shooter Shooter = new RobotConfig.Shooter();
+    public final RobotConfig.Limelight Limelight = new RobotConfig.Limelight();
+    public final RobotConfig.Climber Climber = new RobotConfig.Climber();
+    public final RobotConfig.TurnToHeading turnToHeading = new RobotConfig.TurnToHeading();
 
     public final class Controller {
         public final int driverControllerPort = 0;
@@ -34,6 +37,19 @@ public final class RobotConfig {
         public final int shooterShutdownButtonPort = XboxController.Button.kY.value;
         public final int intakeInButtonPort = XboxController.Button.kBumperLeft.value;
         public final int intakeOutButtonPort = XboxController.Button.kBumperRight.value;
+
+        public final int visionTrackButtonPort = XboxController.Button.kB.value;
+
+        public final int fieldWestButtonAngle = 270;
+        public final int fieldEastButtonAngle = 90;
+        public final int fieldNorthButtonAngle = 0;
+        public final int fieldSouthButtonAngle = 270;
+
+        public final double kDriveDeadzone = 0.2;
+        public final double kDriveScale = .75;
+        public final double kTurnDeadzone = 0.2;
+        public final double kTurnScale = .35;
+        public final int climberReleaseButtonPort = XboxController.Button.kBack.value;
     }
 
     public final class SwerveDrivetrain {
@@ -51,6 +67,7 @@ public final class RobotConfig {
         public final int frontRightAbsoluteEncoder = 1;
         public final int rearLeftAbsoluteEncoder = 3;
         public final int rearRightAbsoluteEncoder = 2;
+
     }
 
     public final class Physical {
@@ -81,7 +98,16 @@ public final class RobotConfig {
     }
 
     public final class Climber {
-        public final int motorPort = 19;
+        public final int winchPort = 19;
+        public final int servoPort = 1;
+        public final double servoReleasePosition = 0;
+        public final double servoReturnPosition = 0.5;
+        public final double servoMaxPWM = 2.5;
+        public final double servoMaxDeadband = 0;
+        public final double servoCenterPWM = 0;
+        public final double servoDeadbandMin = 0;
+        public final double servoMinPWM = 0.5;
+        public final double matchTimeForEndgame = 30;
     }
 
     public final class Shooter {
@@ -102,6 +128,28 @@ public final class RobotConfig {
 
         public final int shooterRPM = 4900;
         public final double feederTimeoutSeconds = .5;
+    }
+
+    public final class Limelight {
+        public final double kP = .01;
+        public final double kI = 0.0;
+        public final double kD = 0.0;
+        public final double tolerance = .5;
+
+        public final double angleSetpointDegrees = 0.0;
+        public final double mountingAngleDegrees = 45.0;
+        public final double mountingHeightMeters = 0.508;
+        public final double targetHeightMeters = 2.49555; // the height of the inner circle, not the height you want to
+                                                          // get to
+
+    }
+
+    public final class TurnToHeading {
+        public final double kP = .019;
+        public final double kI = 0;
+        public final double kD = 0;
+        public final int pidOnTargetTicksGoal = 5;
+        public final double pidTolerance = 2.5;
 
     }
 }
