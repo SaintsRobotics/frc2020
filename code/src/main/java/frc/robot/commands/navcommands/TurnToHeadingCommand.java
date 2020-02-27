@@ -9,7 +9,6 @@ package frc.robot.commands.navcommands;
 
 import com.google.inject.Inject;
 
-import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.controller.PIDController;
 import frc.robot.RobotConfig;
 import frc.robot.commands.DrivetrainCommandBase;
@@ -18,23 +17,23 @@ import frc.robot.common.*;
 /**
  * Add your docs here.
  */
-public class TurnToHeading extends DrivetrainCommandBase {
+public class TurnToHeadingCommand extends DrivetrainCommandBase {
     private final IDrivetrainSubsystem _drivetrain;
     private final RobotConfig _config;
-    private PIDController _PidController;
+    private PIDController _pidController;
 
     private double _pidOutput;
     private double _onTargetTicks;
 
     @Inject
-    public TurnToHeading(final ILogger logger, RobotConfig config, IDrivetrainSubsystem drivetrain) {
+    public TurnToHeadingCommand(final ILogger logger, RobotConfig config, IDrivetrainSubsystem drivetrain) {
         super(logger, config, drivetrain);
         _drivetrain = drivetrain;
         _config = config;
-        _PidController = new PIDController(_config.turnToHeading.kP, _config.turnToHeading.kI,
+        _pidController = new PIDController(_config.turnToHeading.kP, _config.turnToHeading.kI,
                 _config.turnToHeading.kD);
-        _PidController.enableContinuousInput(0, 360);
-        _PidController.setTolerance(_config.turnToHeading.pidTolerance);
+        _pidController.enableContinuousInput(0, 360);
+        _pidController.setTolerance(_config.turnToHeading.pidTolerance);
 
         addRequirements(_drivetrain);
     }
@@ -45,9 +44,9 @@ public class TurnToHeading extends DrivetrainCommandBase {
      *                driver station wall. Heading increases with clockwise rotation
      * @return returns this for chaining methods
      */
-    public TurnToHeading withHeadingDegrees(double heading) {
+    public TurnToHeadingCommand withHeadingDegrees(double heading) {
 
-        _PidController.setSetpoint(heading);
+        _pidController.setSetpoint(heading);
         return this;
     }
 
@@ -62,7 +61,7 @@ public class TurnToHeading extends DrivetrainCommandBase {
     public void execute() {
 
         super.execute();
-        if (_PidController.atSetpoint()) {
+        if (_pidController.atSetpoint()) {
             _onTargetTicks++;
         } else {
             _onTargetTicks = 0;
@@ -77,14 +76,14 @@ public class TurnToHeading extends DrivetrainCommandBase {
     @Override
     public boolean isFinished() {
 
-        return _onTargetTicks >= _config.turnToHeading.pidOnTargetTicksGoal && _PidController.atSetpoint();
+        return _onTargetTicks >= _config.turnToHeading.pidOnTargetTicksGoal && _pidController.atSetpoint();
 
     }
 
     @Override
     protected double getRotation() {
 
-        _pidOutput = _PidController.calculate(_drivetrain.getGyroAngle());
+        _pidOutput = _pidController.calculate(_drivetrain.getGyroAngle());
         return _pidOutput;
     }
 
