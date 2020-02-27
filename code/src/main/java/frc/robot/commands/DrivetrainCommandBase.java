@@ -61,4 +61,11 @@ public abstract class DrivetrainCommandBase extends TraceableCommand {
      * TODO fill this in
      */
     protected abstract double getRotation();
+
+    @Override
+    public void end(boolean interrupted) {
+
+        super.end(interrupted);
+
+    }
 }

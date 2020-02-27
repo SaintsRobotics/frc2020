@@ -8,6 +8,9 @@ package frc.robot.commands.navcommands;
 
 import com.google.inject.Inject;
 
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.RobotConfig;
 
@@ -22,6 +25,7 @@ public class MoveOneMeter extends TraceableCommand {
     private final RobotConfig _config;
     private double currentTime = 0;
     private double x, y, r;
+    private Command m_sequence;
     private double _targetTime = 1;
     private double _velocity = 1;
     private double _heading = 180;
@@ -33,6 +37,7 @@ public class MoveOneMeter extends TraceableCommand {
         _logger = logger;
         _config = config;
         addRequirements(_drivetrain);
+
     }
 
     public MoveOneMeter withHeading(double heading) {
@@ -41,12 +46,22 @@ public class MoveOneMeter extends TraceableCommand {
     }
 
     @Override
+    public void execute() {
+        // TODO Auto-generated method stub
+        super.execute();
+        currentTime += .02;
+
+    }
+
+    @Override
     public void initialize() {
         super.initialize();
-        new SequentialCommandGroup(
+        m_sequence = new SequentialCommandGroup(new SetDriveCoastMode(_logger, _drivetrain),
                 new TimedMoveHeading(_logger, _config, _drivetrain).withHeading(_heading).withTime(1).withVelocity(1),
-                new TimedMoveHeading(_logger, _config, _drivetrain).withHeading(_heading).withTime(.5).withVelocity(.2))
-                        .schedule();
+                new SetDriveCoastMode(_logger, _drivetrain), new TimedMoveHeading(_logger, _config, _drivetrain)
+                        .withHeading(_heading).withTime(.7).withVelocity(.2));
+        m_sequence.schedule();
+
     }
 
     /**
@@ -54,7 +69,8 @@ public class MoveOneMeter extends TraceableCommand {
      */
     @Override
     public boolean isFinished() {
-        return currentTime >= _targetTime;
+
+        return currentTime > 1.7;
     }
 
 }

@@ -25,6 +25,7 @@ public class TrackVisionTarget extends DrivetrainCommandBase {
     private final Limelight _limelight;
     private final PIDController _pidController;
     private double _pidOutput;
+    private double _onTargetTicks;
 
     @Inject
     public TrackVisionTarget(final ILogger logger, RobotConfig config, IDrivetrainSubsystem drivetrain,
@@ -38,6 +39,7 @@ public class TrackVisionTarget extends DrivetrainCommandBase {
     @Override
     public void initialize() {
         super.initialize();
+        _onTargetTicks = 0;
         _limelight.setLEDState(3);
     }
 
@@ -51,8 +53,25 @@ public class TrackVisionTarget extends DrivetrainCommandBase {
     }
 
     @Override
-    public void end(boolean interrupted) {
-        super.end(interrupted);
-        _limelight.setLEDState(1);
+    public void execute() {
+
+        super.execute();
+        if (_pidController.atSetpoint()) {
+            _onTargetTicks++;
+        } else {
+            _onTargetTicks = 0;
+        }
+
+    }
+
+    /**
+     * this method checks that the bot is facing the right direction for a certain
+     * number of ticks
+     */
+    @Override
+    public boolean isFinished() {
+
+        return _onTargetTicks >= _config.turnToHeading.pidOnTargetTicksGoal;
+
     }
 }

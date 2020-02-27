@@ -51,7 +51,7 @@ public class Intake extends TraceableSubsystem implements IIntakeSubsystem {
 
     // Checks if arm is currently lowered
     public boolean isLowered() {
-        return armEncoder.get() > .3 && armEncoder.get() < .32;
+        return armEncoder.get() > .47 && armEncoder.get() < .49;
 
     }
 

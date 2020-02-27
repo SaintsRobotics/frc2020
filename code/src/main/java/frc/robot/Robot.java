@@ -31,6 +31,7 @@ import frc.robot.commands.navcommands.ShooterStartupCommand;
 import frc.robot.commands.navcommands.TrackVisionTarget;
 import frc.robot.commands.navcommands.TurnToHeading;
 import frc.robot.common.IDrivetrainSubsystem;
+import frc.robot.common.Limelight;
 import frc.robot.ioc.DependenciesModule;
 
 /**
@@ -172,6 +173,7 @@ public class Robot extends TimedRobot {
   @Override
   public void disabledInit() {
     _robot.disabledInit();
+    new Limelight(_config).setLEDState(1);
   }
 
   @Override
@@ -185,6 +187,7 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void autonomousInit() {
+    new Limelight(_config).setLEDState(3);
     m_autonomousCommand = _robot.getAutonomousCommand();
 
     // schedule the autonomous command (example)

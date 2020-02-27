@@ -3,6 +3,7 @@ package frc.robot.commands.navcommands;
 import com.google.inject.Inject;
 
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.common.*;
 
 public class LowerArm extends TraceableCommand {
@@ -15,16 +16,19 @@ public class LowerArm extends TraceableCommand {
     public LowerArm(final ILogger logger, IIntakeSubsystem intakeSubsystem) {
         super(logger);
         _intake = intakeSubsystem;
-
+        addRequirements(_intake);
     }
 
     public void initialize() {
+        super.initialize();
 
-        _intake.setArmMotor(-.2);
     }
 
+    @Override
     public void execute() {
-
+        super.execute();
+        _intake.setArmMotor(.8);
+        SmartDashboard.putBoolean("lowered?", _intake.isLowered());
     }
 
     @Override

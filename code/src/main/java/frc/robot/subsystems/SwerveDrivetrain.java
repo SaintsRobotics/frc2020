@@ -20,6 +20,7 @@ import edu.wpi.first.wpilibj.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.wpilibj.kinematics.SwerveModuleState;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.RobotConfig;
 import frc.robot.common.AbsoluteEncoder;
 import frc.robot.common.IDrivetrainSubsystem;
@@ -174,6 +175,10 @@ public class SwerveDrivetrain extends TraceableSubsystem implements IDrivetrainS
                 m_backLeft.setDesiredState(swerveModuleStates[2], this.getMaxSpeed());
                 m_backRight.setDesiredState(swerveModuleStates[3], this.getMaxSpeed());
                 // this.getLogger("frontLeft: ", m)
+                SmartDashboard.putNumber("x", x);
+                SmartDashboard.putNumber("y", y);
+                SmartDashboard.putNumber("r", theta);
+                System.out.println("x: " + x + "y:" + y + "Theta: " + theta);
 
         }
 

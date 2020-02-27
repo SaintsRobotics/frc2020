@@ -125,10 +125,10 @@ public final class RobotConfig {
     }
 
     public final class Limelight {
-        public final double kP = .01;
+        public final double kP = .02;
         public final double kI = 0.0;
         public final double kD = 0.0;
-        public final double tolerance = .5;
+        public final double tolerance = 1.5;
 
         public final double angleSetpointDegrees = 0.0;
         public final double mountingAngleDegrees = 45.0;
@@ -139,7 +139,7 @@ public final class RobotConfig {
     }
 
     public final class TurnToHeading {
-        public final double kP = .019;
+        public final double kP = .015;
         public final double kI = 0;
         public final double kD = 0;
         public final int pidOnTargetTicksGoal = 5;

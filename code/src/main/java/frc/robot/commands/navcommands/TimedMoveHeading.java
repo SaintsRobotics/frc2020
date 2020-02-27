@@ -60,7 +60,7 @@ public class TimedMoveHeading extends TraceableCommand {
         super.execute();
 
         x = -_velocity * Math.cos(Math.toRadians(_heading));
-        y = -_velocity * Math.sin(Math.toRadians(_heading));
+        y = _velocity * Math.sin(Math.toRadians(_heading));
 
         r = 0;
         _drivetrain.move(x, y, r, true);
