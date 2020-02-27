@@ -4,24 +4,24 @@ import com.google.inject.Inject;
 
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
-import edu.wpi.first.wpilibj.util.Color;
-import frc.robot.common.*;
+import frc.robot.common.ILedSubsystem;
+import frc.robot.common.ILogger;
+import frc.robot.common.TraceableCommand;
 
 public class SetAllianceColorCommand extends TraceableCommand {
 
     private ILedSubsystem ledSubsystem;
-    private boolean hasSetColor;
+    private Alliance alliance;
 
     @Inject
     public SetAllianceColorCommand(final ILogger logger, ILedSubsystem ledSubsystem) {
         super(logger);
 
         this.ledSubsystem = ledSubsystem;
-        this.hasSetColor = false;
-        this.runWhenDisabled();
+        this.alliance = Alliance.Invalid;
 
+        this.runWhenDisabled();
         addRequirements(ledSubsystem);
-        System.out.println("created command");
     }
 
     public void initialize() {
@@ -29,27 +29,14 @@ public class SetAllianceColorCommand extends TraceableCommand {
     }
 
     public void execute() {
-        System.out.println("setting led");
-        if (hasSetColor) {
+        Alliance currentAlliance = DriverStation.getInstance().getAlliance();
+        if (alliance == currentAlliance) {
             return;
+        } else {
+            alliance = currentAlliance;
+            ledSubsystem.setPreset(alliance);
         }
 
-        Alliance alliance = DriverStation.getInstance().getAlliance();
-        System.out.println(alliance.name());
-        switch (alliance) {
-        case Invalid:
-            this.ledSubsystem.setColors(Color.kGreen, Color.kWhite);
-            break;
-        case Red:
-            this.ledSubsystem.setColors(Color.kRed, Color.kBlue);
-            hasSetColor = true;
-            break;
-        case Blue:
-            this.ledSubsystem.setColors(Color.kBlue, Color.kRed);
-            hasSetColor = true;
-            break;
-
-        }
     }
 
     public boolean isFinished() {

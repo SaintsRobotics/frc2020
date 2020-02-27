@@ -7,6 +7,7 @@
 
 package frc.robot.subsystems.mocks;
 
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.util.Color;
 import frc.robot.common.ILedSubsystem;
 import frc.robot.common.ILogger;
@@ -24,6 +25,12 @@ public class MockLedSubsystem extends TraceableMockSubsystem implements ILedSubs
 
     @Override
     public void setColors(Color background, Color foreground) {
+        // TODO Auto-generated method stub
+
+    }
+
+    @Override
+    public void setPreset(Alliance alliance) {
         // TODO Auto-generated method stub
 
     }
