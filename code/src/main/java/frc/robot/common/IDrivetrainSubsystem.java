@@ -65,4 +65,9 @@ public interface IDrivetrainSubsystem extends Subsystem {
      * direction it was going because nothing is opposing its momentum
      */
     void setToCoastMode();
+
+
+    double getGyroAngle();
+
+
 }

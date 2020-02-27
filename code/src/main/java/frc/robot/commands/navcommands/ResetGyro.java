@@ -20,6 +20,14 @@ public class ResetGyro extends TraceableCommand {
     @Inject
     public ResetGyro(final ILogger logger, IDrivetrainSubsystem drivetrain) {
         super(logger);
+        /*
+         * This is to prevent edge cases where the TurnToHeading command is running, and
+         * in the middle of that, this command gets scheduled. What happens is the gyro
+         * is reset, but the setpoint of hte pid isn't updated. By requiring the
+         * drivetrain subsystem, the TurnToHeading command is canceled, causing the pid
+         * setpoint to (eventually) get reset.
+         */
+        addRequirements(drivetrain);
         _drivetrain = drivetrain;
 
     }

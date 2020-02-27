@@ -208,4 +208,8 @@ public class SwerveDrivetrain extends TraceableSubsystem implements IDrivetrainS
                 // SmartDashboard.putBoolean("is turning ", this.m_isTurning);
                 // SmartDashboard.putNumber("CAN LEFT DRIVE power", m_leftdrive.getVelocity());
         }
+
+        public double getGyroAngle() {
+                return m_gyro.getAngle();
+        }
 }
