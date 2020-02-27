@@ -102,6 +102,12 @@ public final class RobotConfig {
         public final int servoPort = 1;
         public final double servoReleasePosition = 0;
         public final double servoReturnPosition = 0.5;
+        public final double servoMaxPWM = 2.5;
+        public final double servoMaxDeadband = 0;
+        public final double servoCenterPWM = 0;
+        public final double servoDeadbandMin = 0;
+        public final double servoMinPWM = 0.5;
+        public final double matchTimeForEndgame = 30;
     }
 
     public final class Shooter {

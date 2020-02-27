@@ -31,6 +31,11 @@
   "cSpell.words": [
     "Guice",
     "Xbox",
+
+    "deadband",
+    "max",
+    "servo",
+
     "setpoint",
     "tankdrive",
     "teleop",
