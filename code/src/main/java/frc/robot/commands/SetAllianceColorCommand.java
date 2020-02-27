@@ -18,8 +18,10 @@ public class SetAllianceColorCommand extends TraceableCommand {
 
         this.ledSubsystem = ledSubsystem;
         this.hasSetColor = false;
+        this.runWhenDisabled();
 
         addRequirements(ledSubsystem);
+        System.out.println("created command");
     }
 
     public void initialize() {
@@ -27,11 +29,13 @@ public class SetAllianceColorCommand extends TraceableCommand {
     }
 
     public void execute() {
+        System.out.println("setting led");
         if (hasSetColor) {
             return;
         }
 
         Alliance alliance = DriverStation.getInstance().getAlliance();
+        System.out.println(alliance.name());
         switch (alliance) {
         case Invalid:
             this.ledSubsystem.setColors(Color.kGreen, Color.kWhite);
