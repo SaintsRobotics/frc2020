@@ -89,7 +89,6 @@ public class ShooterSubsystem extends TraceableSubsystem implements IShooterSubs
         }
         m_shooterPID.reset();
 
-        m_shooterPID.setSetpoint(targetRPM);
         SmartDashboard.putNumber("ShooterTargetRPM", targetRPM);
     }
 
