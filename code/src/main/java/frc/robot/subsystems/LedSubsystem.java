@@ -43,11 +43,14 @@ public class LedSubsystem extends TraceableSubsystem implements ILedSubsystem {
 
     @Override
     public void setPreset(Alliance alliance) {
-        if (alliance == Alliance.Blue) {
+        switch (alliance) {
+        case Blue:
             this.sendCommand(PRESET_COMMAND, 2);
-        } else if (alliance == Alliance.Red) {
+            break;
+        case Red:
             this.sendCommand(PRESET_COMMAND, 3);
-        } else {
+            break;
+        case Invalid:
             this.sendCommand(PRESET_COMMAND, 1);
         }
     }
@@ -66,12 +69,6 @@ public class LedSubsystem extends TraceableSubsystem implements ILedSubsystem {
                     "The leds were set to " + commandToSend + ", but the controller reported " + returnString, false);
 
         }
-
-    }
-
-    @Override
-    public void periodic() {
-        super.periodic();
 
     }
 

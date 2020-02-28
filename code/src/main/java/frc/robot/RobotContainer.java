@@ -50,10 +50,7 @@ public class RobotContainer extends CompetitionRobot {
     intake.setDefaultCommand(driveArmCommand);
     climb.setDefaultCommand(climbCommand);
 
-    System.out.println(ledSubsystem);
-    System.out.println(setAllianceColorCommand);
     ledSubsystem.setDefaultCommand(setAllianceColorCommand);
-    System.out.println(ledSubsystem.getDefaultCommand().getName());
 
   }
 
