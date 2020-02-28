@@ -22,6 +22,7 @@ public final class RobotConfig {
     public final RobotConfig.Shooter Shooter = new RobotConfig.Shooter();
     public final RobotConfig.Limelight Limelight = new RobotConfig.Limelight();
     public final RobotConfig.Climber Climber = new RobotConfig.Climber();
+    public final RobotConfig.TurnToHeading turnToHeading = new RobotConfig.TurnToHeading();
 
     public final class Controller {
         public final int driverControllerPort = 0;
@@ -38,6 +39,11 @@ public final class RobotConfig {
         public final int intakeOutButtonPort = XboxController.Button.kBumperRight.value;
 
         public final int visionTrackButtonPort = XboxController.Button.kB.value;
+
+        public final int fieldWestButtonAngle = 270;
+        public final int fieldEastButtonAngle = 90;
+        public final int fieldNorthButtonAngle = 0;
+        public final int fieldSouthButtonAngle = 270;
 
         public final double kDriveDeadzone = 0.2;
         public final double kDriveScale = .75;
@@ -61,6 +67,7 @@ public final class RobotConfig {
         public final int frontRightAbsoluteEncoder = 1;
         public final int rearLeftAbsoluteEncoder = 3;
         public final int rearRightAbsoluteEncoder = 2;
+
     }
 
     public final class Physical {
@@ -95,6 +102,12 @@ public final class RobotConfig {
         public final int servoPort = 1;
         public final double servoReleasePosition = 0;
         public final double servoReturnPosition = 0.5;
+        public final double servoMaxPWM = 2.5;
+        public final double servoMaxDeadband = 0;
+        public final double servoCenterPWM = 0;
+        public final double servoDeadbandMin = 0;
+        public final double servoMinPWM = 0.5;
+        public final double matchTimeForEndgame = 30;
     }
 
     public final class Shooter {
@@ -129,6 +142,15 @@ public final class RobotConfig {
         public final double targetHeightMeters = 2.30555; // the height of the inner circle, not the height you want
                                                           // to
                                                           // get to
+
+    }
+
+    public final class TurnToHeading {
+        public final double kP = .019;
+        public final double kI = 0;
+        public final double kD = 0;
+        public final int pidOnTargetTicksGoal = 5;
+        public final double pidTolerance = 2.5;
 
     }
 }

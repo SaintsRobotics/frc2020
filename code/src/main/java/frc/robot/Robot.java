@@ -20,6 +20,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import edu.wpi.first.wpilibj2.command.button.POVButton;
 import frc.robot.commands.navcommands.IntakeIn;
 import frc.robot.commands.navcommands.IntakeOut;
 import frc.robot.commands.navcommands.ReleaseClimber;
@@ -31,6 +32,7 @@ import frc.robot.commands.navcommands.ShooterFeedBackwardCommand;
 import frc.robot.commands.navcommands.ShooterShutdownCommand;
 import frc.robot.commands.navcommands.ShooterStartupCommand;
 import frc.robot.commands.navcommands.TrackVisionTarget;
+import frc.robot.commands.navcommands.TurnToHeadingCommand;
 import frc.robot.common.IDrivetrainSubsystem;
 import frc.robot.common.Limelight;
 import frc.robot.ioc.DependenciesModule;
@@ -130,8 +132,19 @@ public class Robot extends TimedRobot {
 
     JoystickButton visionTrack = new JoystickButton(_driverController, _config.Controller.visionTrackButtonPort);
     visionTrack.whileHeld(_container.getInstance(TrackVisionTarget.class));
+    POVButton turnForward = new POVButton(_driverController, _config.Controller.fieldNorthButtonAngle);
+    turnForward.whenPressed(_container.getInstance(TurnToHeadingCommand.class)
+        .withHeadingDegrees(_config.Controller.fieldNorthButtonAngle));
+    POVButton turnRight = new POVButton(_driverController, _config.Controller.fieldEastButtonAngle);
+    turnRight.whenPressed(
+        _container.getInstance(TurnToHeadingCommand.class).withHeadingDegrees(_config.Controller.fieldEastButtonAngle));
+    POVButton turnBack = new POVButton(_driverController, _config.Controller.fieldSouthButtonAngle);
+    turnBack.whenPressed(_container.getInstance(TurnToHeadingCommand.class)
+        .withHeadingDegrees(_config.Controller.fieldSouthButtonAngle));
+    POVButton turnLeft = new POVButton(_driverController, _config.Controller.fieldWestButtonAngle);
+    turnLeft.whenPressed(
+        _container.getInstance(TurnToHeadingCommand.class).withHeadingDegrees(_config.Controller.fieldWestButtonAngle));
 
-    // TODO can we cleanup the constructing button, then binding it?
   }
 
   /**

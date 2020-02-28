@@ -11,32 +11,34 @@ import com.google.inject.Inject;
 
 import frc.robot.common.IDrivetrainSubsystem;
 import frc.robot.common.ILogger;
-import frc.robot.common.Location;
 import frc.robot.common.TraceableMockSubsystem;
 
 public class MockDrivetrain extends TraceableMockSubsystem implements IDrivetrainSubsystem {
-    private Location _location;
+    protected boolean _isIdle;
 
     /**
      * Creates a new ExampleSubsystem.
      */
     @Inject
-    public MockDrivetrain(ILogger logger, Location location) {
+    public MockDrivetrain(ILogger logger) {
         super(logger);
 
-        _location = location;
+        _isIdle = true;
+
+    }
+
+    protected void setIdle(boolean idle) {
+        _isIdle = idle;
     }
 
     @Override
     public double getMinSpeed() {
-        // TODO Auto-generated method stub
         return 0;
     }
 
     @Override
     public double getMaxSpeed() {
-        // TODO Auto-generated method stub
-        return 0;
+        return .5;
     }
 
     @Override
@@ -67,6 +69,12 @@ public class MockDrivetrain extends TraceableMockSubsystem implements IDrivetrai
     public void setToCoastMode() {
         // TODO Auto-generated method stub
 
+    }
+
+    @Override
+    public double getGyroAngle() {
+        // TODO Auto-generated method stub
+        return 0;
     }
 
 }
