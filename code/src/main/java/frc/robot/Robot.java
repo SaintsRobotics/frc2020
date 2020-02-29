@@ -83,6 +83,7 @@ public class Robot extends TimedRobot {
 
     // Configure the button bindings
     // these have to be done here as they are not unit testable
+    new Limelight(_config).setLEDState(3);
     configureButtonBindings();
     _container.getInstance(IDrivetrainSubsystem.class).resetGyro();
     _container.getInstance(frc.robot.common.Limelight.class).setLEDState(1);
@@ -174,8 +175,6 @@ public class Robot extends TimedRobot {
   @Override
   public void disabledInit() {
     _robot.disabledInit();
-    new Limelight(_config).setLEDState(1);
-    _robot.getDisabledInitCommand().schedule();
 
   }
 
@@ -190,10 +189,9 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void autonomousInit() {
-    new Limelight(_config).setLEDState(3);
+
     m_autonomousCommand = _robot.getAutonomousCommand();
 
-    // schedule the autonomous command (example)
     if (m_autonomousCommand != null) {
       m_autonomousCommand.schedule();
     }
@@ -213,12 +211,12 @@ public class Robot extends TimedRobot {
     // teleop starts running. If you want the autonomous to
     // continue until interrupted by another command, remove
     // this line or comment it out.
+    new Limelight(_config).setLEDState(1);
     if (m_autonomousCommand != null) {
       m_autonomousCommand.cancel();
     }
-
+    _container.getInstance(ShooterShutdownCommand.class).schedule();
     _robot.teleopInit();
-    _robot.getDisabledInitCommand().schedule();
   }
 
   /**

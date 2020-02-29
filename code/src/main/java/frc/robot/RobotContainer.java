@@ -108,10 +108,6 @@ public class RobotContainer extends CompetitionRobot {
     return m_teleopCommand;
   }
 
-  public Command getDisabledInitCommand() {
-    return m_disabledCommand;
-  }
-
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.
    *
