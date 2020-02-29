@@ -36,8 +36,8 @@ public abstract class DrivetrainCommandBase extends TraceableCommand {
     @Override
     public void execute() {
         super.execute();
-        double x = Util.oddSquare(Util.deadZones(_controller.getY(Hand.kLeft), _config.Controller.kDriveDeadzone)
-                * _drivetrain.getMaxSpeed()) * _config.Controller.kDriveScale;
+        double x = Util.oddSquare(Util.deadZones(_controller.getY(Hand.kLeft), _config.Controller.kDriveDeadzone))
+                * _drivetrain.getMaxSpeed() * _config.Controller.kDriveScale;
         double y = Util.oddSquare(Util.deadZones(_controller.getX(Hand.kLeft), _config.Controller.kDriveDeadzone))
                 * _drivetrain.getMaxSpeed() * _config.Controller.kDriveScale;
 
@@ -57,7 +57,8 @@ public abstract class DrivetrainCommandBase extends TraceableCommand {
     }
 
     /**
-     * TODO fill this in
+     * IMPORTANT: DO NOT MULTIPLY BY MAX ROTATION SPEED. BUT DO DEADZONE AND
+     * TRANSFORM OUPTUT FUNCITON (ex. odd square) IF NEEDED
      */
     protected abstract double getRotation();
 

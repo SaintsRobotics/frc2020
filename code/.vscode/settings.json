@@ -42,5 +42,6 @@
     "waypoint",
     "waypoints"
   ],
-  "editor.formatOnSave": true
+  "editor.formatOnSave": true,
+  "wpilib.autoStartRioLog": false
 }

@@ -46,9 +46,9 @@ public final class RobotConfig {
         public final int fieldSouthButtonAngle = 270;
 
         public final double kDriveDeadzone = 0.2;
-        public final double kDriveScale = .75;
+        public final double kDriveScale = .5;
         public final double kTurnDeadzone = 0.2;
-        public final double kTurnScale = .2;
+        public final double kTurnScale = .5;
         public final int climberReleaseButtonPort = XboxController.Button.kBack.value;
     }
 
@@ -131,7 +131,7 @@ public final class RobotConfig {
     }
 
     public final class Limelight {
-        public final double kP = .02;
+        public final double kP = .015;
         public final double kI = 0.0;
         public final double kD = 0.0;
         public final double tolerance = 1.5;
@@ -146,7 +146,7 @@ public final class RobotConfig {
 
     public final class TurnToHeading {
 
-        public final double kP = .019;
+        public final double kP = .013;
 
         public final double kI = 0;
         public final double kD = 0;

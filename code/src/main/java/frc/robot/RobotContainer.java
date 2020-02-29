@@ -67,8 +67,8 @@ public class RobotContainer extends CompetitionRobot {
     climb.setDefaultCommand(climbCommand);
 
     m_autonomousCommand = new SequentialCommandGroup(new ShooterStartupCommand(logger, shooter),
-        new TimedAutonMoveBackward(logger, _config, drivetrain).withTime(1.5).withVelocity(1),
-        new TimedAutonMoveBackward(logger, _config, drivetrain).withTime(1).withVelocity(.5).withTimeout(3),
+        new TimedAutonMoveBackward(logger, _config, drivetrain).withTime(.9).withVelocity(1),
+        new TimedAutonMoveBackward(logger, _config, drivetrain).withTime(.6).withVelocity(.5).withTimeout(3),
         new TrackVisionTarget(logger, config, drivetrain, new Limelight(config)).withTimeout(4),
         new ShootOneBallCommand(logger, shooter), new ShootOneBallCommand(logger, shooter),
         new ShootOneBallCommand(logger, shooter), new ShooterShutdownCommand(logger, shooter));
