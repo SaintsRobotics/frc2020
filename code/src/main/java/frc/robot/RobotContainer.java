@@ -31,6 +31,7 @@ import frc.robot.common.ILogger;
 import frc.robot.common.IShooterSubsystem;
 import frc.robot.common.Limelight;
 import frc.robot.strategies.Easy23StrategyCommand;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
@@ -44,7 +45,8 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 public class RobotContainer extends CompetitionRobot {
 
   private Command m_teleopCommand;
-  private SequentialCommandGroup m_autonomousCommand;
+  private SequentialCommandGroup m_ThreeBallAuto;
+  private SequentialCommandGroup m_LowScore;
   private SequentialCommandGroup m_trenchAuton;
   private RobotConfig _config;
   private Command m_disabledCommand;
@@ -66,12 +68,17 @@ public class RobotContainer extends CompetitionRobot {
     intake.setDefaultCommand(driveArmCommand);
     climb.setDefaultCommand(climbCommand);
 
-    m_autonomousCommand = new SequentialCommandGroup(new ShooterStartupCommand(logger, shooter),
+    m_ThreeBallAuto = new SequentialCommandGroup(new ShooterStartupCommand(logger, shooter),
         new TimedAutonMoveBackward(logger, _config, drivetrain).withTime(.9).withVelocity(1),
         new TimedAutonMoveBackward(logger, _config, drivetrain).withTime(.6).withVelocity(.5).withTimeout(3),
         new TrackVisionTarget(logger, config, drivetrain, new Limelight(config)).withTimeout(4),
         new ShootOneBallCommand(logger, shooter), new ShootOneBallCommand(logger, shooter),
         new ShootOneBallCommand(logger, shooter), new ShooterShutdownCommand(logger, shooter));
+
+    m_LowScore = new SequentialCommandGroup(new ShooterStartupCommand(logger, shooter),
+        new TimedMoveHeading(logger, config, drivetrain).withHeading(0).withTime(3.3).withVelocity(1),
+        new ShootOneBallCommand(logger, shooter), new ShootOneBallCommand(logger, shooter),
+        new ShootOneBallCommand(logger, shooter));
 
     // TODO finish this auton after Glacier Peak.
     // m_trenchAuton = new SequentialCommandGroup(new ResetGyro(logger, drivetrain),
@@ -114,9 +121,15 @@ public class RobotContainer extends CompetitionRobot {
    * @return the command to run in autonomous
    */
   public SequentialCommandGroup getAutonomousCommand() {
-    // m_autonomousCommand Is the Three ball auto.
+
+    SendableChooser<SequentialCommandGroup> m_chooser = new SendableChooser<SequentialCommandGroup>();
+
+    m_chooser.setDefaultOption("ThreeDefault", m_ThreeBallAuto);
+    m_chooser.addObject("LowScore", m_LowScore);
+
+    // m_ThreeBallAuto Is the Three ball auto.
     // If it is different, It is UNTESTED
-    return m_autonomousCommand;
+    return m_LowScore;
   }
 
   public Command whenButtonAPressed() {
