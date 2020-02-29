@@ -124,6 +124,8 @@ public class Robot extends TimedRobot {
 
     new JoystickButton(_operatorController, _config.Controller.climberReleaseButtonPort)
         .whenPressed(_container.getInstance(ReleaseClimber.class));
+    new JoystickButton(_driverController, XboxController.Button.kX.value)
+        .whenPressed(_container.getInstance(TurnToHeadingCommand.class).withHeadingDegrees(22.5));
 
     JoystickButton visionTrack = new JoystickButton(_driverController, _config.Controller.visionTrackButtonPort);
     visionTrack.whileHeld(_container.getInstance(TrackVisionTarget.class));
