@@ -38,7 +38,7 @@ public class TrackVisionTarget extends DrivetrainCommandBase {
     @Override
     public void initialize() {
         super.initialize();
-
+        _pidController.reset();
         _limelight.setLEDState(3);
     }
 
