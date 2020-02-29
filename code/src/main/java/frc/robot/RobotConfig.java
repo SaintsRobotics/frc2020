@@ -132,7 +132,7 @@ public final class RobotConfig {
 
     public final class Limelight {
         public final double kP = .015;
-        public final double kI = 0.0;
+        public final double kI = 0.005;
         public final double kD = 0.0;
         public final double tolerance = 1.5;
 
