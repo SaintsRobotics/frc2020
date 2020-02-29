@@ -28,8 +28,6 @@ public class ClimbSubsystem extends TraceableSubsystem implements IClimbSubsyste
 
         this.servoMotor = new Servo(config.Climber.servoPort);
         this.winchMotor = new CANSparkMax(config.Climber.winchPort, MotorType.kBrushless);
-        this.servoMotor.setBounds(config.Climber.servoMaxPWM, config.Climber.servoMaxDeadband,
-                config.Climber.servoCenterPWM, config.Climber.servoDeadbandMin, config.Climber.servoMinPWM);
         this.endgameTime = config.Climber.matchTimeForEndgame;
         this.releasePosition = config.Climber.servoReleasePosition;
         this.returnPosition = config.Climber.servoReturnPosition;

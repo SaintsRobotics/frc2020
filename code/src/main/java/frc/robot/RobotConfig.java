@@ -35,8 +35,8 @@ public final class RobotConfig {
         public final int feedBackwardButtonPort = XboxController.Button.kB.value;
         public final int feedOneBallButtonPort = XboxController.Button.kX.value;
         public final int shooterShutdownButtonPort = XboxController.Button.kY.value;
-        public final int intakeInButtonPort = XboxController.Button.kBumperLeft.value;
-        public final int intakeOutButtonPort = XboxController.Button.kBumperRight.value;
+        public final int intakeInButtonPort = XboxController.Button.kBumperRight.value;
+        public final int intakeOutButtonPort = XboxController.Button.kBumperLeft.value;
 
         public final int visionTrackButtonPort = XboxController.Button.kB.value;
 
@@ -48,7 +48,7 @@ public final class RobotConfig {
         public final double kDriveDeadzone = 0.2;
         public final double kDriveScale = .75;
         public final double kTurnDeadzone = 0.2;
-        public final double kTurnScale = .35;
+        public final double kTurnScale = .2;
         public final int climberReleaseButtonPort = XboxController.Button.kBack.value;
     }
 
