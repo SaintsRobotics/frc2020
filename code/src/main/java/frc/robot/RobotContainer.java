@@ -48,6 +48,7 @@ public class RobotContainer extends CompetitionRobot {
   private SequentialCommandGroup m_autonomousCommand;
   private SequentialCommandGroup m_trenchAuton;
   private RobotConfig _config;
+  private Command m_disabledCommand;
   private Provider<Easy23StrategyCommand> _autonomousCommand;
 
   // private final Provider<DrivetrainControllerCommand> _autonomousCommand;
@@ -60,6 +61,7 @@ public class RobotContainer extends CompetitionRobot {
       DrivetrainControllerCommand driveCommand, IIntakeSubsystem intake, IShooterSubsystem shooter,
       DriveArmCommand driveArmCommand, IClimbSubsystem climb, ClimbControllerCommand climbCommand) {
     super(logger);
+
     _config = config;
     drivetrain.setDefaultCommand(driveCommand);
     intake.setDefaultCommand(driveArmCommand);
@@ -68,11 +70,9 @@ public class RobotContainer extends CompetitionRobot {
     m_autonomousCommand = new SequentialCommandGroup(new ShooterStartupCommand(logger, shooter),
         new TimedAutonMoveBackward(logger, _config, drivetrain).withTime(1.5).withVelocity(1),
         new TimedAutonMoveBackward(logger, _config, drivetrain).withTime(1).withVelocity(.5).withTimeout(3),
-        new TrackVisionTarget(logger, config, drivetrain, new Limelight(config)).withTimeout(2),
+        new TrackVisionTarget(logger, config, drivetrain, new Limelight(config)).withTimeout(4),
         new ShootOneBallCommand(logger, shooter), new ShootOneBallCommand(logger, shooter),
         new ShootOneBallCommand(logger, shooter), new ShooterShutdownCommand(logger, shooter));
-
-    m_autonomousCommand = new SequentialCommandGroup(new LowerArm(logger, intake));
 
     // TODO finish this auton.
     m_trenchAuton = new SequentialCommandGroup(new ResetGyro(logger, drivetrain),
@@ -99,11 +99,15 @@ public class RobotContainer extends CompetitionRobot {
     // new ShootOneBallCommand(logger, shooter).withTimeout(3),
     // new ShootOneBallCommand(logger, shooter).withTimeout(3), new
     // ShooterShutdownCommand(logger, shooter));
-
+    m_disabledCommand = new ShooterShutdownCommand(logger, shooter);
   }
 
   public Command getTeleopCommand() {
     return m_teleopCommand;
+  }
+
+  public Command getDisabledInitCommand() {
+    return m_disabledCommand;
   }
 
   /**
@@ -113,7 +117,7 @@ public class RobotContainer extends CompetitionRobot {
    */
   public SequentialCommandGroup getAutonomousCommand() {
     // // An ExampleCommand will run in autonomous
-    return m_trenchAuton;
+    return m_autonomousCommand;
   }
 
   public Command whenButtonAPressed() {

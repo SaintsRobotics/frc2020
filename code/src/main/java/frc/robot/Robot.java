@@ -174,6 +174,8 @@ public class Robot extends TimedRobot {
   public void disabledInit() {
     _robot.disabledInit();
     new Limelight(_config).setLEDState(1);
+    _robot.getDisabledInitCommand().schedule();
+
   }
 
   @Override
@@ -215,6 +217,7 @@ public class Robot extends TimedRobot {
     }
 
     _robot.teleopInit();
+    _robot.getDisabledInitCommand().schedule();
   }
 
   /**
