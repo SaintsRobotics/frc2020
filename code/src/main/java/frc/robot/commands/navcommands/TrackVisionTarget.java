@@ -25,7 +25,6 @@ public class TrackVisionTarget extends DrivetrainCommandBase {
     private final Limelight _limelight;
     private final PIDController _pidController;
     private double _pidOutput;
-    private double _onTargetTicks;
 
     @Inject
     public TrackVisionTarget(final ILogger logger, RobotConfig config, IDrivetrainSubsystem drivetrain,

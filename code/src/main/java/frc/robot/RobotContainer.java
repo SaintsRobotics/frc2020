@@ -23,7 +23,6 @@ import frc.robot.commands.navcommands.ShooterStartupCommand;
 import frc.robot.commands.navcommands.TimedAutonMoveBackward;
 import frc.robot.commands.navcommands.TimedMoveHeading;
 import frc.robot.commands.navcommands.TrackVisionTarget;
-import frc.robot.commands.navcommands.TurnToHeading;
 import frc.robot.common.CompetitionRobot;
 import frc.robot.common.IClimbSubsystem;
 import frc.robot.common.IDrivetrainSubsystem;
@@ -74,17 +73,20 @@ public class RobotContainer extends CompetitionRobot {
         new ShootOneBallCommand(logger, shooter), new ShootOneBallCommand(logger, shooter),
         new ShootOneBallCommand(logger, shooter), new ShooterShutdownCommand(logger, shooter));
 
-    // TODO finish this auton.
-    m_trenchAuton = new SequentialCommandGroup(new ResetGyro(logger, drivetrain),
-        new ShooterStartupCommand(logger, shooter),
-        new TimedAutonMoveBackward(logger, _config, drivetrain).withTime(1.5).withVelocity(1),
-        new TimedAutonMoveBackward(logger, _config, drivetrain).withTime(1).withVelocity(.5),
-        new TrackVisionTarget(logger, config, drivetrain, new Limelight(config)),
-        // .withTimeout(2),
-        new TimedMoveHeading(logger, config, drivetrain).withTime(0.2).withHeading(0),
-        new ShootOneBallCommand(logger, shooter).withTimeout(3),
-        new ShootOneBallCommand(logger, shooter).withTimeout(3),
-        new ShootOneBallCommand(logger, shooter).withTimeout(3));
+    // TODO finish this auton after Glacier Peak.
+    // m_trenchAuton = new SequentialCommandGroup(new ResetGyro(logger, drivetrain),
+    // new ShooterStartupCommand(logger, shooter),
+    // new TimedAutonMoveBackward(logger, _config,
+    // drivetrain).withTime(1.5).withVelocity(1),
+    // new TimedAutonMoveBackward(logger, _config,
+    // drivetrain).withTime(1).withVelocity(.5),
+    // new TrackVisionTarget(logger, config, drivetrain, new Limelight(config)),
+    // // .withTimeout(2),
+    // new TimedMoveHeading(logger, config,
+    // drivetrain).withTime(0.2).withHeading(0),
+    // new ShootOneBallCommand(logger, shooter).withTimeout(3),
+    // new ShootOneBallCommand(logger, shooter).withTimeout(3),
+    // new ShootOneBallCommand(logger, shooter).withTimeout(3));
     // new TurnToHeading(logger, config, drivetrain).withHeadingDegrees(270), new
     // LowerArm(logger, intake),
     // new ParallelRaceGroup(new IntakeIn(logger, intake),
@@ -116,7 +118,8 @@ public class RobotContainer extends CompetitionRobot {
    * @return the command to run in autonomous
    */
   public SequentialCommandGroup getAutonomousCommand() {
-    // // An ExampleCommand will run in autonomous
+    // m_autonomousCommand Is the Three ball auto.
+    // If it is different, It is UNTESTED
     return m_autonomousCommand;
   }
 
