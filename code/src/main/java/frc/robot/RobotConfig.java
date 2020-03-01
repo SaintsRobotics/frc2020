@@ -51,7 +51,9 @@ public final class RobotConfig {
         public final double kDriveScale = .75;
         public final double kTurnDeadzone = 0.2;
         public final double kTurnScale = .75;
+
         public final int climberReleaseButtonPort = XboxController.Button.kBack.value;
+        public final int climbDirectionSwitchButtonPort = XboxController.Button.kStart.value;
     }
 
     public final class SwerveDrivetrain {
@@ -101,14 +103,20 @@ public final class RobotConfig {
 
     public final class Climber {
         public final int winchPort = 19;
-        public final int servoPort = 1;
+        public final int releaseServoPort = 1;
         public final double servoReleasePosition = 0;
         public final double servoReturnPosition = 0.5;
+
+        public final int directionServoPort = 0;
+        public final double winchNormalServoPosition = 0.5;
+        public final double winchReverseServoPosition = 0;
+
         public final double servoMaxPWM = 2.5;
         public final double servoMaxDeadband = 0;
         public final double servoCenterPWM = 0;
         public final double servoDeadbandMin = 0;
         public final double servoMinPWM = 0.5;
+
         public final double matchTimeForEndgame = 30;
     }
 

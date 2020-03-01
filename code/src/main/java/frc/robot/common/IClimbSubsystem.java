@@ -6,6 +6,9 @@ import edu.wpi.first.wpilibj2.command.Subsystem;
 import com.google.inject.AbstractModule;
 
 public interface IClimbSubsystem extends Subsystem {
+    public void reverseClimb();
+
+    public void normalClimb();
 
     /**
      * @return the angle of the servo

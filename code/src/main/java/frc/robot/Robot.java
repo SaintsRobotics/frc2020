@@ -24,6 +24,8 @@ import frc.robot.commands.navcommands.IntakeIn;
 import frc.robot.commands.navcommands.IntakeOut;
 import frc.robot.commands.navcommands.ReleaseClimber;
 import frc.robot.commands.navcommands.ResetGyro;
+import frc.robot.commands.navcommands.SetClimbNormal;
+import frc.robot.commands.navcommands.SetClimbReverse;
 import frc.robot.commands.navcommands.SetDriveBrakeMode;
 import frc.robot.commands.navcommands.SetDriveCoastMode;
 import frc.robot.commands.navcommands.ShootOneBallCommand;
@@ -32,6 +34,7 @@ import frc.robot.commands.navcommands.ShooterShutdownCommand;
 import frc.robot.commands.navcommands.ShooterStartupCommand;
 import frc.robot.commands.navcommands.TrackVisionTarget;
 import frc.robot.commands.navcommands.TurnToHeadingCommand;
+import frc.robot.common.IClimbSubsystem;
 import frc.robot.common.IDrivetrainSubsystem;
 import frc.robot.common.Limelight;
 import frc.robot.ioc.DependenciesModule;
@@ -89,6 +92,9 @@ public class Robot extends TimedRobot {
     configureButtonBindings();
     _container.getInstance(IDrivetrainSubsystem.class).resetGyro();
     _container.getInstance(frc.robot.common.Limelight.class).setLEDState(1);
+
+    _container.getInstance(IClimbSubsystem.class).normalClimb();
+    _container.getInstance(IClimbSubsystem.class).lockServo();
   }
 
   /**
@@ -104,6 +110,11 @@ public class Robot extends TimedRobot {
     JoystickButton idleState = new JoystickButton(_driverController, _config.Controller.driveMotorIdleStateButtonPort);
     idleState.whenPressed(_container.getInstance(SetDriveCoastMode.class));
     idleState.whenReleased(_container.getInstance(SetDriveBrakeMode.class));
+
+    JoystickButton winchDirectionControl = new JoystickButton(_operatorController,
+        _config.Controller.climbDirectionSwitchButtonPort);
+    winchDirectionControl.whenPressed(_container.getInstance(SetClimbReverse.class));
+    winchDirectionControl.whenReleased(_container.getInstance(SetClimbNormal.class));
 
     JoystickButton start = new JoystickButton(_operatorController, _config.Controller.shooterStartupButtonPort);
     start.whenPressed(_container.getInstance(ShooterStartupCommand.class));
