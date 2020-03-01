@@ -131,9 +131,9 @@ public final class RobotConfig {
     }
 
     public final class Limelight {
-        public final double kP = .015;
+        public final double kP = .01;
         public final double kI = 0.00;
-        public final double kD = 0.0;
+        public final double kD = 0.05;
         public final double tolerance = 1.5;
 
         public final double angleSetpointDegrees = 0.0;
