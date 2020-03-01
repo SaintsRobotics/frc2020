@@ -129,7 +129,7 @@ public class RobotContainer extends CompetitionRobot {
 
     // m_ThreeBallAuto Is the Three ball auto.
     // If it is different, It is UNTESTED
-    return m_LowScore;
+    return m_ThreeBallAuto;
   }
 
   public Command whenButtonAPressed() {

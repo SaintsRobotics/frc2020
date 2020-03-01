@@ -46,9 +46,9 @@ public final class RobotConfig {
         public final int fieldSouthButtonAngle = 270;
 
         public final double kDriveDeadzone = 0.2;
-        public final double kDriveScale = .5;
+        public final double kDriveScale = .75;
         public final double kTurnDeadzone = 0.2;
-        public final double kTurnScale = .5;
+        public final double kTurnScale = .75;
         public final int climberReleaseButtonPort = XboxController.Button.kBack.value;
     }
 
