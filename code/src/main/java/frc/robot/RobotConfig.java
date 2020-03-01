@@ -43,7 +43,9 @@ public final class RobotConfig {
         public final int fieldWestButtonAngle = 270;
         public final int fieldEastButtonAngle = 90;
         public final int fieldNorthButtonAngle = 0;
-        public final int fieldSouthButtonAngle = 270;
+        public final int fieldSouthButtonAngle = 180;
+        public final double trenchSideGeneratorSwitchAngle = 90 + 22.5;
+        public final int generatorSwitchHeadingButtonPort = XboxController.Button.kX.value;
 
         public final double kDriveDeadzone = 0.2;
         public final double kDriveScale = .75;
