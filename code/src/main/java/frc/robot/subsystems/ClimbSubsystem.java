@@ -17,40 +17,47 @@ import edu.wpi.first.wpilibj.Servo;
 public class ClimbSubsystem extends TraceableSubsystem implements IClimbSubsystem {
 
     private Servo servoMotor;
+    private Servo ratchetServo;
     private CANSparkMax winchMotor;
-    private double releasePosition;
-    private double returnPosition;
+    private RobotConfig _config;
     private double endgameTime;
 
     @Inject
     public ClimbSubsystem(final ILogger logger, RobotConfig config) {
         super(logger);
-
-        this.servoMotor = new Servo(config.Climber.servoPort);
+        _config = config;
+        this.servoMotor = new Servo(config.Climber.releaseServoPort);
+        this.ratchetServo = new Servo(_config.Climber.directionServoPort);
         this.winchMotor = new CANSparkMax(config.Climber.winchPort, MotorType.kBrushless);
-        this.servoMotor.setBounds(config.Climber.servoMaxPWM, config.Climber.servoMaxDeadband,
-                config.Climber.servoCenterPWM, config.Climber.servoDeadbandMin, config.Climber.servoMinPWM);
         this.endgameTime = config.Climber.matchTimeForEndgame;
-        this.releasePosition = config.Climber.servoReleasePosition;
-        this.returnPosition = config.Climber.servoReturnPosition;
     }
 
     public double getAngle() {
         return servoMotor.get();
     }
 
+    public void reverseClimb() {
+        this.ratchetServo.set(_config.Climber.winchReverseServoPosition);
+        DriverStation.reportError("climb direction reversed", false);
+    }
+
+    public void normalClimb() {
+        this.ratchetServo.set(_config.Climber.winchNormalServoPosition);
+        DriverStation.reportError("climb direction normal", false);
+    }
+
     public void releaseClimber() {
-        // If there is more than 30 seconds left in the match, we're not allowed to
+        // If there are more than 30 seconds left in the match, we're not allowed to
         // release the climber
-        if (DriverStation.getInstance().getMatchTime() > this.endgameTime) {
-            return;
-        }
-        this.servoMotor.set(this.releasePosition);
+        // if (DriverStation.getInstance().getMatchTime() > this.endgameTime) {
+        // return;
+        // }
+        this.servoMotor.set(_config.Climber.servoReleasePosition);
         DriverStation.reportError("climb released ", false);
     }
 
     public void lockServo() {
-        this.servoMotor.set(this.returnPosition);
+        this.servoMotor.set(_config.Climber.servoReturnPosition);
     }
 
     public void climb(double speed) {

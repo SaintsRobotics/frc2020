@@ -26,19 +26,6 @@ public class MockIntake extends TraceableMockSubsystem implements IIntakeSubsyst
     }
 
     @Override
-    public void raiseArm() {
-        // the spinner will be shut down when the arm is raised
-        _isSpinning = false;
-
-        _isRaised = true;
-    }
-
-    @Override
-    public void lowerArm() {
-        _isRaised = false;
-    }
-
-    @Override
     public boolean isLowered() {
         return !_isRaised;
     }

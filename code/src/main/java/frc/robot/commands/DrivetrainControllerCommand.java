@@ -35,6 +35,6 @@ public class DrivetrainControllerCommand extends DrivetrainCommandBase {
     @Override
     protected double getRotation() {
         return Util.oddSquare(Util.deadZones(_controller.getX(Hand.kRight), _config.Controller.kTurnDeadzone))
-                * _drivetrain.getMaxAngularSpeed();
+                * _config.Controller.kTurnScale;
     }
 }

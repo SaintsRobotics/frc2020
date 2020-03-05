@@ -36,17 +36,16 @@ public abstract class DrivetrainCommandBase extends TraceableCommand {
     @Override
     public void execute() {
         super.execute();
-        double x = Util.oddSquare(Util.deadZones(_controller.getY(Hand.kLeft),
-                _config.Controller.kDriveDeadzone * _drivetrain.getMaxSpeed()));
+        double x = Util.oddSquare(Util.deadZones(_controller.getY(Hand.kLeft), _config.Controller.kDriveDeadzone))
+                * _drivetrain.getMaxSpeed() * _config.Controller.kDriveScale;
         double y = Util.oddSquare(Util.deadZones(_controller.getX(Hand.kLeft), _config.Controller.kDriveDeadzone))
-                * _drivetrain.getMaxSpeed();
+                * _drivetrain.getMaxSpeed() * _config.Controller.kDriveScale;
 
         double r = this.getRotation() * _drivetrain.getMaxAngularSpeed();
         // Multiplying the rotating joystick by the max angular speed instead of linear
         // speed because the rotation input is in radians per second
 
-        _drivetrain.move(x * _config.Controller.kDriveScale, y * _config.Controller.kDriveScale,
-                r * _config.Controller.kTurnScale, !_controller.getBumper(Hand.kRight));
+        _drivetrain.move(x, y, r, !_controller.getBumper(Hand.kRight));
     }
 
     /**
@@ -58,7 +57,15 @@ public abstract class DrivetrainCommandBase extends TraceableCommand {
     }
 
     /**
-     * TODO fill this in
+     * IMPORTANT: DO NOT MULTIPLY BY MAX ROTATION SPEED. BUT DO DEADZONE AND
+     * TRANSFORM OUPTUT FUNCITON (ex. odd square) IF NEEDED
      */
     protected abstract double getRotation();
+
+    @Override
+    public void end(boolean interrupted) {
+
+        super.end(interrupted);
+
+    }
 }
