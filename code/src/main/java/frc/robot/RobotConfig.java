@@ -90,6 +90,8 @@ public final class RobotConfig {
         public final double widthInMeters = .67;
         public final double lengthInMeters = .5;
         public final double weightInKgs = 0; // TODO this isn't the real weight!!!
+        public final double staticFrictionConstant = .0205;
+
     }
 
     public final class Intake {
@@ -143,7 +145,7 @@ public final class RobotConfig {
     public final class Limelight {
         public final double kP = .01;
         public final double kI = 0.00;
-        public final double kD = 0.05;
+        public final double kD = 0.07;
         public final double tolerance = 1.5;
 
         public final double angleSetpointDegrees = 0.0;

@@ -12,6 +12,7 @@ import com.google.inject.Guice;
 import com.google.inject.Injector;
 
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.PowerDistributionPanel;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -52,6 +53,7 @@ public class Robot extends TimedRobot {
   private RobotConfig _config;
   private XboxController _driverController;
   private XboxController _operatorController;
+  private PowerDistributionPanel _pdp;
 
   private final Injector _container;
 
@@ -61,7 +63,7 @@ public class Robot extends TimedRobot {
 
   public Robot(AbstractModule dependencies) {
     _container = Guice.createInjector(dependencies);
-
+    _pdp = new PowerDistributionPanel(50);
     _config = _container.getInstance(RobotConfig.class);
     _driverController = new XboxController(_config.Controller.driverControllerPort);
     _operatorController = new XboxController(_config.Controller.operatorControllerPort);
@@ -240,6 +242,7 @@ public class Robot extends TimedRobot {
   @Override
   public void teleopPeriodic() {
     _robot.teleopPeriodic();
+    SmartDashboard.putNumber("pdp Voltage", _pdp.getVoltage());
   }
 
   @Override
