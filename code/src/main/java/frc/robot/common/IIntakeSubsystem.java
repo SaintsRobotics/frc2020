@@ -4,12 +4,6 @@ import edu.wpi.first.wpilibj2.command.Subsystem;
 
 public interface IIntakeSubsystem extends Subsystem {
 
-    // Engages the intake arm to be parallel with the ground
-    void raiseArm();
-
-    // Disengages arm to be normal with the ground
-    void lowerArm();
-
     /**
      * 
      * @return whether or not the intake arm is currently lowered

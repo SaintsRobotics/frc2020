@@ -43,13 +43,17 @@ public final class RobotConfig {
         public final int fieldWestButtonAngle = 270;
         public final int fieldEastButtonAngle = 90;
         public final int fieldNorthButtonAngle = 0;
-        public final int fieldSouthButtonAngle = 270;
+        public final int fieldSouthButtonAngle = 180;
+        public final double trenchSideGeneratorSwitchAngle = 247.51;
+        public final int generatorSwitchHeadingButtonPort = XboxController.Button.kX.value;
 
         public final double kDriveDeadzone = 0.2;
-        public final double kDriveScale = .75;
+        public final double kDriveScale = 1;
         public final double kTurnDeadzone = 0.2;
-        public final double kTurnScale = .2;
+        public final double kTurnScale = 1;
+
         public final int climberReleaseButtonPort = XboxController.Button.kBack.value;
+        public final int climbDirectionSwitchButtonPort = XboxController.Button.kStart.value;
     }
 
     public final class SwerveDrivetrain {
@@ -99,14 +103,20 @@ public final class RobotConfig {
 
     public final class Climber {
         public final int winchPort = 19;
-        public final int servoPort = 1;
+        public final int releaseServoPort = 1;
         public final double servoReleasePosition = 0;
         public final double servoReturnPosition = 0.5;
+
+        public final int directionServoPort = 0;
+        public final double winchNormalServoPosition = 0.5;
+        public final double winchReverseServoPosition = 0;
+
         public final double servoMaxPWM = 2.5;
         public final double servoMaxDeadband = 0;
         public final double servoCenterPWM = 0;
         public final double servoDeadbandMin = 0;
         public final double servoMinPWM = 0.5;
+
         public final double matchTimeForEndgame = 30;
     }
 
@@ -132,9 +142,9 @@ public final class RobotConfig {
 
     public final class Limelight {
         public final double kP = .01;
-        public final double kI = 0.0;
-        public final double kD = 0.0;
-        public final double tolerance = .5;
+        public final double kI = 0.00;
+        public final double kD = 0.05;
+        public final double tolerance = 1.5;
 
         public final double angleSetpointDegrees = 0.0;
         public final double mountingAngleDegrees = 45.0;
@@ -145,7 +155,9 @@ public final class RobotConfig {
     }
 
     public final class TurnToHeading {
-        public final double kP = .019;
+
+        public final double kP = .013;
+
         public final double kI = 0;
         public final double kD = 0;
         public final int pidOnTargetTicksGoal = 5;

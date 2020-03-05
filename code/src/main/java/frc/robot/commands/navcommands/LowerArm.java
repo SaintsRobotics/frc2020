@@ -3,35 +3,41 @@ package frc.robot.commands.navcommands;
 import com.google.inject.Inject;
 
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.common.*;
 
-public class IntakeOut extends TraceableCommand {
+public class LowerArm extends TraceableCommand {
 
     private final IIntakeSubsystem _intake;
+    private double currentTime = 0;
 
     @Inject
 
-    public IntakeOut(final ILogger logger, IIntakeSubsystem intakeSubsystem) {
+    public LowerArm(final ILogger logger, IIntakeSubsystem intakeSubsystem) {
         super(logger);
         _intake = intakeSubsystem;
-
+        addRequirements(_intake);
     }
 
     public void initialize() {
-        _intake.reverseIntake();
-    }
-
-    public void execute() {
+        super.initialize();
 
     }
 
     @Override
+    public void execute() {
+        super.execute();
+        _intake.setArmMotor(.8);
+        SmartDashboard.putBoolean("lowered?", _intake.isLowered());
+    }
+
+    @Override
     public void end(boolean interrupted) {
-        _intake.stopIntake();
+        _intake.setArmMotor(0);
     }
 
     public boolean isFinished() {
-        return false;
+        return _intake.isLowered();
     }
 
     /**

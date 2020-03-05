@@ -2,6 +2,7 @@ package frc.robot.commands.navcommands;
 
 import com.google.inject.Inject;
 
+import edu.wpi.first.wpilibj.DriverStation;
 import frc.robot.common.ILogger;
 import frc.robot.common.IShooterSubsystem;
 import frc.robot.common.TraceableCommand;
@@ -19,6 +20,7 @@ public class ShootOneBallCommand extends TraceableCommand {
 
     @Override
     public void initialize() {
+        DriverStation.reportError("Shoot one sched", false);
     }
 
     @Override

@@ -11,16 +11,21 @@ import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
 import frc.robot.commands.navcommands.IntakeIn;
 import frc.robot.commands.navcommands.IntakeOut;
 import frc.robot.commands.navcommands.ReleaseClimber;
 import frc.robot.commands.navcommands.ResetGyro;
+import frc.robot.commands.navcommands.SetClimbNormal;
+import frc.robot.commands.navcommands.SetClimbReverse;
 import frc.robot.commands.navcommands.SetDriveBrakeMode;
 import frc.robot.commands.navcommands.SetDriveCoastMode;
 import frc.robot.commands.navcommands.ShootOneBallCommand;
@@ -29,7 +34,9 @@ import frc.robot.commands.navcommands.ShooterShutdownCommand;
 import frc.robot.commands.navcommands.ShooterStartupCommand;
 import frc.robot.commands.navcommands.TrackVisionTarget;
 import frc.robot.commands.navcommands.TurnToHeadingCommand;
+import frc.robot.common.IClimbSubsystem;
 import frc.robot.common.IDrivetrainSubsystem;
+import frc.robot.common.Limelight;
 import frc.robot.ioc.DependenciesModule;
 
 /**
@@ -40,7 +47,7 @@ import frc.robot.ioc.DependenciesModule;
  * project.
  */
 public class Robot extends TimedRobot {
-  private Command m_autonomousCommand;
+  private SequentialCommandGroup m_autonomousCommand;
   private RobotContainer _robot;
   private RobotConfig _config;
   private XboxController _driverController;
@@ -81,9 +88,13 @@ public class Robot extends TimedRobot {
 
     // Configure the button bindings
     // these have to be done here as they are not unit testable
+    new Limelight(_config).setLEDState(3);
     configureButtonBindings();
     _container.getInstance(IDrivetrainSubsystem.class).resetGyro();
     _container.getInstance(frc.robot.common.Limelight.class).setLEDState(1);
+
+    _container.getInstance(IClimbSubsystem.class).normalClimb();
+    _container.getInstance(IClimbSubsystem.class).lockServo();
   }
 
   /**
@@ -99,6 +110,11 @@ public class Robot extends TimedRobot {
     JoystickButton idleState = new JoystickButton(_driverController, _config.Controller.driveMotorIdleStateButtonPort);
     idleState.whenPressed(_container.getInstance(SetDriveCoastMode.class));
     idleState.whenReleased(_container.getInstance(SetDriveBrakeMode.class));
+
+    JoystickButton winchDirectionControl = new JoystickButton(_operatorController,
+        _config.Controller.climbDirectionSwitchButtonPort);
+    winchDirectionControl.whenPressed(_container.getInstance(SetClimbReverse.class));
+    winchDirectionControl.whenReleased(_container.getInstance(SetClimbNormal.class));
 
     JoystickButton start = new JoystickButton(_operatorController, _config.Controller.shooterStartupButtonPort);
     start.whenPressed(_container.getInstance(ShooterStartupCommand.class));
@@ -122,8 +138,9 @@ public class Robot extends TimedRobot {
 
     new JoystickButton(_operatorController, _config.Controller.climberReleaseButtonPort)
         .whenPressed(_container.getInstance(ReleaseClimber.class));
-    new JoystickButton(_driverController, XboxController.Button.kX.value)
-        .whenPressed(_container.getInstance(TurnToHeadingCommand.class).withHeadingDegrees(22.5));
+
+    new JoystickButton(_driverController, _config.Controller.generatorSwitchHeadingButtonPort).whenPressed(_container
+        .getInstance(TurnToHeadingCommand.class).withHeadingDegrees(_config.Controller.trenchSideGeneratorSwitchAngle));
 
     JoystickButton visionTrack = new JoystickButton(_driverController, _config.Controller.visionTrackButtonPort);
     visionTrack.whileHeld(_container.getInstance(TrackVisionTarget.class));
@@ -163,6 +180,7 @@ public class Robot extends TimedRobot {
     CommandScheduler.getInstance().run();
 
     _robot.robotPeriodic();
+    SmartDashboard.putNumber("MatchTime", DriverStation.getInstance().getMatchTime());
 
   }
 
@@ -172,6 +190,7 @@ public class Robot extends TimedRobot {
   @Override
   public void disabledInit() {
     _robot.disabledInit();
+
   }
 
   @Override
@@ -185,9 +204,9 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void autonomousInit() {
+
     m_autonomousCommand = _robot.getAutonomousCommand();
 
-    // schedule the autonomous command (example)
     if (m_autonomousCommand != null) {
       m_autonomousCommand.schedule();
     }
@@ -207,10 +226,11 @@ public class Robot extends TimedRobot {
     // teleop starts running. If you want the autonomous to
     // continue until interrupted by another command, remove
     // this line or comment it out.
+    new Limelight(_config).setLEDState(1);
     if (m_autonomousCommand != null) {
       m_autonomousCommand.cancel();
     }
-
+    _container.getInstance(ShooterShutdownCommand.class).schedule();
     _robot.teleopInit();
   }
 
