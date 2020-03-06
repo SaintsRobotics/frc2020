@@ -16,10 +16,12 @@ public interface IShooterSubsystem extends Subsystem {
 
     /**
      * starts the shooter
-     *
+     * 
+     * @param rpm the rpm at which the shooter will start spinning when this method
+     *            is called.
      */
 
-    void turnOnShooter();
+    void turnOnShooter(int rpm);
 
     /**
      * basically, this makes sure one ball is yeeted, if feedbackward is false if

@@ -9,6 +9,7 @@ package frc.robot.subsystems;
 
 import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
 import com.google.inject.Inject;
+import com.playingwithfusion.TimeOfFlight;
 import com.revrobotics.CANEncoder;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
@@ -33,7 +34,7 @@ public class ShooterSubsystem extends TraceableSubsystem implements IShooterSubs
     private SpeedControllerGroup m_shooter;
     private CANEncoder m_leftEncoder;
     private PIDController m_shooterPID;
-
+    private RobotConfig _config;
     private boolean m_hasShotBall = true; // ONE ball, singular!
     private boolean m_isShooting = false;
 
@@ -41,18 +42,19 @@ public class ShooterSubsystem extends TraceableSubsystem implements IShooterSubs
                                         // shoot
     private int m_onTargetFor = 0; // the amount of ticks the pid has been on target
 
-    private final int shooterRPM; //
+    private int targetShooterRPM;
     private SpeedController m_wheels;
     private SpeedController m_kicker;
     private SpeedControllerGroup m_feeder;
     private boolean m_feedBackward = false;
     private boolean m_isShooterOn = false;
 
-    private Timer m_timer;
+    private TimeOfFlight m_beambreak;
 
     @Inject
     public ShooterSubsystem(ILogger logger, final RobotConfig config) {
         super(logger);
+        _config = config;
         m_leftShooter = new CANSparkMax(config.Shooter.leftShooterPort, MotorType.kBrushless);
         m_rightShooter = new CANSparkMax(config.Shooter.rightShooterPort, MotorType.kBrushless);
         m_leftShooter.setInverted(true);
@@ -66,7 +68,7 @@ public class ShooterSubsystem extends TraceableSubsystem implements IShooterSubs
         m_shooterPID.setTolerance(config.Shooter.pidTolerance);
         m_shooterPID.reset();
         pidOnTargetTicks = config.Shooter.pidOnTargetTicks;
-        shooterRPM = config.Shooter.shooterRPM;
+        this.targetShooterRPM = config.Shooter.shooterRPM;
 
         m_kicker = new WPI_VictorSPX(config.Shooter.feederPort);
         m_wheels = new WPI_VictorSPX(config.Shooter.spinnerPort);
@@ -74,21 +76,16 @@ public class ShooterSubsystem extends TraceableSubsystem implements IShooterSubs
 
         m_feeder = new SpeedControllerGroup(m_kicker, m_wheels);
 
-        m_timer = new Timer();
+        m_beambreak = new TimeOfFlight(51);
 
     }
 
     /*
      */
     @Override
-    public void turnOnShooter() {
+    public void turnOnShooter(int rpm) {
         m_isShooterOn = true;
-        if (m_shooterPID.getSetpoint() != 0) {
-            return;
-        }
-        m_shooterPID.reset();
-        m_shooterPID.setSetpoint(5600);
-        m_timer.start();
+        this.targetShooterRPM = rpm;
     }
 
     /**
@@ -112,23 +109,15 @@ public class ShooterSubsystem extends TraceableSubsystem implements IShooterSubs
         m_isShooterOn = false;
         m_shooterPID.setSetpoint(0);
         this.m_hasShotBall = true;
-        m_timer.reset();
-        m_timer.stop();
     }
 
     public boolean getHasShotBall() {
         return m_hasShotBall;
     }
 
-    private boolean isUpToSpeed() {
-        if (m_shooterPID.atSetpoint() && m_shooterPID.getSetpoint() != 0) {
-            m_onTargetFor++;
-        } else {
-            m_onTargetFor = 0;
-        }
+    private boolean hasBeamBroken() {
 
-        return m_onTargetFor >= pidOnTargetTicks;
-
+        return m_beambreak.getRange() <= 75;
     }
 
     public void periodic() {
@@ -139,7 +128,11 @@ public class ShooterSubsystem extends TraceableSubsystem implements IShooterSubs
          * m_shooter.set(0); }
          */
         if (m_isShooterOn) {
-            m_shooter.set(1);
+            if (m_leftEncoder.getVelocity() > this.targetShooterRPM) {
+                m_shooter.set(_config.Shooter.lowerBangValue);
+            } else {
+                m_shooter.set(1);
+            }
         } else {
             m_shooter.set(0);
         }
@@ -150,18 +143,15 @@ public class ShooterSubsystem extends TraceableSubsystem implements IShooterSubs
             if (this.m_feedBackward) {
                 this.m_feeder.set(-1);
 
-            } else if (m_timer.get() >= 0.4) {
+            } else {
                 this.m_feeder.set(1);
                 this.m_isShooting = true;
-                m_timer.reset();
             }
         }
 
-        SmartDashboard.putNumber("timer ", m_timer.get());
-
         // if we are/were shooting and the pid isn't at the setpoint, that means we've
         // shot a ball
-        if (this.m_isShooting && !m_shooterPID.atSetpoint()) {
+        if (this.m_isShooting && this.hasBeamBroken()) {
             this.m_hasShotBall = true;
             this.m_onTargetFor = 0;
             this.m_isShooting = false;
@@ -179,9 +169,8 @@ public class ShooterSubsystem extends TraceableSubsystem implements IShooterSubs
         SmartDashboard.putNumber("Shooter RPM", m_leftEncoder.getVelocity());
         SmartDashboard.putNumber("Shooter Current", m_leftShooter.getBusVoltage());
         SmartDashboard.putBoolean("has shot ball ", this.m_hasShotBall);
-        SmartDashboard.putBoolean("m_feedBackward ", m_feedBackward);
-        SmartDashboard.putBoolean("is up to speed", this.isUpToSpeed());
-        // SmartDashboard.putNumber("Shooter Speed", shooterSpeed);
+        SmartDashboard.putBoolean("beam has broken ", this.hasBeamBroken());
+        SmartDashboard.putNumber("playing with fusion", m_beambreak.getRange());
 
     }
 

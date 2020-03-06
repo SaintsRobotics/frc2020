@@ -128,6 +128,7 @@ public final class RobotConfig {
         public final int leftShooterPort = 16;
         public final int rightShooterPort = 17;
 
+        public final double lowerBangValue = .9;
         public final int stallLimit = 30;
         public final int freeLimit = 60;
         public final int limitRPM = 150;
@@ -138,7 +139,7 @@ public final class RobotConfig {
         public final double pidD = 0;
         public final int pidOnTargetTicks = 10;
 
-        public final int shooterRPM = 4900;
+        public final int shooterRPM = 5250;
         public final double feederTimeoutSeconds = .5;
     }
 

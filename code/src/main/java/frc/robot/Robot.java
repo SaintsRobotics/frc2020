@@ -119,7 +119,7 @@ public class Robot extends TimedRobot {
     winchDirectionControl.whenReleased(_container.getInstance(SetClimbNormal.class));
 
     JoystickButton start = new JoystickButton(_operatorController, _config.Controller.shooterStartupButtonPort);
-    start.whenPressed(_container.getInstance(ShooterStartupCommand.class));
+    start.whenPressed(_container.getInstance(ShooterStartupCommand.class).withRPM(_config.Shooter.shooterRPM));
 
     JoystickButton back = new JoystickButton(_operatorController, _config.Controller.feedBackwardButtonPort);
     back.whileHeld(_container.getInstance(ShooterFeedBackwardCommand.class));
