@@ -16,6 +16,7 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import edu.wpi.first.wpilibj.Preferences;
 import edu.wpi.first.wpilibj.SpeedController;
 import edu.wpi.first.wpilibj.SpeedControllerGroup;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.controller.PIDController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.RobotConfig;
@@ -45,6 +46,9 @@ public class ShooterSubsystem extends TraceableSubsystem implements IShooterSubs
     private SpeedController m_kicker;
     private SpeedControllerGroup m_feeder;
     private boolean m_feedBackward = false;
+    private boolean m_isShooterOn = false;
+
+    private Timer m_timer;
 
     @Inject
     public ShooterSubsystem(ILogger logger, final RobotConfig config) {
@@ -70,19 +74,21 @@ public class ShooterSubsystem extends TraceableSubsystem implements IShooterSubs
 
         m_feeder = new SpeedControllerGroup(m_kicker, m_wheels);
 
+        m_timer = new Timer();
+
     }
 
     /*
      */
     @Override
     public void turnOnShooter() {
+        m_isShooterOn = true;
         if (m_shooterPID.getSetpoint() != 0) {
             return;
         }
         m_shooterPID.reset();
-        int setpoint = Preferences.getInstance().getInt("shooterTargetRPM", shooterRPM);
-        m_shooterPID.setSetpoint(setpoint);
-        SmartDashboard.putNumber("ShooterTargetRPM", setpoint);
+        m_shooterPID.setSetpoint(5600);
+        m_timer.start();
     }
 
     /**
@@ -99,13 +105,15 @@ public class ShooterSubsystem extends TraceableSubsystem implements IShooterSubs
     @Override
     public void stopFeeding() {
         this.m_hasShotBall = true;
-
     }
 
     @Override
     public void turnOffShooter() {
+        m_isShooterOn = false;
         m_shooterPID.setSetpoint(0);
         this.m_hasShotBall = true;
+        m_timer.reset();
+        m_timer.stop();
     }
 
     public boolean getHasShotBall() {
@@ -124,13 +132,15 @@ public class ShooterSubsystem extends TraceableSubsystem implements IShooterSubs
     }
 
     public void periodic() {
-        double shooterSpeed = m_shooterPID.calculate(m_leftEncoder.getVelocity());
-        if (shooterSpeed > -0.2)
-            m_shooter.set(shooterSpeed);
-        else {
-            m_shooter.set(-0.2);
-        }
-        if (m_shooterPID.getSetpoint() == 0) {
+        /*
+         * double shooterSpeed = m_shooterPID.calculate(m_leftEncoder.getVelocity()); if
+         * (shooterSpeed > -0.2) m_shooter.set(shooterSpeed); else {
+         * m_shooter.set(-0.2); } if (m_shooterPID.getSetpoint() == 0) {
+         * m_shooter.set(0); }
+         */
+        if (m_isShooterOn) {
+            m_shooter.set(1);
+        } else {
             m_shooter.set(0);
         }
 
@@ -140,14 +150,17 @@ public class ShooterSubsystem extends TraceableSubsystem implements IShooterSubs
             if (this.m_feedBackward) {
                 this.m_feeder.set(-1);
 
-            } else if (this.isUpToSpeed()) {
+            } else if (m_timer.get() >= 0.4) {
                 this.m_feeder.set(1);
                 this.m_isShooting = true;
+                m_timer.reset();
             }
         }
 
-        // if we are shooting and the pid isn't at the setpoint, that means we've shot a
-        // ball
+        SmartDashboard.putNumber("timer ", m_timer.get());
+
+        // if we are/were shooting and the pid isn't at the setpoint, that means we've
+        // shot a ball
         if (this.m_isShooting && !m_shooterPID.atSetpoint()) {
             this.m_hasShotBall = true;
             this.m_onTargetFor = 0;
@@ -168,7 +181,7 @@ public class ShooterSubsystem extends TraceableSubsystem implements IShooterSubs
         SmartDashboard.putBoolean("has shot ball ", this.m_hasShotBall);
         SmartDashboard.putBoolean("m_feedBackward ", m_feedBackward);
         SmartDashboard.putBoolean("is up to speed", this.isUpToSpeed());
-        SmartDashboard.putNumber("Shooter Speed", shooterSpeed);
+        // SmartDashboard.putNumber("Shooter Speed", shooterSpeed);
 
     }
 
