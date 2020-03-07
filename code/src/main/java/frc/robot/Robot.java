@@ -121,6 +121,13 @@ public class Robot extends TimedRobot {
     JoystickButton start = new JoystickButton(_operatorController, _config.Controller.shooterStartupButtonPort);
     start.whenPressed(_container.getInstance(ShooterStartupCommand.class).withRPM(_config.Shooter.shooterRPM));
 
+    POVButton shooterUp = new POVButton(_operatorController, _config.Controller.shooterIncreaseButton);
+    shooterUp.whenPressed(_container.getInstance(ShooterStartupCommand.class).withRPM(_config.Shooter.shooterUpperRPM));
+
+    POVButton shooterDown = new POVButton(_operatorController, _config.Controller.shooterDecreaseButton);
+    shooterDown
+        .whenPressed(_container.getInstance(ShooterStartupCommand.class).withRPM(_config.Shooter.shooterLowerRPM));
+
     JoystickButton back = new JoystickButton(_operatorController, _config.Controller.feedBackwardButtonPort);
     back.whileHeld(_container.getInstance(ShooterFeedBackwardCommand.class));
     // automatically gets canceled/interrupted when button released.
@@ -192,6 +199,7 @@ public class Robot extends TimedRobot {
   @Override
   public void disabledInit() {
     _robot.disabledInit();
+    _container.getInstance(IClimbSubsystem.class).lockServo();
 
   }
 

@@ -38,6 +38,9 @@ public final class RobotConfig {
         public final int intakeInButtonPort = XboxController.Button.kBumperRight.value;
         public final int intakeOutButtonPort = XboxController.Button.kBumperLeft.value;
 
+        public final int shooterIncreaseButton = 0;
+        public final int shooterDecreaseButton = 180;
+
         public final int visionTrackButtonPort = XboxController.Button.kB.value;
 
         public final int fieldWestButtonAngle = 270;
@@ -139,8 +142,13 @@ public final class RobotConfig {
         public final double pidD = 0;
         public final int pidOnTargetTicks = 10;
 
-        public final int shooterRPM = 5250;
+        public final int shooterRPM = 5400;
+
+        public final int shooterUpperRPM = 5600;
+        public final int shooterLowerRPM = 4900;
         public final double feederTimeoutSeconds = .5;
+
+        public final int beamBrakeFinal = 60;
     }
 
     public final class Limelight {

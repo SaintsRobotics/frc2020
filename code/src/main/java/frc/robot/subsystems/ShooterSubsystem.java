@@ -117,7 +117,7 @@ public class ShooterSubsystem extends TraceableSubsystem implements IShooterSubs
 
     private boolean hasBeamBroken() {
 
-        return m_beambreak.getRange() <= 75;
+        return m_beambreak.getRange() <= _config.Shooter.beamBrakeFinal;
     }
 
     public void periodic() {
@@ -131,27 +131,33 @@ public class ShooterSubsystem extends TraceableSubsystem implements IShooterSubs
             if (m_leftEncoder.getVelocity() > this.targetShooterRPM) {
                 m_shooter.set(_config.Shooter.lowerBangValue);
             } else {
+
                 m_shooter.set(1);
             }
         } else {
             m_shooter.set(0);
+        }
+        if (m_leftEncoder.getVelocity() > this.targetShooterRPM - _config.Shooter.pidTolerance) {
+            m_onTargetFor++;
+        } else {
+            m_onTargetFor = 0;
         }
 
         // not having shot a ball implies that a button is being pressed, and we want
         // the feeder to be driven
         if (!this.m_hasShotBall) {
             if (this.m_feedBackward) {
-                this.m_feeder.set(-1);
+                this.m_feeder.set(-.5);
 
             } else {
-                this.m_feeder.set(1);
+                this.m_feeder.set(.5);
                 this.m_isShooting = true;
             }
         }
 
         // if we are/were shooting and the pid isn't at the setpoint, that means we've
         // shot a ball
-        if (this.m_isShooting && this.hasBeamBroken()) {
+        if (this.m_isShooting && this.hasBeamBroken() && m_onTargetFor > 5) {
             this.m_hasShotBall = true;
             this.m_onTargetFor = 0;
             this.m_isShooting = false;
