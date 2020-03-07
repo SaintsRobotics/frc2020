@@ -149,8 +149,18 @@ public class SwerveDrivetrain extends TraceableSubsystem implements IDrivetrainS
 
                 }
                 // applies heading correction only when moving and not sending a input command
-                else if (x != 0 && y != 0) {
+                else if (x != 0 || y != 0) {
                         theta = this.m_pidController.calculate((((this.m_gyro.getAngle() % 360) + 360) % 360));
+                }
+                
+                if (x != 0) {
+                        x += (x / Math.abs(x)) * (_config.Physical.staticFrictionConstant);
+                }
+                if (y != 0) {
+                        y += (y / Math.abs(y)) * (_config.Physical.staticFrictionConstant);
+                }
+                if (theta != 0) {
+                        theta += (theta / Math.abs(theta)) * (_config.Physical.staticFrictionConstant);
                 }
 
                 // SmartDashboard.putNumber("x", x);
@@ -204,6 +214,7 @@ public class SwerveDrivetrain extends TraceableSubsystem implements IDrivetrainS
                 // SmartDashboard.putNumber("front left ", m_frontLeftEncoder.getRadians());
                 // SmartDashboard.putNumber("front right ", m_frontRightEncoder.getRadians());
                 SmartDashboard.putNumber("Gyro VAlue", ((m_gyro.getAngle() % 360) + 360) % 360);
+
                 // SmartDashboard.putNumber("gyro angle fed to field relative ",
                 // (360 - (this.m_gyro.getAngle() % (360)) + (360)) % (360));
 
