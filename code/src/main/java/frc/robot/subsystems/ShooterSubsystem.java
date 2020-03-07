@@ -38,11 +38,13 @@ public class ShooterSubsystem extends TraceableSubsystem implements IShooterSubs
     private boolean m_hasShotBall = true; // ONE ball, singular!
     private boolean m_isShooting = false;
 
-    private final int pidOnTargetTicks; // the number of ticks the pid must be on target for to be considered ready to
-                                        // shoot
+    private int m_minOnTargetTicks;
+    // This is the minimum number of ticks that the shooter RPM must be on target
+    // for it to be considered "ready to shoot"
+
     private int m_onTargetFor = 0; // the amount of ticks the pid has been on target
 
-    private int targetShooterRPM;
+    private int m_targetShooterRPM;
     private SpeedController m_wheels;
     private SpeedController m_kicker;
     private SpeedControllerGroup m_feeder;
@@ -67,8 +69,8 @@ public class ShooterSubsystem extends TraceableSubsystem implements IShooterSubs
         m_shooterPID = new PIDController(config.Shooter.pidP, config.Shooter.pidI, config.Shooter.pidD);
         m_shooterPID.setTolerance(config.Shooter.pidTolerance);
         m_shooterPID.reset();
-        pidOnTargetTicks = config.Shooter.pidOnTargetTicks;
-        this.targetShooterRPM = config.Shooter.shooterRPM;
+        m_minOnTargetTicks = config.Shooter.minOnTargetTicks;
+        this.m_targetShooterRPM = config.Shooter.shooterRPM;
 
         m_kicker = new WPI_VictorSPX(config.Shooter.feederPort);
         m_wheels = new WPI_VictorSPX(config.Shooter.spinnerPort);
@@ -76,7 +78,7 @@ public class ShooterSubsystem extends TraceableSubsystem implements IShooterSubs
 
         m_feeder = new SpeedControllerGroup(m_kicker, m_wheels);
 
-        m_beambreak = new TimeOfFlight(51);
+        m_beambreak = new TimeOfFlight(_config.Shooter.beamBrakeSensorPort);
 
     }
 
@@ -85,7 +87,7 @@ public class ShooterSubsystem extends TraceableSubsystem implements IShooterSubs
     @Override
     public void turnOnShooter(int rpm) {
         m_isShooterOn = true;
-        this.targetShooterRPM = rpm;
+        this.m_targetShooterRPM = rpm;
     }
 
     /**
@@ -121,14 +123,9 @@ public class ShooterSubsystem extends TraceableSubsystem implements IShooterSubs
     }
 
     public void periodic() {
-        /*
-         * double shooterSpeed = m_shooterPID.calculate(m_leftEncoder.getVelocity()); if
-         * (shooterSpeed > -0.2) m_shooter.set(shooterSpeed); else {
-         * m_shooter.set(-0.2); } if (m_shooterPID.getSetpoint() == 0) {
-         * m_shooter.set(0); }
-         */
+
         if (m_isShooterOn) {
-            if (m_leftEncoder.getVelocity() > this.targetShooterRPM) {
+            if (m_leftEncoder.getVelocity() > this.m_targetShooterRPM) {
                 m_shooter.set(_config.Shooter.lowerBangValue);
             } else {
 
@@ -137,7 +134,7 @@ public class ShooterSubsystem extends TraceableSubsystem implements IShooterSubs
         } else {
             m_shooter.set(0);
         }
-        if (m_leftEncoder.getVelocity() > this.targetShooterRPM - _config.Shooter.pidTolerance) {
+        if (m_leftEncoder.getVelocity() > this.m_targetShooterRPM - _config.Shooter.pidTolerance) {
             m_onTargetFor++;
         } else {
             m_onTargetFor = 0;
@@ -157,7 +154,7 @@ public class ShooterSubsystem extends TraceableSubsystem implements IShooterSubs
 
         // if we are/were shooting and the pid isn't at the setpoint, that means we've
         // shot a ball
-        if (this.m_isShooting && this.hasBeamBroken() && m_onTargetFor > 5) {
+        if (this.m_isShooting && this.hasBeamBroken() && m_onTargetFor > m_minOnTargetTicks) {
             this.m_hasShotBall = true;
             this.m_onTargetFor = 0;
             this.m_isShooting = false;

@@ -38,8 +38,8 @@ public final class RobotConfig {
         public final int intakeInButtonPort = XboxController.Button.kBumperRight.value;
         public final int intakeOutButtonPort = XboxController.Button.kBumperLeft.value;
 
-        public final int shooterIncreaseButton = 0;
-        public final int shooterDecreaseButton = 180;
+        public final int shooterUpperPresetButton = 0;
+        public final int shooterLowerPresetButton = 180;
 
         public final int visionTrackButtonPort = XboxController.Button.kB.value;
 
@@ -130,8 +130,11 @@ public final class RobotConfig {
         public final int spinnerPort = 27;
         public final int leftShooterPort = 16;
         public final int rightShooterPort = 17;
-
+        public final int beamBrakeSensorPort = 51;
         public final double lowerBangValue = .9;
+        // This is the scaled voltage that the motor is set to when overshooting the
+        // desired RPM
+
         public final int stallLimit = 30;
         public final int freeLimit = 60;
         public final int limitRPM = 150;
@@ -140,7 +143,7 @@ public final class RobotConfig {
         public final double pidP = 0.000129;
         public final double pidI = 0.0004;
         public final double pidD = 0;
-        public final int pidOnTargetTicks = 10;
+        public final int minOnTargetTicks = 5;
 
         public final int shooterRPM = 5400;
 
