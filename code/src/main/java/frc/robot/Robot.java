@@ -117,14 +117,15 @@ public class Robot extends TimedRobot {
     winchDirectionControl.whenReleased(_container.getInstance(SetClimbNormal.class));
 
     JoystickButton start = new JoystickButton(_operatorController, _config.Controller.shooterStartupButtonPort);
-    start.whenPressed(_container.getInstance(ShooterStartupCommand.class).withRPM(_config.Shooter.shooterRPM));
+    start.whenPressed(_container.getInstance(ShooterStartupCommand.class).withSpeed(_config.Shooter.shooterDefaultRPM));
 
     POVButton shooterUp = new POVButton(_operatorController, _config.Controller.shooterUpperPresetButton);
-    shooterUp.whenPressed(_container.getInstance(ShooterStartupCommand.class).withRPM(_config.Shooter.shooterUpperRPM));
+    shooterUp
+        .whenPressed(_container.getInstance(ShooterStartupCommand.class).withSpeed(_config.Shooter.shooterUpperRPM));
 
     POVButton shooterDown = new POVButton(_operatorController, _config.Controller.shooterLowerPresetButton);
     shooterDown
-        .whenPressed(_container.getInstance(ShooterStartupCommand.class).withRPM(_config.Shooter.shooterLowerRPM));
+        .whenPressed(_container.getInstance(ShooterStartupCommand.class).withSpeed(_config.Shooter.shooterLowerRPM));
 
     JoystickButton back = new JoystickButton(_operatorController, _config.Controller.feedBackwardButtonPort);
     back.whileHeld(_container.getInstance(ShooterFeedBackwardCommand.class));
@@ -197,7 +198,6 @@ public class Robot extends TimedRobot {
   @Override
   public void disabledInit() {
     _robot.disabledInit();
-    _container.getInstance(IClimbSubsystem.class).lockServo();
 
   }
 
@@ -239,6 +239,7 @@ public class Robot extends TimedRobot {
       m_autonomousCommand.cancel();
     }
     _container.getInstance(ShooterShutdownCommand.class).schedule();
+    _container.getInstance(IClimbSubsystem.class).lockServo();
     _robot.teleopInit();
   }
 

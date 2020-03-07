@@ -131,7 +131,6 @@ public final class RobotConfig {
         public final int leftShooterPort = 16;
         public final int rightShooterPort = 17;
         public final int beamBrakeSensorPort = 51;
-        public final double lowerBangValue = .9;
         // This is the scaled voltage that the motor is set to when overshooting the
         // desired RPM
 
@@ -139,19 +138,13 @@ public final class RobotConfig {
         public final int freeLimit = 60;
         public final int limitRPM = 150;
 
-        public final double pidTolerance = 80;
-        public final double pidP = 0.000129;
-        public final double pidI = 0.0004;
-        public final double pidD = 0;
-        public final int minOnTargetTicks = 5;
+        public final double shooterDefaultRPM = 0.93;
+        public final double shooterUpperRPM = 0.96;
+        public final double shooterLowerRPM = 0.84;
 
-        public final int shooterRPM = 5400;
-
-        public final int shooterUpperRPM = 5600;
-        public final int shooterLowerRPM = 4900;
         public final double feederTimeoutSeconds = .5;
 
-        public final int beamBrakeFinal = 60;
+        public final int beamBrakeLimit = 60;
     }
 
     public final class Limelight {

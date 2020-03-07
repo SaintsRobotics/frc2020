@@ -9,7 +9,7 @@ import frc.robot.common.TraceableCommand;
 public class ShooterStartupCommand extends TraceableCommand {
 
     private IShooterSubsystem m_subsystem;
-    private int m_rpm;
+    private double m_speed;
 
     @Inject
     public ShooterStartupCommand(ILogger logger, IShooterSubsystem subsystem) {
@@ -18,8 +18,11 @@ public class ShooterStartupCommand extends TraceableCommand {
         addRequirements(m_subsystem);
     }
 
-    public ShooterStartupCommand withRPM(int rpm) {
-        m_rpm = rpm;
+    /**
+     * @param speed -1 to 1 speed given to motor controller
+     */
+    public ShooterStartupCommand withSpeed(double speed) {
+        m_speed = speed;
         return this;
     }
 
@@ -30,7 +33,7 @@ public class ShooterStartupCommand extends TraceableCommand {
 
     @Override
     public void execute() {
-        m_subsystem.turnOnShooter(m_rpm);
+        m_subsystem.turnOnShooter(m_speed);
     }
 
     public boolean isFinished() {

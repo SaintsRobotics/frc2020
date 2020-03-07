@@ -25,7 +25,7 @@ public class MockShooter extends TraceableMockSubsystem implements IShooterSubsy
     }
 
     @Override
-    public void turnOnShooter(int rpm) {
+    public void turnOnShooter(double speed) {
         // TODO Auto-generated method stub
 
     }
