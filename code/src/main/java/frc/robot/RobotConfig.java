@@ -59,6 +59,7 @@ public final class RobotConfig {
     public final class SwerveDrivetrain {
         public final double maxMetersPerSecond = 3.66;
         public final double maxRadiansPerSecond = 8.76;
+        public final double gearRatio = 8.33;
         public final int frontLeftDriveMotorPort = 8;
         public final int frontLeftTurnMotorPort = 1;
         public final int rearLeftDriveMotorPort = 2;
