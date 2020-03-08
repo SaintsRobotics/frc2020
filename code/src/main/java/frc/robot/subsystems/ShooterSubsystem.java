@@ -9,6 +9,7 @@ package frc.robot.subsystems;
 
 import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
 import com.google.inject.Inject;
+import com.playingwithfusion.TimeOfFlight;
 import com.revrobotics.CANEncoder;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
@@ -16,6 +17,7 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import edu.wpi.first.wpilibj.Preferences;
 import edu.wpi.first.wpilibj.SpeedController;
 import edu.wpi.first.wpilibj.SpeedControllerGroup;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.controller.PIDController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.RobotConfig;
@@ -31,24 +33,23 @@ public class ShooterSubsystem extends TraceableSubsystem implements IShooterSubs
     private CANSparkMax m_rightShooter;
     private SpeedControllerGroup m_shooter;
     private CANEncoder m_leftEncoder;
-    private PIDController m_shooterPID;
-
+    private RobotConfig _config;
     private boolean m_hasShotBall = true; // ONE ball, singular!
     private boolean m_isShooting = false;
 
-    private final int pidOnTargetTicks; // the number of ticks the pid must be on target for to be considered ready to
-                                        // shoot
-    private int m_onTargetFor = 0; // the amount of ticks the pid has been on target
-
-    private final int shooterRPM; //
+    private double m_targetShooterSpeed;
     private SpeedController m_wheels;
     private SpeedController m_kicker;
     private SpeedControllerGroup m_feeder;
     private boolean m_feedBackward = false;
+    private boolean m_isShooterOn = false;
+
+    // private TimeOfFlight m_beambreak;
 
     @Inject
     public ShooterSubsystem(ILogger logger, final RobotConfig config) {
         super(logger);
+        _config = config;
         m_leftShooter = new CANSparkMax(config.Shooter.leftShooterPort, MotorType.kBrushless);
         m_rightShooter = new CANSparkMax(config.Shooter.rightShooterPort, MotorType.kBrushless);
         m_leftShooter.setInverted(true);
@@ -58,11 +59,7 @@ public class ShooterSubsystem extends TraceableSubsystem implements IShooterSubs
                 config.Shooter.limitRPM);
         m_leftEncoder = m_leftShooter.getEncoder();
         m_shooter = new SpeedControllerGroup(m_leftShooter, m_rightShooter);
-        m_shooterPID = new PIDController(config.Shooter.pidP, config.Shooter.pidI, config.Shooter.pidD);
-        m_shooterPID.setTolerance(config.Shooter.pidTolerance);
-        m_shooterPID.reset();
-        pidOnTargetTicks = config.Shooter.pidOnTargetTicks;
-        shooterRPM = config.Shooter.shooterRPM;
+        this.m_targetShooterSpeed = config.Shooter.shooterDefaultRPM;
 
         m_kicker = new WPI_VictorSPX(config.Shooter.feederPort);
         m_wheels = new WPI_VictorSPX(config.Shooter.spinnerPort);
@@ -70,19 +67,16 @@ public class ShooterSubsystem extends TraceableSubsystem implements IShooterSubs
 
         m_feeder = new SpeedControllerGroup(m_kicker, m_wheels);
 
+        // m_beambreak = new TimeOfFlight(_config.Shooter.beamBrakeSensorPort);
+
     }
 
     /*
      */
     @Override
-    public void turnOnShooter() {
-        if (m_shooterPID.getSetpoint() != 0) {
-            return;
-        }
-        m_shooterPID.reset();
-        int setpoint = Preferences.getInstance().getInt("shooterTargetRPM", shooterRPM);
-        m_shooterPID.setSetpoint(setpoint);
-        SmartDashboard.putNumber("ShooterTargetRPM", setpoint);
+    public void turnOnShooter(double speed) {
+        m_isShooterOn = true;
+        this.m_targetShooterSpeed = speed;
     }
 
     /**
@@ -99,12 +93,11 @@ public class ShooterSubsystem extends TraceableSubsystem implements IShooterSubs
     @Override
     public void stopFeeding() {
         this.m_hasShotBall = true;
-
     }
 
     @Override
     public void turnOffShooter() {
-        m_shooterPID.setSetpoint(0);
+        m_isShooterOn = false;
         this.m_hasShotBall = true;
     }
 
@@ -112,25 +105,16 @@ public class ShooterSubsystem extends TraceableSubsystem implements IShooterSubs
         return m_hasShotBall;
     }
 
-    private boolean isUpToSpeed() {
-        if (m_shooterPID.atSetpoint() && m_shooterPID.getSetpoint() != 0) {
-            m_onTargetFor++;
-        } else {
-            m_onTargetFor = 0;
-        }
-
-        return m_onTargetFor >= pidOnTargetTicks;
-
+    private boolean hasBeamBroken() {
+        return false;
+        // return m_beambreak.getRange() <= _config.Shooter.beamBrakeLimit;
     }
 
     public void periodic() {
-        double shooterSpeed = m_shooterPID.calculate(m_leftEncoder.getVelocity());
-        if (shooterSpeed > -0.2)
-            m_shooter.set(shooterSpeed);
-        else {
-            m_shooter.set(-0.2);
-        }
-        if (m_shooterPID.getSetpoint() == 0) {
+
+        if (m_isShooterOn) {
+            m_shooter.set(this.m_targetShooterSpeed);
+        } else {
             m_shooter.set(0);
         }
 
@@ -140,17 +124,16 @@ public class ShooterSubsystem extends TraceableSubsystem implements IShooterSubs
             if (this.m_feedBackward) {
                 this.m_feeder.set(-1);
 
-            } else if (this.isUpToSpeed()) {
+            } else {
                 this.m_feeder.set(1);
                 this.m_isShooting = true;
             }
         }
 
-        // if we are shooting and the pid isn't at the setpoint, that means we've shot a
-        // ball
-        if (this.m_isShooting && !m_shooterPID.atSetpoint()) {
+        // if we are/were shooting and the pid isn't at the setpoint, that means we've
+        // shot a ball
+        if (this.m_isShooting && this.hasBeamBroken()) {// && this.hasBeamBroken()) {
             this.m_hasShotBall = true;
-            this.m_onTargetFor = 0;
             this.m_isShooting = false;
         }
 
@@ -159,16 +142,13 @@ public class ShooterSubsystem extends TraceableSubsystem implements IShooterSubs
             this.m_feeder.set(0);
         }
 
-        // SmartDashboard.putNumber("feeder speed", this.m_feeder.get());
-        // SmartDashboard.putNumber("Shooter Pid Output", shooterSpeed);
-        // SmartDashboard.putNumber("shooter pid setpoint ",
-        // this.m_shooterPID.getSetpoint());
         SmartDashboard.putNumber("Shooter RPM", m_leftEncoder.getVelocity());
+        SmartDashboard.putNumber("rpm error ", m_targetShooterSpeed - m_leftEncoder.getVelocity());
         SmartDashboard.putNumber("Shooter Current", m_leftShooter.getBusVoltage());
-        SmartDashboard.putBoolean("has shot ball ", this.m_hasShotBall);
-        SmartDashboard.putBoolean("m_feedBackward ", m_feedBackward);
-        SmartDashboard.putBoolean("is up to speed", this.isUpToSpeed());
-        SmartDashboard.putNumber("Shooter Speed", shooterSpeed);
+        SmartDashboard.putNumber("shooter motor input ", m_leftShooter.get());
+        SmartDashboard.putNumber("target shooter rpm ", m_targetShooterSpeed);
+        SmartDashboard.putBoolean("beam has broken ", this.hasBeamBroken());
+        // SmartDashboard.putNumber("playing with fusion", m_beambreak.getRange());
 
     }
 

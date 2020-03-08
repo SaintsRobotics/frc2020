@@ -48,6 +48,7 @@ public class TrackVisionTarget extends DrivetrainCommandBase {
         SmartDashboard.putNumber("pid output ", -_pidController.calculate(_limelight.getRotationalOffset()));
         SmartDashboard.putNumber("pid error ", _pidController.getPositionError());
 
+        // negating pid output because the gyro decreases when given positive rotation input
         return -_pidController.calculate(_limelight.getRotationalOffset());
     }
 

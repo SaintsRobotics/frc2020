@@ -7,51 +7,32 @@
 
 package frc.robot.subsystems.mocks;
 
-import com.google.inject.Inject;
-
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import edu.wpi.first.wpilibj.util.Color;
+import frc.robot.common.ILedSubsystem;
 import frc.robot.common.ILogger;
-import frc.robot.common.IShooterSubsystem;
 import frc.robot.common.TraceableMockSubsystem;
 
 /**
  * Add your docs here.
  */
-public class MockShooter extends TraceableMockSubsystem implements IShooterSubsystem {
+public class MockLedSubsystem extends TraceableMockSubsystem implements ILedSubsystem {
 
-    @Inject
-    public MockShooter(ILogger logger) {
+    public MockLedSubsystem(ILogger logger) {
         super(logger);
         // TODO Auto-generated constructor stub
     }
 
     @Override
-    public void turnOnShooter(double speed) {
+    public void setColors(Color background, Color foreground) {
         // TODO Auto-generated method stub
 
     }
 
     @Override
-    public void feed(boolean feedBackward) {
+    public void setPreset(Alliance alliance) {
         // TODO Auto-generated method stub
 
-    }
-
-    @Override
-    public void stopFeeding() {
-        // TODO Auto-generated method stub
-
-    }
-
-    @Override
-    public void turnOffShooter() {
-        // TODO Auto-generated method stub
-
-    }
-
-    @Override
-    public boolean getHasShotBall() {
-        // TODO Auto-generated method stub
-        return false;
     }
 
 }

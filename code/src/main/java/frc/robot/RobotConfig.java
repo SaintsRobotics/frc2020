@@ -38,6 +38,9 @@ public final class RobotConfig {
         public final int intakeInButtonPort = XboxController.Button.kBumperRight.value;
         public final int intakeOutButtonPort = XboxController.Button.kBumperLeft.value;
 
+        public final int shooterUpperPresetButton = 0;
+        public final int shooterLowerPresetButton = 180;
+
         public final int visionTrackButtonPort = XboxController.Button.kB.value;
 
         public final int fieldWestButtonAngle = 270;
@@ -90,6 +93,8 @@ public final class RobotConfig {
         public final double widthInMeters = .67;
         public final double lengthInMeters = .5;
         public final double weightInKgs = 0; // TODO this isn't the real weight!!!
+        public final double staticFrictionConstant = .0205;
+
     }
 
     public final class Intake {
@@ -125,25 +130,27 @@ public final class RobotConfig {
         public final int spinnerPort = 27;
         public final int leftShooterPort = 16;
         public final int rightShooterPort = 17;
+        public final int beamBrakeSensorPort = 51;
+        // This is the scaled voltage that the motor is set to when overshooting the
+        // desired RPM
 
         public final int stallLimit = 30;
         public final int freeLimit = 60;
         public final int limitRPM = 150;
 
-        public final double pidTolerance = 80;
-        public final double pidP = 0.000129;
-        public final double pidI = 0.0004;
-        public final double pidD = 0;
-        public final int pidOnTargetTicks = 10;
+        public final double shooterDefaultRPM = 0.93;
+        public final double shooterUpperRPM = 0.96;
+        public final double shooterLowerRPM = 0.84;
 
-        public final int shooterRPM = 4900;
         public final double feederTimeoutSeconds = .5;
+
+        public final int beamBrakeLimit = 60;
     }
 
     public final class Limelight {
-        public final double kP = .01;
+        public final double kP = .008;
         public final double kI = 0.00;
-        public final double kD = 0.05;
+        public final double kD = 0.07;
         public final double tolerance = 1.5;
 
         public final double angleSetpointDegrees = 0.0;

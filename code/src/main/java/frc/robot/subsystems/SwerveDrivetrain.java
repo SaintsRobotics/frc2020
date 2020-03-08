@@ -185,6 +185,16 @@ public class SwerveDrivetrain extends TraceableSubsystem implements IDrivetrainS
                         _theta = this.m_pidController.calculate((((this.m_gyro.getAngle() % 360) + 360) % 360));
                 }
 
+                if (_x != 0) {
+                        _x += (_x / Math.abs(_x)) * (_config.Physical.staticFrictionConstant);
+                }
+                if (_y != 0) {
+                        _y += (_y / Math.abs(_y)) * (_config.Physical.staticFrictionConstant);
+                }
+                if (_theta != 0) {
+                        _theta += (_theta / Math.abs(_theta)) * (_config.Physical.staticFrictionConstant);
+                }
+
                 // SmartDashboard.putNumber("_x", _x);
                 // SmartDashboard.putNumber("y", y);
                 // SmartDashboard.putNumber("_theta", _theta);
@@ -212,7 +222,8 @@ public class SwerveDrivetrain extends TraceableSubsystem implements IDrivetrainS
                 // SmartDashboard.putNumber("front left ", m_frontLeftEncoder.getRadians());
                 // SmartDashboard.putNumber("front right ", m_frontRightEncoder.getRadians());
                 SmartDashboard.putNumber("Gyro VAlue", ((m_gyro.getAngle() % 360) + 360) % 360);
-                // SmartDashboard.putNumber("gyro angle fed to field relative ",
+
+                                // SmartDashboard.putNumber("gyro angle fed to field relative ",
                 // (360 - (this.m_gyro.getAngle() % (360)) + (360)) % (360));
 
                 // SmartDashboard.putNumber("heading pid error ",
