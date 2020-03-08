@@ -173,15 +173,13 @@ public class SwerveDrivetrain extends TraceableSubsystem implements IDrivetrainS
 
                         // Sets the setpoint to maintain the heading the tick after you release the
                         // joystick
-
                 } else if (_theta == 0.0 && this.m_isTurning) {
                         this.m_pidController.setSetpoint((((this.m_gyro.getAngle() % 360) + 360) % 360));
                         this.m_isTurning = false;
                         _theta = this.m_pidController.calculate((((this.m_gyro.getAngle() % 360) + 360) % 360));
-
                 }
-                // applies heading correction only when moving and not sending a input command
-                else if (_x != 0 && _y != 0) {
+                // applies heading correction only when translating but not rotating
+                else if (_x != 0 || _y != 0) {
                         _theta = this.m_pidController.calculate((((this.m_gyro.getAngle() % 360) + 360) % 360));
                 }
 
