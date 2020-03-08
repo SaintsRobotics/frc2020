@@ -54,6 +54,7 @@ public class TrackVisionTarget extends DrivetrainCommandBase {
     @Override
     public void end(boolean interrupted) {
         super.end(interrupted);
+        _drivetrain.move(0, 0, 0, true);
         _limelight.setLEDState(1);
     }
 

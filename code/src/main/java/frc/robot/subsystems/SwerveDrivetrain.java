@@ -55,7 +55,10 @@ public class SwerveDrivetrain extends TraceableSubsystem implements IDrivetrainS
         private SwerveDriveKinematics m_kinematics;
         private AHRS m_gyro;
         private PIDController m_pidController;
-
+        private double _x;
+        private double _y;
+        private double _theta;
+        private boolean isFieldRelative;
         private boolean m_isTurning;
 
         @Inject
@@ -134,46 +137,11 @@ public class SwerveDrivetrain extends TraceableSubsystem implements IDrivetrainS
         public void move(double x, double y, double theta, final boolean fieldRelative) {
 
                 this.getLogger().debug("x: " + x + ", y: " + y + ", theta: " + theta);
+                _x = x;
+                _y = y;
+                _theta = theta;
+                isFieldRelative = fieldRelative;
 
-                // Drag Heading Correction
-                if (theta != 0.0) {
-                        m_isTurning = true;
-
-                        // Sets the setpoint to maintain the heading the tick after you release the
-                        // joystick
-
-                } else if (theta == 0.0 && this.m_isTurning) {
-                        this.m_pidController.setSetpoint((((this.m_gyro.getAngle() % 360) + 360) % 360));
-                        this.m_isTurning = false;
-                        theta = this.m_pidController.calculate((((this.m_gyro.getAngle() % 360) + 360) % 360));
-
-                }
-                // applies heading correction only when moving and not sending a input command
-                else if (x != 0 && y != 0) {
-                        theta = this.m_pidController.calculate((((this.m_gyro.getAngle() % 360) + 360) % 360));
-                }
-
-                // SmartDashboard.putNumber("x", x);
-                // SmartDashboard.putNumber("y", y);
-                // SmartDashboard.putNumber("theta", theta);
-
-                SwerveModuleState[] swerveModuleStates;
-
-                // Field relative conversion
-                if (fieldRelative) {
-                        swerveModuleStates = m_kinematics.toSwerveModuleStates(
-                                        ChassisSpeeds.fromFieldRelativeSpeeds(x, y, theta, new Rotation2d(2 * Math.PI
-                                                        - Math.toRadians(((m_gyro.getAngle() % 360) + 360) % 360))));
-                } else {
-                        swerveModuleStates = m_kinematics.toSwerveModuleStates(new ChassisSpeeds(x, y, theta));
-                }
-                SwerveDriveKinematics.normalizeWheelSpeeds(swerveModuleStates, this.getMaxSpeed());
-                // order of wheels in swerve module states is the same order as the wheels being
-                // inputed to Swerve kinematics
-                m_frontLeft.setDesiredState(swerveModuleStates[0], this.getMaxSpeed());
-                m_frontRight.setDesiredState(swerveModuleStates[1], this.getMaxSpeed());
-                m_backLeft.setDesiredState(swerveModuleStates[2], this.getMaxSpeed());
-                m_backRight.setDesiredState(swerveModuleStates[3], this.getMaxSpeed());
                 // this.getLogger("frontLeft: ", m)
                 SmartDashboard.putNumber("subsystem m/s x", x);
                 SmartDashboard.putNumber("subsystem m/s y", y);
@@ -198,7 +166,47 @@ public class SwerveDrivetrain extends TraceableSubsystem implements IDrivetrainS
                 m_backRightDrive.setIdleMode(IdleMode.kCoast);
         }
 
-        public void periodic() { // Debugging output mostly
+        public void periodic() {
+                // Drag Heading Correction
+                if (_theta != 0.0) {
+                        m_isTurning = true;
+
+                        // Sets the setpoint to maintain the heading the tick after you release the
+                        // joystick
+
+                } else if (_theta == 0.0 && this.m_isTurning) {
+                        this.m_pidController.setSetpoint((((this.m_gyro.getAngle() % 360) + 360) % 360));
+                        this.m_isTurning = false;
+                        _theta = this.m_pidController.calculate((((this.m_gyro.getAngle() % 360) + 360) % 360));
+
+                }
+                // applies heading correction only when moving and not sending a input command
+                else if (_x != 0 && _y != 0) {
+                        _theta = this.m_pidController.calculate((((this.m_gyro.getAngle() % 360) + 360) % 360));
+                }
+
+                // SmartDashboard.putNumber("_x", _x);
+                // SmartDashboard.putNumber("y", y);
+                // SmartDashboard.putNumber("_theta", _theta);
+
+                SwerveModuleState[] swerveModuleStates;
+
+                // Field relative conversion
+                if (isFieldRelative) {
+                        swerveModuleStates = m_kinematics.toSwerveModuleStates(
+                                        ChassisSpeeds.fromFieldRelativeSpeeds(_x, _y, _theta, new Rotation2d(2 * Math.PI
+                                                        - Math.toRadians(((m_gyro.getAngle() % 360) + 360) % 360))));
+                } else {
+                        swerveModuleStates = m_kinematics.toSwerveModuleStates(new ChassisSpeeds(_x, _y, _theta));
+                }
+                SwerveDriveKinematics.normalizeWheelSpeeds(swerveModuleStates, this.getMaxSpeed());
+                // order of wheels in swerve module states is the same order as the wheels being
+                // inputed to Swerve kinematics
+                m_frontLeft.setDesiredState(swerveModuleStates[0], this.getMaxSpeed());
+                m_frontRight.setDesiredState(swerveModuleStates[1], this.getMaxSpeed());
+                m_backLeft.setDesiredState(swerveModuleStates[2], this.getMaxSpeed());
+                m_backRight.setDesiredState(swerveModuleStates[3], this.getMaxSpeed());
+                // Debugging output mostly
                 // SmartDashboard.putNumber("back left ", m_backLeftEncoder.getRadians());
                 // SmartDashboard.putNumber("back right ", m_backRightEncoder.getRadians());
                 // SmartDashboard.putNumber("front left ", m_frontLeftEncoder.getRadians());
