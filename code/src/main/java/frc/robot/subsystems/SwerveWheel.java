@@ -31,7 +31,7 @@ public class SwerveWheel {
   private final Translation2d m_location;
   private final CANEncoder m_driveEncoder;
   private final AbsoluteEncoder m_turningEncoder;
-  private double PIDOutput;
+  private double m_pidOutput;
 
   // private final PIDController m_drivePIDController = new PIDController(1, 0,
   // 0);
@@ -54,7 +54,7 @@ public class SwerveWheel {
    */
   public SwerveWheel(CANSparkMax driveMotor, CANSparkMax turningMotor, double X, double Y, AbsoluteEncoder turnEncoder,
       String name) {
-    PIDOutput = 0;
+    m_pidOutput = 0;
     m_name = name;
     m_driveMotor = driveMotor;
     m_turningMotor = turningMotor;
@@ -109,9 +109,23 @@ public class SwerveWheel {
     driveOutput = smartInversion(state.angle.getRadians(), driveOutput);
 
     m_driveMotor.set(driveOutput);
-    PIDOutput = m_turningPIDController.calculate(m_turningEncoder.getRadians());
-    m_turningMotor.set(PIDOutput);
+    m_pidOutput = m_turningPIDController.calculate(m_turningEncoder.getRadians());
+    m_turningMotor.set(m_pidOutput);
 
+  }
+
+  /**
+   * Sets only the velocity of the wheel, does not change the heading. Still sets
+   * the turning motor to the pid controller's calculated output from the previous
+   * heading.
+   * 
+   * @param metersPerSecond the speed of the wheel in meters per second
+   * @param maxWheelSpeed   the maximum speed of a wheel in meters/second. use the
+   *                        getMaxSpeed() method of the drivetrain
+   */
+  public void setVelocity(double metersPerSecond, double maxWheelSpeed) {
+    m_driveMotor.set(metersPerSecond / maxWheelSpeed);
+    m_turningMotor.set(m_turningPIDController.calculate(m_turningEncoder.getRadians()));
   }
 
   /**
@@ -143,6 +157,6 @@ public class SwerveWheel {
   }
 
   public double getPID() {
-    return this.PIDOutput;
+    return this.m_pidOutput;
   }
 }
