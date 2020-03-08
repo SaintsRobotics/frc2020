@@ -22,6 +22,7 @@ import edu.wpi.first.wpilibj.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.wpilibj.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.RobotConfig;
+import frc.robot.commands.Util;
 import frc.robot.common.AbsoluteEncoder;
 import frc.robot.common.IDrivetrainSubsystem;
 import frc.robot.common.ILogger;
@@ -60,7 +61,6 @@ public class SwerveDrivetrain extends TraceableSubsystem implements IDrivetrainS
         private double _theta;
         private boolean _isFieldRelative;
         private boolean _isTurning;
-        private SwerveModuleState[] _previousSwerveStates;
 
         @Inject
         public SwerveDrivetrain(final ILogger logger, final RobotConfig config) {
@@ -169,12 +169,13 @@ public class SwerveDrivetrain extends TraceableSubsystem implements IDrivetrainS
 
         public void periodic() {
                 // Drag Heading Correction
-                if (_theta != 0.0) {
+                if (Util.deadZones(m_gyro.getRate(), _config.Drivetrain.gyroRateDeadzone) != 0.0) {
                         _isTurning = true;
 
                         // Sets the setpoint to maintain the heading the tick after you release the
                         // joystick
-                } else if (_theta == 0.0 && this._isTurning) {
+                } else if (Util.deadZones(m_gyro.getRate(), _config.Drivetrain.gyroRateDeadzone) == 0.0
+                                && this._isTurning) {
                         this._pidController.setSetpoint((((this.m_gyro.getAngle() % 360) + 360) % 360));
                         this._isTurning = false;
                         _theta = this._pidController.calculate((((this.m_gyro.getAngle() % 360) + 360) % 360));
@@ -184,6 +185,7 @@ public class SwerveDrivetrain extends TraceableSubsystem implements IDrivetrainS
                         _theta = this._pidController.calculate((((this.m_gyro.getAngle() % 360) + 360) % 360));
                 }
 
+                // adding static friction
                 if (_x != 0) {
                         _x += (_x / Math.abs(_x)) * (_config.Physical.staticFrictionConstant);
                 }
@@ -233,9 +235,8 @@ public class SwerveDrivetrain extends TraceableSubsystem implements IDrivetrainS
                 // SmartDashboard.putNumber("front left ", m_frontLeftEncoder.getRadians());
                 // SmartDashboard.putNumber("front right ", m_frontRightEncoder.getRadians());
                 SmartDashboard.putNumber("Gyro VAlue", ((m_gyro.getAngle() % 360) + 360) % 360);
-                // SmartDashboard.putNumber("gyro angle fed to field relative ",
-                // (360 - (this.m_gyro.getAngle() % (360)) + (360)) % (360));
-
+                SmartDashboard.putNumber("gyro rate ", m_gyro.getRate());
+                SmartDashboard.putBoolean("Is turning ", _isTurning);
                 // SmartDashboard.putNumber("heading pid error ",
                 // this.m_pidController.getPositionError());
                 // SmartDashboard.putBoolean("is turning ", this.m_isTurning);

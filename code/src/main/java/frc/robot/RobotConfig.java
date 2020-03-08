@@ -75,6 +75,7 @@ public final class RobotConfig {
         public final int rearLeftAbsoluteEncoder = 3;
         public final int rearRightAbsoluteEncoder = 2;
 
+        public final double gyroRateDeadzone = 0.05;
     }
 
     public final class Physical {
