@@ -20,7 +20,6 @@ public class ShootOneBallCommand extends TraceableCommand {
 
     @Override
     public void initialize() {
-        DriverStation.reportError("Shoot one sched", false);
     }
 
     @Override

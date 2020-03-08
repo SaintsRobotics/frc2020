@@ -73,7 +73,8 @@ public class RobotContainer extends CompetitionRobot {
 
     ledSubsystem.setDefaultCommand(setAllianceColorCommand);
 
-    m_ThreeBallAuto = new SequentialCommandGroup(new ShooterStartupCommand(logger, shooter),
+    m_ThreeBallAuto = new SequentialCommandGroup(
+        new ShooterStartupCommand(logger, shooter).withSpeed(_config.Shooter.shooterDefaultRPM),
         new TimedAutonMoveBackward(logger, _config, drivetrain).withTime(.9).withVelocity(1),
         new TimedAutonMoveBackward(logger, _config, drivetrain).withTime(.6).withVelocity(.5).withTimeout(3),
         new TrackVisionTarget(logger, config, drivetrain, new Limelight(config)).withTimeout(4),
