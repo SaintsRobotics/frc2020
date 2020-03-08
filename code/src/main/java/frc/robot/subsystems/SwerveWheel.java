@@ -115,13 +115,17 @@ public class SwerveWheel {
   }
 
   /**
-   * Sets only the velocity of the wheel, does not change the heading. 
+   * Sets only the velocity of the wheel, does not change the heading. Still sets
+   * the turning motor to the pid controller's calculated output from the previous
+   * heading.
+   * 
    * @param metersPerSecond the speed of the wheel in meters per second
-   * @param maxWheelSpeed the maximum speed of a wheel in meters/second. use the
-   *                      getMaxSpeed() method of the drivetrain
+   * @param maxWheelSpeed   the maximum speed of a wheel in meters/second. use the
+   *                        getMaxSpeed() method of the drivetrain
    */
   public void setVelocity(double metersPerSecond, double maxWheelSpeed) {
     m_driveMotor.set(metersPerSecond / maxWheelSpeed);
+    m_turningMotor.set(m_turningPIDController.calculate(m_turningEncoder.getRadians()));
   }
 
   /**
