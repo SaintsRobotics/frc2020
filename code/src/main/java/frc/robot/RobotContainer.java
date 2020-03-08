@@ -13,6 +13,7 @@ import com.google.inject.Provider;
 import frc.robot.commands.ClimbControllerCommand;
 import frc.robot.commands.DriveArmCommand;
 import frc.robot.commands.DrivetrainControllerCommand;
+import frc.robot.commands.SetAllianceColorCommand;
 import frc.robot.commands.navcommands.IntakeIn;
 import frc.robot.commands.navcommands.LowerArm;
 import frc.robot.commands.navcommands.MoveOneMeter;
@@ -27,6 +28,7 @@ import frc.robot.common.CompetitionRobot;
 import frc.robot.common.IClimbSubsystem;
 import frc.robot.common.IDrivetrainSubsystem;
 import frc.robot.common.IIntakeSubsystem;
+import frc.robot.common.ILedSubsystem;
 import frc.robot.common.ILogger;
 import frc.robot.common.IShooterSubsystem;
 import frc.robot.common.Limelight;
@@ -60,13 +62,16 @@ public class RobotContainer extends CompetitionRobot {
   @Inject
   private RobotContainer(final ILogger logger, RobotConfig config, IDrivetrainSubsystem drivetrain,
       DrivetrainControllerCommand driveCommand, IIntakeSubsystem intake, IShooterSubsystem shooter,
-      DriveArmCommand driveArmCommand, IClimbSubsystem climb, ClimbControllerCommand climbCommand) {
+      DriveArmCommand driveArmCommand, IClimbSubsystem climb, ClimbControllerCommand climbCommand,
+      ILedSubsystem ledSubsystem, SetAllianceColorCommand setAllianceColorCommand) {
     super(logger);
 
     _config = config;
     drivetrain.setDefaultCommand(driveCommand);
     intake.setDefaultCommand(driveArmCommand);
     climb.setDefaultCommand(climbCommand);
+
+    ledSubsystem.setDefaultCommand(setAllianceColorCommand);
 
     m_ThreeBallAuto = new SequentialCommandGroup(
         new ShooterStartupCommand(logger, shooter).withSpeed(_config.Shooter.shooterDefaultRPM),

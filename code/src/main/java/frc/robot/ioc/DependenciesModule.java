@@ -20,6 +20,7 @@ import frc.robot.subsystems.mocks.MatchSimDrivetrain;
 import frc.robot.subsystems.mocks.MockCommandDrivetrain;
 import frc.robot.subsystems.mocks.MockDrivetrain;
 import frc.robot.subsystems.mocks.MockIntake;
+import frc.robot.subsystems.mocks.MockLedSubsystem;
 import frc.robot.subsystems.mocks.MockShooter;
 
 /**
@@ -39,6 +40,9 @@ public class DependenciesModule extends AbstractModule {
             this.bind(IClimbSubsystem.class).to(ClimbSubsystem.class).in(Singleton.class);
 
             this.bind(IIntakeSubsystem.class).to(Intake.class).in(Singleton.class);
+
+            this.bind(ILedSubsystem.class).to(LedSubsystem.class).in(Singleton.class);
+
         } else {
             this.bind(IShooterSubsystem.class).to(MockShooter.class).in(Singleton.class);
             this.bind(IDrivetrainSubsystem.class).to(MockDrivetrain.class).in(Singleton.class);
@@ -47,6 +51,8 @@ public class DependenciesModule extends AbstractModule {
 
             // Mock out the Navigation Commands
             this.bind(GoToPosition.class).to(MockGotoPosition.class);
+
+            this.bind(ILedSubsystem.class).to(MockLedSubsystem.class).in(Singleton.class);
         }
     }
 }
