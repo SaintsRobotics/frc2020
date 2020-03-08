@@ -16,6 +16,13 @@ public interface ILedSubsystem extends Subsystem {
     public void setColors(Color background, Color foreground);
 
     /**
+     * Sets the brightness of the leds with a 0-128 range
+     * 
+     * @param brighness The brightness to set the leds to.
+     */
+    public void setBrightness(int brightness);
+
+    /**
      * Sets the leds to the provided Alliance color.
      * 
      * @param alliance The alliance to set the leds too.

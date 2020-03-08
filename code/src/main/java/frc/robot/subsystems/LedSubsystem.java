@@ -25,6 +25,7 @@ public class LedSubsystem extends TraceableSubsystem implements ILedSubsystem {
     private static final String BACKGROUND_COMMAND = "b";
     private static final String FOREGROUND_COMMAND = "f";
     private static final String PRESET_COMMAND = "t";
+    private static final String BRIGHTNESS_COMMAND = "a";
 
     private SerialPort serialPort;
 
@@ -39,6 +40,11 @@ public class LedSubsystem extends TraceableSubsystem implements ILedSubsystem {
     public void setColors(Color background, Color foreground) {
         this.sendCommand(BACKGROUND_COMMAND, background.red, background.green, background.blue);
         this.sendCommand(FOREGROUND_COMMAND, foreground.red, foreground.green, foreground.blue);
+    }
+
+    @Override
+    public void setBrightness(int brightness) {
+        this.sendCommand(BRIGHTNESS_COMMAND, brightness);
     }
 
     @Override
