@@ -7,6 +7,7 @@
 
 package frc.robot.common;
 
+import edu.wpi.first.wpilibj.geometry.Translation2d;
 import edu.wpi.first.wpilibj2.command.Subsystem;
 
 /**
@@ -38,6 +39,7 @@ public interface IDrivetrainSubsystem extends Subsystem {
 
     // used for teleop
     /**
+     * The pivot point of the bot when rotating around its center is 0, 0.
      * 
      * @param x             Represents forward velocity w.r.t the robot frame of
      *                      reference. (Fwd is +)
@@ -46,8 +48,24 @@ public interface IDrivetrainSubsystem extends Subsystem {
      * @param rotation      Represents the angular velocity of the robot frame. (CCW
      *                      is +)
      * @param fieldRelative
+     * 
      */
     void move(double x, double y, double rotation, boolean fieldRelative);
+
+    /**
+     * 
+     * @param x                Represents forward velocity w.r.t the robot frame of
+     *                         reference. (Fwd is +)
+     * @param y                Represents sideways velocity w.r.t the robot frame of
+     *                         reference. (Left is +)
+     * @param rotation         Represents the angular velocity of the robot frame.
+     *                         (CCW is +)
+     * @param fieldRelative
+     * @param pivotPointMeters The point around which the bot rotates in meters,
+     *                         with (0, 0) being it's center. The pivot point
+     *                         defaults to zero if no parameter is provided.
+     */
+    void move(double x, double y, double rotation, boolean fieldRelative, Translation2d pivotPointMeters);
 
     void resetGyro();
 
@@ -66,8 +84,6 @@ public interface IDrivetrainSubsystem extends Subsystem {
      */
     void setToCoastMode();
 
-
     double getGyroAngle();
-
 
 }

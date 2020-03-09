@@ -8,6 +8,7 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.geometry.Translation2d;
 
 /**
  * Defines all the configuration for your Robot. This class is not static to
@@ -76,6 +77,11 @@ public final class RobotConfig {
         public final int rearRightAbsoluteEncoder = 2;
 
         public final double gyroRateDeadzone = 0.05;
+
+        // TODO you might need to reverse the x and y parameters if it doesn't work
+        public final Translation2d intakePivotPoint = new Translation2d(0, 0.25);
+        // TODO These are estimates!
+        public final Translation2d shooterPivotPoint = new Translation2d(0.35, 0);
     }
 
     public final class Physical {

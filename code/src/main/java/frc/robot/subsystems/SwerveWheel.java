@@ -48,9 +48,9 @@ public class SwerveWheel {
    * @param driveMotor   drive motor.
    * @param turningMotor turning motor.
    * @param X            X displacement in meters from the pivot point of the
-   *                     robot
+   *                     robot (width)
    * @param Y            Y displacement in meters from the pivot point of the
-   *                     robot
+   *                     robot (length)
    */
   public SwerveWheel(CANSparkMax driveMotor, CANSparkMax turningMotor, double X, double Y, AbsoluteEncoder turnEncoder,
       String name) {

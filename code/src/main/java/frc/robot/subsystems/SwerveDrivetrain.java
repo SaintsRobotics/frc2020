@@ -17,6 +17,7 @@ import com.kauailabs.navx.frc.AHRS;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.controller.PIDController;
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
+import edu.wpi.first.wpilibj.geometry.Translation2d;
 import edu.wpi.first.wpilibj.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.wpilibj.kinematics.SwerveModuleState;
@@ -61,6 +62,7 @@ public class SwerveDrivetrain extends TraceableSubsystem implements IDrivetrainS
         private double _theta;
         private boolean _isFieldRelative;
         private boolean _isTurning;
+        private Translation2d _pivotPointMeters;
 
         @Inject
         public SwerveDrivetrain(final ILogger logger, final RobotConfig config) {
@@ -136,19 +138,23 @@ public class SwerveDrivetrain extends TraceableSubsystem implements IDrivetrainS
 
         @Override
         public void move(double x, double y, double theta, final boolean fieldRelative) {
+                this.move(x, y, theta, fieldRelative, new Translation2d());
+        }
 
+        @Override
+        public void move(double x, double y, double theta, boolean fieldRelative, Translation2d pivotPointMeters) {
                 this.getLogger().debug("x: " + x + ", y: " + y + ", theta: " + theta);
                 _x = x;
                 _y = y;
                 _theta = theta;
                 _isFieldRelative = fieldRelative;
+                _pivotPointMeters = pivotPointMeters;
 
                 // this.getLogger("frontLeft: ", m)
                 SmartDashboard.putNumber("subsystem m/s x", x);
                 SmartDashboard.putNumber("subsystem m/s y", y);
                 SmartDashboard.putNumber("subsystem m/s r", theta);
                 // System.out.println("x: " + x + "y:" + y + "Theta: " + theta);
-
         }
 
         @Override
