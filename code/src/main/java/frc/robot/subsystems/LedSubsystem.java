@@ -32,7 +32,7 @@ public class LedSubsystem extends TraceableSubsystem implements ILedSubsystem {
     public LedSubsystem(ILogger logger) {
         super(logger);
 
-        this.serialPort = new SerialPort(115200, SerialPort.Port.kUSB);
+        // this.serialPort = new SerialPort(115200, SerialPort.Port.kUSB);
     }
 
     @Override

@@ -71,7 +71,7 @@ public class RobotContainer extends CompetitionRobot {
     intake.setDefaultCommand(driveArmCommand);
     climb.setDefaultCommand(climbCommand);
 
-    ledSubsystem.setDefaultCommand(setAllianceColorCommand);
+    // ledSubsystem.setDefaultCommand(setAllianceColorCommand);
 
     m_ThreeBallAuto = new SequentialCommandGroup(
         new ShooterStartupCommand(logger, shooter).withSpeed(_config.Shooter.shooterDefaultRPM),

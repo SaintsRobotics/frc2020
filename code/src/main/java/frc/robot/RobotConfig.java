@@ -139,8 +139,8 @@ public final class RobotConfig {
         public final int freeLimit = 60;
         public final int limitRPM = 150;
 
-        public final double shooterDefaultRPM = 0.93;
-        public final double shooterUpperRPM = 0.96;
+        public final double shooterDefaultRPM = 0.95;
+        public final double shooterUpperRPM = 0.98;
         public final double shooterLowerRPM = 0.84;
 
         public final double feederTimeoutSeconds = .5;
